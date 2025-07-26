@@ -1,0 +1,215 @@
+\chapter{Turing computability}
+
+\section{Turing machines}
+
+Follow IGT ch.41?
+
+% ** Informal motivation
+
+A Turing machine is an idealized machine.
+
+% ** Tape and computation steps
+
+A Turing machine works on a tape that is unbounded in both directions. The tape
+is divided into cells, each of which is either blank or hold a symbol from some
+finite alphabet.
+
+The machine works in discrete steps. Each step operates on a single cell at a
+time. At the start of a step, the machine \textit{reads} the symbol in the cell. It
+then erases that symbol and either leaves the cell blank or writes a new symbol
+onto the cell. (The new symbol might be the same as the old symbol.) Finally,
+the machine moves its head one cell to the left or right.
+
+% ** Instructions: states
+
+To program a Turing machine, we need to give it instructions for which action to take depending on the content of the cell it is currently reading. For example, an instruction might say "if the cell contains a 1, erase it and move right; if the cell is blank, write a 1 and move left".
+
+A single instruction of this kind would not allow the machine to perform any
+interesting computation. Instead, we need a set of instructions that can be
+applied in sequence. For example, we might program a machine to first follow the
+above instruction and then a different instruction: "if the cell contains a 1,
+erase it and move left; if the cell is blank, write a 0 and move right".
+
+Of course, the machine isn't really reading English instructions. To implement such a set of instructions, the machine must be able to go into different internal \textit{states} in which it responds to the scanned symbol in different ways.
+
+The machine begins in a \textit{starting state}. We program what it should do, including possibly that it should go into a different state.
+
+% ** Example
+
+Here is a simple example. q1 is the start state.
+
+% ** We allow reusing states
+
+For most computational tasks, it isn't necessary to keep track of all the past symbols and acts. This means that we can allow the machine to return to an earlier state.
+
+We can simplify the above algorithm.
+
+% ** Simplification: only one symbol
+
+We could say that the machine EITHER changes the cell content OR moves. Some
+authors do this. The definitions are equivalent.
+
+We can also restrict the number of symbols. It turns out that it makes no
+difference whether there is one symbol or two symbols, or any finite number. A
+common assumption, that we'll follow, is that there is only one symbol, a
+"stroke".
+
+% ** Programs as flow charts
+
+The \textit{program} of a Turing machine can be represented as a flow chart.
+
+Here is one.
+
+\begin{center}
+\begin{tikzpicture}[>=stealth', shorten >=1pt, auto, node distance=5cm, thick]
+  % States
+  \node[state] (A) {$q_{1}$};
+  \node[state, right of=A] (B) {$q_{2}$};
+  %\node[right of=B] (H) {$H$};
+
+  % A to B: read 0 (top arc)
+  \path[->] (A) edge[bend left=20] node[above] {0: 1,R} (B);
+
+  % A to B: read 1 (bottom arc)
+  \path[->] (A) edge[bend right=20] node[below] {1: 1,L} (B);
+
+  % B to A: read 0 (wide top arc)
+  \path[->] (B) edge[bend right=60] node[above right] {0: 1,L} (A);
+
+  % B to H: read 1
+  %\path[->] (B) edge node[above] {1: 1,R} (H);
+\end{tikzpicture}
+\end{center}
+
+under its head, then it writes a new symbol in that cell, and finally it moves the head one cell to the left or right.
+
+We'll assume that there is only one symbol, a "stroke", so that each cell on the tape is either blank or contains a stroke.
+
+The tape is infinite, so it can be thought of as a sequence of cells indexed by integers, with the leftmost cell being indexed by 0.
+
+The machine has a head that can read and write symbols on the tape and move left or right.
+
+% ** Exercise: ex-erase
+
+\begin{exercise}
+Describe a TM that erases a consecutive string of 1s at whose left end it starts.
+\end{exercise}
+
+% ** Example: unary addition
+
+\section{Coding}
+
+% ** Encoding strings
+
+We've assumed that a TM takes sequences of 1s as input.
+
+Mention the general fact that we need to express questions in a particular string format to make algorithms applicable. When we say that a function is computable, we mean the function from numbers to numbers, but computations require a representation of the numbers.
+
+Some representations of numbers make computations easier. It is easier to compute 34 * 100 in decimal than in Roman. But in principle, it can be done either way.
+
+% ** Coding of strings
+
+Suppose, for example, that we define an algorithm on strings of symbols. We need to code the strings as sequences of strokes and blanks.
+
+There are many ways to do this. We can use sequences of strokes alone. In
+effect, we code the strings as numbers.
+
+The obvious technique is to first code each symbol as a number. Now we need to
+code sequences of symbols, or equivalently sequences of code numbers. How could
+we do that?
+
+(As BBJ say, the most important aspect of coding strings is that the concatenation function that takes two code numbers and returns the code number of their concatenation is recursive.)
+
+% ** Coding pairs of symbols/numbers
+
+Suppose we have a countable alphabet of symbols $a_{1}, a_{2}, \ldots$. We assign to
+each symbol a number: $a_{1} = 1$, $a_{2} = 2$, etc.
+
+In $L_A$, we have infinitely many variables. (Could we simply insist that
+variables are written $v_1, v_2$, etc. in decimal notation?)
+
+Let's think about the simplest case: coding pairs of symbols.
+
+In effect, we need to code pairs of numbers as single numbers.
+Cantor's zig-zag method.
+The formula for this is $J(x,y) = \ldots$.
+
+% ** Coding sequences based on prime decomposition
+
+We can also code sequences of numbers by exploiting the fact that
+every number has a unique prime factorization.
+
+Recall that a prime number is a natural number which is greater than 1 and can
+be divided only by 1 and the number itself (all the other numbers greater than 1
+are "composite"). There are infinitely many prime numbers; the beginning of the
+sequence is 2, 3, 5, 7, 11, 13, 17, …
+
+The fundamental theorem of arithmetic (or the unique-prime-factorization
+theorem) states that any natural number greater than 1 can be written as a
+unique product (up to ordering of the factors) of prime numbers.
+
+Let then p1 be the first prime number, p2 the second prime number, and so forth.
+Given an arbitrary finite sequence of positive numbers (0 would cause
+complications) with length k+1, $(n_0,n_1,\ldots,n_k)$, it can be uniquely coded as a
+product of powers of the prime numbers $p_1,p_2,\ldots,p_{k+1}$ as follows: \ldots
+
+Suppose we want to code the sequence 10,4,6. Since the sequence has length 3, we use the first three prime numbers: 2, 3, and 5. We can then code the sequence as
+
+\[
+2^{10} \cdot 3^{4} \cdot 5^{6} = 1296000000.
+\]
+
+To decode the number, we can factor it into primes and read the exponents. In this case, the code number uniquely factors into primes as $2^{10} \cdot 3^{4} \cdot 5^{6}$. This tells us that the number codes a sequence of three numbers, where the first number is 10, the second is 4, and the third is 6.
+
+In practice, this method is terribly inefficient, in part because the code numbers grow large very quickly. But efficiency is not our concern here.
+
+% ** Encoding TMs
+
+\section{Uncomputability}
+
+% ** Diagonalizing the Turing machines
+
+Need to code TMs so that we can enumerate them.
+
+% ** The busy beaver problem
+
+https://scottaaronson.blog/?p=8972
+
+What makes BB(748) independent of ZFC is not its value, but the fact that one of the 748-state machines (call it TM\_ZFC\_INC) looks for an inconsistency (proof of FALSE) in ZFC and only halts upon finding one.
+
+Thus, any proof that BB(748) = N must either show that TM\_ZF\_INC halts within N steps or never halts. By Gödel's famous results, neither of those cases is possible if ZFC is assumed to be consistent.
+
+% ** The undecidability of predicate logic
+
+Turing noted that one can prove the Turing-undecidability of predicate logic, by
+"reducing the halting problem to it". The idea is that for any TM and number n,
+we can find a set of FOL sentences Γ and a sentence D such that Γ entails D iff
+the machine halts when started on input n. So if we could construct a TM that
+decides entailment, we could construct a TM that solves the halting problem.
+
+The sentences in $\Gamma$ simply provide a first-order description of the TM and its
+input. Here we use non-logical symbols for natural numbers, a predicate $Q$ so
+that $Q(x,y)$ says that at step $x$ the machine is in state $y$, another
+predicate $@$ so that $@(x,y)$ says that at step $x$ the machine is positioned
+at square $y$, and a predicate $M$ so that $M(x,y)$ says that at step $x$ there
+is a mark (a stroke) in square $y$. One can then easily express the starting
+configuration of a TM. Likewise, one can formulate each row of the machine
+table. To these, one needs to add some background information about the natural
+numbers -- PA is more than enough; a finite fragment will do. That's $\Gamma$.
+
+The sentence $D$ says that there is a step at which the machine halts. It is a
+disjunction, each disjunct of which corresponds to a state/symbol combination
+for which there is no entry in the machine table. For example, if there's no
+entry in the table for what to do in state 0 when reading a blank, a disjunct of $D$ will be $\exists x \exists y( Q(x,0) \land @(x,y) \land \neg M(x,y))$.
+
+To complete the proof, one needs to show that the machine does indeed halt iff
+$\Gamma$ entails $D$. This is not hard, but it takes a few pages of labour. We'll
+give another proof of Church's Theorem later.
+
+\begin{exercise}
+Show equivalence between decision problem for entailment and DP for validity and DP for satisfiability.
+\end{exercise}
+
+\begin{exercise}
+Using Church's thesis, prove Trakhtenbaum's Theorem.
+\end{exercise}

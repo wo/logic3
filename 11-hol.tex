@@ -1,0 +1,101 @@
+\chapter{HOL}
+
+\section{Syntax}
+
+We can quantify over predicate position.
+The same intro and elim rules hold for 2nd-order quantifiers.
+
+These are formally easy to define but hard to express in English!
+Some have thought that this richer language is very useful in mathematics and metaphysics.
+
+\begin{exercise}
+Could we quantify over operators or quantifiers?
+\end{exercise}
+
+There's also 2nd-order identity,
+which is governed by SI and LL (intro and elim).
+
+\section{Lambdas}
+
+A predicate says something about such an object. Informally, if you take a
+sentence and remove name, leaving a gap, you get a predicate. A predicate isn't
+true or false -- as it contains a gap. Rather it may be true \textit{of} some
+objects and false \textit{of} others.
+
+% ** Variables as markers
+
+[Following Bostock here; later intro lambdas!]
+
+Consider the sentence 'Horace loves Horace'. This could be understood as applying a one-place predicate to Horace, or ....
+
+To mark this difference, we need different gap markers: '-- loves --' vs '--
+loves \_\_'. Instead of gap markers, we can use variables. Thus we can distinguish '$x$ loves $x$' from '$x$ loves $y$'.
+
+Hmm. But now sentence formation is substitution and $F$ isn't a predicate? Well, yes, $F$ is a predicate letter! Move to lambda chapter. We need complex predicates just as we need complex sentences.
+
+\begin{exercise}
+Can you think of a way to construct complex singular terms from formulas? [iota]
+\end{exercise}
+
+
+Goldfarb sec. 5.4.
+
+\section{models}
+
+% ** Higher-order models
+
+We can quantify over predicate position.
+As a first shot,
+we could read ∀XXa as Fa∧Ga∧...
+But what if some properties are not expressed by predicates?
+I assume that "property" is the label for the kinds of things expressed by predicates.
+These plausibly aren't extensions.
+Remember that we use extensions to \textit{model} interpretations.
+Given that sets of individuals model properties,
+it's natural to model second-level predicates as ranging over sets of individuals.
+
+Note that this makes properties "abundant".
+We've put no constraints on what predicates can mean.
+For any set of individuals,
+[F] could be assigned that set.
+We could put restrictions on the eligible sets,
+but let's not do this.
+
+2nd-order logic quantifies into the position of predicates and propositions. We assume that there are "entities" of the higher type.
+
+We \textit{model} this by assuming that the 2nd-order quantifiers range over arbitrary sets of individuals, just as we modeled the meaning of 2nd-order predicates as arbitrary sets.
+
+
+\section{Categoricity}
+
+
+
+% ** Categoricity
+
+\begin{definition}{Categoricity}{categoricity}
+\emph{Categoricity} is the property of a theory that all its models are isomorphic. Explain what this means. For two models $\langle\mathbb{N};0,S,+,\cdot\rangle$ there's a bijection f...
+\end{definition}
+
+Second-order PA is categorical.
+
+\begin{exercise}
+Explain why a theory without = can never be categorical. [You can always duplicate the elements of a model.]
+\end{exercise}
+
+\begin{exercise}
+What if you add to PA2 infinitely many statements $a\not=0, a\not=s(0),....$? Is this theory consistent? What do its models look like?
+\end{exercise}
+
+Yes, consistent. No models. https://math.stackexchange.com/questions/1005283/whats-an-example-of-a-theory-thats-consistent-yet-has-no-model
+
+% ** Structuralism
+
+The "structuralist" approach to mathematics assumes that the study of arithmetic is the study not of particular things -- numbers -- but of a more abstract structure. The structure can be instantiated in many ways. This structure can only be adequately described in second-order logic.
+
+The same is true for all infinite mathematical structures.
+
+% ** A set theory worry
+
+Remember that standard 2nd order logic assumes that the second-order quantifiers range over sets. One might worry that this undercuts the structuralist approach. We'd now need to be assured that the set-theoretic universe is definite.
+
+Hamlin p.32

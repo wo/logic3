@@ -1,0 +1,302 @@
+\chapter{Computability}
+
+\section{Preview Gödel}
+
+% ** Hilbert's programme
+
+Imagine it is 1930. First-order logic has been rigorously developed. We have
+axiomatized theories. On a structuralist or formalist view, the axioms define
+the subject matter. From now on, no mysterious intuitions or questionable steps
+are involved any more when proving mathematical claims. Moreover, we can
+formally prove consistency of infinitary theories. Or so it seems.
+
+What is needed to show that this programme works?
+
+\begin{enumerate}
+\item Prove completeness of axiomatized theories.
+\item Prove consistency of axiomatized theories.
+\item Solve Entscheidungsproblem.
+\end{enumerate}
+
+   Suppose something is entailed by the axioms, but there is no way to show that
+   it is, without relying on intuition. Then that's not very useful. Gödel's
+   completeness theorem shows that there will always be a proof. But how do you
+   find a proof? Ideally, that, too, doesn't require intuition. Ideally, there's
+   a mechanical way to find proofs, just as there is a mechanical way to add or
+   differentiate.
+
+We'd like PA = $\Omega$. Generally, we'd like completeness.
+
+We'd also like \emph{decidability}. A set of sentences is decidable if there is
+a mechanical procedure for checking, for any sentence, whether it belongs to the
+set or not. This would be nice to have for mathematical theories.
+
+
+
+% ** Gödel's theorems
+
+Godel shattered this program.
+
+He showed that no mathematical theory of a certain strength, that includes PA and ZFC, can be complete (unless it is inconsistent). More precisely:
+
+   Every consistent and (recursively) axiomatized theory in which all computable functions are representable is incomplete.
+
+He also showed that there are serious problems for proving the consistency of any such theory. In particular, one can't prove the consistency of ZFC (or PA) in any theory that's strictly weaker.
+
+Since 2nd-order PA is complete, it immediately follows that 2nd-order logic is
+unformalizable. (This was part of what caused a move towards concentrating on
+first-order logic and first-order theories.)
+
+% ** Preview Entscheidungsproblem
+
+Gödel's original argument also showed that finding proofs is not a process of
+the same abstract kind as adding numbers, insofar as any algorithm for finding
+proofs would fall into a different category than familiar mathematical
+algorithms. Gödel couldn't yet show that there is \textit{no} such algorithm at all.
+This requires having a fully general theory of algorithms or computations.
+
+% ** Roadmap (Preview Gödel)
+
+In the next 3 chapters, we'll explore this theory, as it emerged in 1934-1936.
+That task is important not just for the Entscheidungsproblem, but also for
+Gödel's incompleteness theorems.
+
+The crucial feature of proofs is that they are finite and verifiable, in the
+sense that one can mechanically check whether something is a proof or not.
+
+The trick will be to code proofs as numbers, and find an arithmetical predicate
+that captures that a code number represents a proof of a given formula.
+
+From: https://math.stackexchange.com/questions/2205943/godels-incompleteness-theorem
+
+Then, show the basic idea of arithmetization, i.e. a way of assigning numbers to
+logical symbols, expressions, and derivations, so that statements about
+arithmetic can be treated as statements about logical statements and proofs.
+Just show some very basic examples of how such a coding scheme could work, and
+then just wave your hands and say that we can create a formula that effectively
+says 'the statement with Godel number x is not provable from A', where the fact
+that we can have such a formula depends on A being 'at least as strong as PA'
+and being finite.
+
+Next (and again without any further proof) mention the Diagonal Lemma through
+which Godel established that for every formula there is a sentence that is true
+if and only if that formula is true for the godel number of that sentence. Thus,
+in particular, there will be a Sentence G (the Godel sentence) that ends up
+saying "I am not provable from A"
+
+And now do the grand finale! If G is false, then G is provable from A, but given
+that A is sound, that means G is true. Ok, so G cannot be false, so it is true.
+And so G is indeed not provable from A. So, there is something that is true, but
+not provable from A, and thus A is not complete.
+
+This trick is very general. It works for all computable relations and functions.
+Before we get to it, let's talk about what computable relations and functions
+look like. This is independently important for maths and computer science in
+logic. Remember for example the Entscheidungsproblem.
+
+\section{Computable functions}
+
+Copy from Machover
+
+% ** Algorithms
+
+In high school, you learned how to calculate answers to mathematical questions: how to do sums, divisions, derivatives, etc. You learned an algorithm that could in principle be taught to a machine.
+
+We might wonder if all mathematical questions can be answered with some such algorithm. Leibniz envisaged this.
+
+Let's be clear about what that means.
+
+% ** Need to focus on functions
+
+In a sense, it's trivial that for every mathematical question there's an algorithm that gives the answer: simply write down the answer. No calculation required.
+
+This approach doesn't scale. We want to compress what the machine does. An algorithm is an instruction to find the answer to every question of a certain type, which typically has infinitely many instances. That is, we're interested in the computability of \textit{functions}.
+
+% ** Mechanical computation
+
+And by computability, we mean computability with an effective procedure,
+following a pre-defined set of exact rules -- rules that can in principle be carried
+out by a computer.
+
+% ** Effective computability
+
+\begin{definition}{Effective Computability}{effective-computability}
+A function is \emph{effectively computable} if there are precise, determinate instructions for computing the output for any given input.
+\end{definition}
+
+We don't assume that anyone is actually able to follow the instructions in practice. Doing so might require more time or memory than anyone has. Multiplication, for example, is effectively computable, but nobody can in fact compute the product of any two numbers.
+
+% ** Different, equivalent definitions
+
+I haven't said exactly what it means that a function is effectively computable.
+Different precise definitions have been considered. We'll consider two in the
+next two chapters: computable by a Turing machine and recursivity. They will
+turn out to be equivalent in the sense that they define the same class of
+functions.
+
+All plausible proposals for making precise the notion of effective computability
+turn out to be equivalent.
+
+% ** Church's Thesis
+
+[intro here so that we can make labour-saving uses of it.]
+
+Church's Thesis posits that the intuitive notion of "computable" corresponds
+exactly to the functions that are $\mu$-recursive.
+
+We've shown that these are precisely the functions that are computable by a
+Turing machine.
+
+% ** Lazy and unavoidable appeals to Church's Thesis
+
+To show that there is no effective procedure for solving some problem -- say,
+the Entscheidungsproblem --, one generally needs to appeal to Church's Thesis in
+order to connect the informal notion of "effectively computable" with a formal
+notion of computability.
+
+Besides these \textit{unavoidable} appeals to Church's Thesis, we'll also frequently
+make \textit{avoidable} or \textit{lazy} appeals to Church's Thesis when we need the
+assumption that some particular function is recursive. If the function is
+obviously computable, we'll sometimes say that it is recursive "by Church's
+Thesis". In each such case, one could directly prove that the function is indeed
+recursive, without using Church's Thesis.
+
+\section{The halting problem}
+
+% ** Uncomputable functions
+
+Any function you can think of is computable. Are there uncomputable ones?
+
+Yes: there are more functions than computations.
+
+But can we give an example?
+
+% ** Can't we diagonalize out of the computable functions?
+
+An algorithm is a recipe.
+Presumably every algorithm can be stated in a suitably general language, in finitely many symbols.
+So one could define an algorithm to list all the algorithms.
+But now we can write another algorithm that goes as follows:
+for any input $n$, list the algorithms up to $n$, then compute the algorithm with input $n$, and return the output plus 1.
+
+This algorithm can't be on the list!
+What's wrong with it?
+
+% ** The halting problem
+
+Perhaps we can't enumerate the algorithms?
+No.
+The problem is that algorithms may run forever.
+That's not enough to escape the paradox.
+We must also assume that we can't detect whether an algorithm halts.
+
+% ** An uncomputable function
+
+This gives us an uncomputable function!
+
+\begin{exercise}
+Let the \textit{power} of a formula be the size of its smallest model. Consider the function that maps any number to the largest power of a formula of that length. Explain why this function is not computable, given that first-order logic is undecidable.
+\end{exercise}
+
+[Maybe move to after Turing section, where we could prove undecidability?]
+
+% ** From the unsolvability of the Halting Problem to incompleteness and undecidability
+
+We already know from the unsolvability of the halting problem that there is no
+complete maths: Whether a Turing Machine halts on a given input is a
+mathematical question. (It's not a question in engineering!) If there was a
+complete axiomatic theory of Turing Machines, we could try to derive that M
+halts on input x, while also trying to derive that M doesn't halt. One of these
+would yield a positive answer in a finite amount of time.
+
+\begin{exercise}
+I often see the halting problem misconstrued as "it's impossible to
+tell if a program will halt before running it." This is wrong. The halting
+problem says that we cannot create an algorithm that, when applied to an
+arbitrary program, tells us whether the program will halt or not. It is
+absolutely possible to tell if many programs will halt or not.
+\end{exercise}
+
+\section{Decidable sets and relations}
+
+% ** Decidable sets
+
+\begin{definition}{Decidable Sets}{decidable-sets}
+Terminology: a set is \emph{(effectively) decidable} if there is an algorithm that
+can determine whether something is in the set or not.
+\end{definition}
+
+\begin{exercise}
+Is the set of even numbers decidable? Is the set of prime numbers decidable?
+\end{exercise}
+
+% ** Characteristic functions
+
+A set is decidable iff its characteristic function is effectively computable.
+
+% ** Finite sets are always decidable
+
+Note that finite sets are always decidable.
+
+If we allowed the rules/programs to be infinite, even infinite sets would be decidable. We don't.
+
+% ** Decidable relations
+
+We can generalize the concept of decidability to relations. A binary relation is decidable if there is an algorithm that can determine whether it applies to any given pair.
+
+\section{Recursive enumerability}
+
+% ** Semidecidable sets
+
+\begin{definition}{Effectively Enumerable Sets}{effectively-enumerable}
+A set is \emph{effectively enumerable} if there is an algorithm that can enumerate
+its elements, i.e., list them one by one. Equivalently, there is an effectively
+computable function that outputs 'yes' for every element in the set, and never
+for an element not in the set.
+\end{definition}
+
+Similarly for relations.
+
+Effectively enumerable sets are also called \textit{semidecidable} or \textit{recursively enumerable} -- for short, \textit{r.e.}.
+
+% ** Example: r.e. but not decidable
+
+Some sets are undecidable but r.e. For example, the set of all Turing machines
+that halt on a given input is r.e. but not decidable. We can enumerate the
+machines that halt, but we cannot decide whether a given machine halts.
+
+% ** Definition from recursive relations
+
+\begin{theorem}{R.E. from Decidable Relations}{re-from-decidable}
+If $R$ is a decidable (two-place) relation, then the set of all $x$
+such that $\exists y R(x,y)$ is r.e.
+\end{theorem}
+
+\begin{proof}
+To check whether a number $n$ is in the set, we compute $R(n,0), R(n,1),
+R(n,2)$, and so on. If $n$ is in the set, we will eventually find this answer.
+(If it isn't, we won't.)
+\end{proof}
+
+The converse is true as well:
+
+\begin{theorem}{Decidable Relations from R.E.}{decidable-from-re}
+If S is r.e. then there is a recursive relation $R$ such that $x\in S$ iff $\exists y R(x,y)$.
+\end{theorem}
+
+\begin{proof}
+If $S$ is r.e. then there's a machine that enumerates $S$. The relation
+$R$ is the relation that holds between $x$ and $y$ iff the machine has produced
+$y$ among the first $x$ items.
+\end{proof}
+
+This second proposition can be used to formally define the concept of r.e.
+
+% ** Kleene's theorem
+
+\begin{theorem}{Kleene's Theorem}{kleenes-theorem}
+If a set and its complement are both r.e. then the set is
+recursive.
+\end{theorem}
+
+BBJ 82.

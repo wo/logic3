@@ -1,0 +1,266 @@
+\chapter{Representability}
+
+Goldfarb ch.4
+
+\section{Robinson Arithmetic}
+
+% ** Preview Goedel
+
+We'll now prove Goedel's incompleteness theorem for arithmetic. Why arithmetic?
+Two reasons. (a) It's a simple, familiar branch of maths. If arithmetic can't be
+completely axiomatized then obviously more powerful theories can't either. (b)
+In a sense, arithmetic is the computational fragment of maths: computations on
+any domain can be encoded as arithmetic computations.
+
+Once we've shown that every recursive function is expressible in $L_{A}$, what
+remains to be shown is that if we code the elements of other domains as numbers,
+computable operations on these domains will be recursive operations on numbers.
+
+% ** Q
+
+The theory Q as a toy arithmetical theory.
+
+Review: What do models of Q look like? Are all models isomorphic? If so, Q is complete, by completeness of predicate logic!
+
+But Q has nonstandard models. It is incomplete, and that's not hard to see.
+Gödel's proof of the incompleteness of Q also works for any \textit{stronger} theory,
+including PA and ZFC, whose incompleteness is much harder to spot.
+
+% % ** Q knows all basic $\mathrm{\Delta_{0}$ truths}
+
+We can ask what Q knows about the numbers. Does it know that 2+2=4? Yes. It knows all atomic facts about addition and multiplication.
+
+It means that Q can prove all true $\mathrm{\Delta}_{0}$ sentences.
+(And so also all true $\mathrm{\Sigma}_{0}$ sentences.)
+
+% ** Semantic incompleteness?
+
+[Representability is only needed for the syntactic incompleteness theorem. I
+might combine the discussion of Q with the semantic incompleteness theorem into
+a first chapter? We'll then define two versions of the diagonal lemma in
+successive chapters, but maybe that's not so bad.]
+
+\section{Expressibility}
+
+% ** Defined expressions in the language of arithmetic
+
+The language $L_A$ is very poor.
+That's deliberate.
+We can define other concepts in terms of addition, multiplication, successor.
+That's considered better than having them all primitive.
+
+Compare how we defined $\land$ and $\lor$ in propcal.
+
+Can you define exponentiation?
+
+% ** Expressing factorial
+
+All recursive functions are expressible in the language of arithmetic.
+
+Try to translate $x^2 < y!$. [This could be an exercise, with a warning that
+it's very very hard.]
+
+$x^2$ and $<$ are easy. How do we translate $x!$? We'll translate this not into
+a function expression but into a formula $F(x,y)$ that holds between $x$ and $y$
+iff $x! = y$. That's OK, because we can then translate $x^2 < y!$ as, say, $\forall
+y(F(x,y) \to x^2 < y)$.
+
+The trick is to see the p.r. definition of ! as defining a sequence.
+
+Let $\text{fact}_{k}$ be the sequence $0!\ldots k!$ Our formula $F(x,y)$ will say that $y$ is in
+$k$th element of $\text{fact}_{k}$.
+
+Let's pretend, for now, that we variables $\sigma$ for sequences of numbers, and we
+have an operation that allows extracting the items of the sequence.
+
+We can define the sequence $\text{fact}_{k}$ as follows: $\sigma$ is $\text{fact}_{k}$ iff $\sigma[0] = 1 \land \forall
+x<k(\sigma[x+1] = \sigma[x] \cdot (x+1))$. This is expressible in $L_{A}$.
+
+Now we only need to code sequences of numbers into numbers such that we can access their elements.
+The access function is called $\beta$. So if s codes $\sigma$ then $\beta(s,i) = \sigma[i]$.
+
+% ** Coding sequences
+
+\section{Representability}
+
+% ** x+y captures addition in Q
+
+Remember that Q can prove all particular facts about addition.
+
+This means that x+y \textit{captures} addition.
+
+Remember that + and * are arbitrary symbols. They don't come with a built-in meaning (unlike $\land$ and $\neg$). It's really $f_{1}(x,y)$ that captures x+y.
+
+% ** Capturing factorial
+
+We've seen that there's a formula $F(x,y)$ that expresses the factorial
+function, in the sense that $F(n,m)$ is true iff $x!=y$. This connection between
+$F$ and the factorial function, however, relies on the meaning of the arithmetic
+expressions 0, +, *, s. A formal theory is just a set of expressions. It doesn't
+"know" what they mean. So while it is \textit{true} that, for example, $F(3,6)$, and
+not that $F(3,7)$, a formal theory may say the opposite.
+
+We'll be interested in what a theory entails about factorials, or about other
+recursive notions -- in particular, about proofs. To this end, we must find
+expressions in the language that not merely \textit{express} these functions, but
+\textit{represent} them. The empty theory, for example, says nothing about
+factorialhood, because there's no expression that represents it.
+
+% ** All recursive functions can be captured in Q
+
+% ** Recursive non-numerical sets and relations
+
+We've talked about numerical functions and relations.
+
+Derivatively, an arbitrary set of things is called recursive (or r.e.) if the
+set of their code numbers is recursive (or r.e.), given some effective method of
+coding.
+
+\section{Arithmetization of syntax}
+
+% ** Preview: arithmetization and Godel's theorem
+
+Hilbert had the insight that we can study proofs in, say, PA as mathematical
+objects. What branch of maths do we need? Proof theory. But we can interpret
+proof theory in set theory. Indeed, Gödel saw that we can interpret it in
+arithmetic.
+
+We'll code sentences and proofs as numbers. We'll find a p.r. predicate Prf that
+holds between x and y iff x codes a PA-proof (or Q-proof etc.) of the sentence
+coded by y.
+
+% ** Coding $L_A$ strings -- coding sequences
+
+We're interested in properties and relations on $L_A$ strings. So we need to code
+these as numbers.
+
+We've talked about coding strings in ch.6. There I suggested that we can code an
+$L_A$ string in two steps.
+
+First, we assign a code number to each $L_A$ symbol. For example
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+Symbol & $\neg$ & $\to$ & $=$ & $\forall$ & $0$ & $s$ & $+$ & $\times$ & $($ & $)$ & $,$ & $x_{1}$ & $x_{2}$ & $\ldots$ \\
+\hline
+Code & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & $\ldots$ \\
+\hline
+\end{tabular}
+\end{center}
+
+Then we code formulas, which are sequences of symbols. Code numbers of formulas
+are called Gödel numbers.
+
+Since we have coded each symbol by a number, we need to code sequences of
+numbers. We can use the prime factor decomposition technique from the previous
+section. Take the string '$0 = 0$'. This will be coded as $2^5 \times 3^3 \times 5^5$, or
+2345xxx.
+
+In general, let $p_{i}$ be the $i$-th prime. Then the gn of a string $a_{1} \ldots a_{n}$
+of symbols is
+
+\[
+ p_{1}^{a_{1}} \cdot p_{2}^{a_{2}} \cdots p_{n}^{a_{n}}.
+\]
+
+(The empty sequence is coded by the empty product, 1.)
+
+Given these two methods, it is possible to code an arbitrary expression of the language by a single number: first, replace each symbol s by it symbol number \#(s). This way a sequence of symbols becomes a sequence of numbers. Second, using the above powers of primes coding, associate to this sequence of numbers a unique single number as its code.
+
+The Gödel number of a formula (sentence, derivation) A is denoted by $\ulcorner A\urcorner$. E.g.
+
+\[
+\langle 0 = 0 \rangle = 2^{5} \cdot 3^{5} = 243.
+\]
+
+% ** Syntactic categories are p.r.
+
+We can now define arithmetical predicates that indirectly talk about $L_A$ strings. E.g., "the first symbol of the string coded by x is '$0$'". This holds of a number x if and only if the first exponent is 5, the Gödel number of '$0$'.
+
+Define:
+
+\textit{Var(x)} for "x codes a variable symbol in $L_A$".
+
+Define:
+
+\textit{Term(x)} for "x codes a term in $L_A$".
+
+This is p.r.: we need to check if x codes 0 or a variable of a sequence beginning with '$s($' followed by a term followed by '$)$'.
+
+\textit{Formula(x)} for "x codes a formula in $L_A$".
+
+This is directly definable by primitive recursion.
+
+% ** Substitution is p.r.
+
+Define the substitution function \textit{sub(x,v,t)} that takes a code number x of a
+formula and a code number v of a variable and t of a term, and returns the code
+number of the formula obtained by substituting the term for all occurrences of
+the variable in the formula.
+
+This is tedious but mechanical to construct.
+
+Algorithm: walk through the sequence coded by x; whenever you meet the
+single-symbol sequence v that is free (check the binding structure on the fly)
+splice in the code for t. All the operations "read symbol i", "write symbol",
+"concatenate" and "test bound/free" are p.r.
+
+% ** Prf is p.r.
+
+A mathematical proof consists of a sequence of formulas. So Gödel gave every sequence of formulas a unique Gödel number too. In this case, he starts with the list of prime numbers as before — 2, 3, 5 and so on. He then raises each prime to the Gödel number of the formula at the same position in the sequence ($2^{243,000,000} \times \ldots$, if $0 = 0$ comes first, for example) and multiplies everything together.
+
+We can now define a p.r. predicate Prf(x,y) that holds between x and y iff x codes a proof of the sentence coded by y from the axioms of Q.
+
+A finite sequence of $L_A$-strings is a proof if each item satisfies one of the following conditions:
+
+\begin{enumerate}[label=(\roman*)]
+\item it is an axiom of Q;
+\item it is a logical axiom;
+\item it follows from earlier items by MP
+\item it follows from earlier items by HG
+\end{enumerate}
+
+The corresponding predicate Pr(x) is p.r.
+
+(What if we replace Q by another theory? Doesn't matter if the theory is finitely axiomatizable. The proof also works for PA, which is p.r. axiomatized.)
+
+We can define Prf(x,y) as: Pr(x) and Last(x)=y.
+
+This is called the \textit{gödel number} of the string.
+
+% ** Cryptographic functions
+
+We can then define numerical functions that operate on code numbers. For
+example, we can define a function $len(x)$ that takes returns the length of
+string coded by a code number $x$.
+
+We can then define a numerical predicate $sent(x)$ that applies to a number $x$
+iff $x$ codes an $L_A$-sentence.
+
+By a lazy application of Church's Thesis, all these functions are recursive.
+We've actually shown this for some of them in the previous chapter, where we've
+shown that they are in fact p.r..
+
+Key propositions about pr functions:
+
+\begin{enumerate}
+\item Sent(x) is recursive. [BBJ 15.2]
+\item Prf(x,y) is recursive.  [BBJ 15.3]
+\end{enumerate}
+
+Proof sketch
+
+% ** Set of consequences from rec set of axioms is r.e.
+
+An interesting consequence: the set of sentences deducible from a rec set of axioms is r.e. (BBJ 15.4)
+
+% ** Recursive axiomatizability
+
+\begin{definition}{Recursive Axiomatizability}{recursive-axiomatizability}
+A theory is \emph{recursively axiomatizable} if it contains all and only the sentences derivable from some recursive set of axioms. Q and PA and ZFC are recursively axiomatizable.
+\end{definition}
+
+\begin{exercise}
+Show that if a theory is r. ax. and complete then it is decidable. (appeal lazily to Church's Theorem)
+\end{exercise}

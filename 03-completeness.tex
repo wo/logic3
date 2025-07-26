@@ -1,0 +1,193 @@
+\chapter{Completeness}
+
+In this chapter, we meet some important metalogical results. The first is the completeness theorem. This shows that different approaches to first-order logical consequence coincide. It shows that there is a mechanical way to check for first-order entailment. This is a great strength of first-order logic (not shared by second-order logic). But it is tightly connected to some limitations: compactness and Löweheim-Skolem.
+
+\section{Soundness}
+
+ If Σ $\vdash$ φ, then Σ $\models$ φ.
+
+
+\begin{exercise}
+Can we still use soundness to prove consistency of the axiomatization? Yes.
+\end{exercise}
+
+\section{Completeness preview}
+
+We'll prove completeness. This will make it plausible that all mathematical
+reasoning can indeed be the captured in our first-order calculus. Almost all
+mathematical statements can be expressed in a suitable first-order language.
+Before Gödel's completeness proof, it was known that a lot of ordinary
+mathematical inferences could be replicated in the first-order calculus that
+we've reviewd in the previous chapter, but it was an open question whether this
+is true for all such inferences. The completeness proof provides strong evidence
+for a positive answer. It shows that any form of inference that \emph{can't} be
+replicated in the first-order calculus can lead from true premises to false
+conclusions.  % BBJ 185
+
+Completeness is surprising.
+Think about the usefulness of the semantic conception of entailment.
+Any model where this is true is a model where that is true.
+No need to posit a finite derivation.
+Model-theoretic validity is a highly infinitary notion. Why should it map onto finitary proofs?
+(We seemingly need to check every possible model.)
+
+More dramatically:
+suppose I like the number 1, the number 2, the number 3, etc.
+It follows model-theoretically that I like all numbers.
+But proofs are finite.
+So you can't prove the conclusion from the premises.
+
+Yet we have completeness for FOL!
+
+What about the numbers argument?
+This argument isn't \textit{logically} valid.
+It's \textit{arithmetically} valid, we might say:
+valid given the standard meaning of the arithmetical terms.
+Arithmetical entailment is not mirrored by any finite proof system!
+
+The proof of completeness will proceed much like in ch.1.
+
+\begin{exercise}
+Which, if any, of these statements are correct? (1) The soundness theorem implies that every sentence provable from the Peano axioms is a true sentence of arithmetic; (2) The completeness theorem implies that every true sentence of arithmetic is provable from the Peano axioms. [yes/no]
+\end{exercise}
+
+\section{Completeness proof}
+
+We'll use not Gödel's technique, but Henkin's. We've already used this tehnique
+in ch.1. It works for a wide range of logics. In overview, it goes like this.
+
+The proof is by contraposition. That is, we assume $\Gamma \not\vdash A$ and show that, in any such case, $\Gamma \not\models A$.
+
+\begin{enumerate}
+\item Assume $\Gamma \not\vdash A$.
+\item Show $\Gamma \cup \{ \neg A \}$ is consistent.
+\item Show that $\Gamma \cup \{ \neg A \}$ can be extended to a maximal consistent set.
+\item Construct a model so that every sentence in the maximal consistent set is true in the model.
+\item Infer that $\Gamma \not\models A$.
+\end{enumerate}
+
+Why this fails for SOL: https://math.stackexchange.com/questions/4913675/how-completeness-fails-in-second-order-logic
+
+\section{Counting beyond infinity}
+
+We're going to prove some striking facts about the size of models, by which we
+mean the size of a model's domain. To state and appreciate these facts, we need
+to fill in some background about the sizes of sets.
+
+The official set theoretic term for size is \textit{cardinality}. The set \{ Frege \} has cardinality 1.
+
+Some sets have infinite cardinality. E.g. the set of natural numbers.
+Cardinality is called $\aleph_0$.
+
+Two sets are equipollent iff there is a 1-1 bijection between them. This is one
+reasonable way to defining "same size". So all such sets have the same
+cardinality.
+
+E.g. odd numbers and all numbers.
+
+But some sets have greater cardinality. Cantor's Theorem for the set of sets of
+natural numbers. Greater than $\aleph_0$.
+
+\begin{definition}{Enumerable and Denumerable Sets}{enumerable}
+A set is \emph{enumerable} if its size is not greater than $\aleph_0$. \emph{Denumerable} if
+its size is $\aleph_0$.
+\end{definition}
+
+\section{Compactness and Skolem-Löwenheim}
+
+Now let's consider the sizes of models. Consider $\exists x \exists y(x\not=y)$. Any model of this must have at least size 2. Its negation only has models with size 1.
+
+\begin{exercise}
+Find a sentence with model size at least 3 and at most 2.
+\end{exercise}
+
+Here's a set of sentences with only infinite models: xxxx [e.g. BBJ 138]
+
+Any adequate, formalized theory of natural numbers will only have infinite
+models. One might similarly think that any adequate, formalized theory of real
+numbers will only have non-enumerable models.
+
+\begin{theorem}{Löwenheim-Skolem}{lowenheim-skolem}
+[Statement to be filled in]
+\end{theorem}
+
+\begin{theorem}{Compactness}{compactness}
+[Statement to be filled in]
+\end{theorem}
+
+The word 'compact', in this use, is inherited from topology,
+
+This means that if we have an inconsistency or an entailment which holds just
+because of the truth- functors and quantifiers involved, then it is always due
+to a finite number of the propositions in question.
+
+This is surprising, for it is easy to mention examples
+where all of infinitely many assumptions would be needed in order to jus-
+tify some consequence. Here is a very simple one. Consider the infinite set
+of assumptions
+(1) a is not a parent of b;
+(2) a is not a parent of a parent of b;
+(3) a is not a parent of a parent of a parent of b;
+etc. From all these assumptions together there follows
+a is not an ancestor of b.
+But the conclusion is not entailed by any finite subset of the assumptions.
+The explanation, of course, is that this inference does not depend just on
+the truth-functors and quantifiers in the premisses and the conclusion, but
+also on the special relation between being a parent of and being an ancestor
+of. But it should be noted that this explanation brings with it an interesting
+consequence: the relation between being a parent of and being an ancestor
+of cannot itself be defined by using only the truth-functors and the quan-
+tifiers. For, if it could be so defined, then the definition could be added to
+the set of assumptions, and we should have an impossible situation. (If the
+definition is adequate, then the conclusion should follow from it, together
+with all the infinitely many other assumptions. But then, by compactness,
+the conclusion would also have to follow from a finite subset of those as-
+sumptions, which is absurd.) As a matter of fact the relation in question can
+be defined in what is called second-order logic
+
+Corollary: Every satisfiable set of sentences has a model whose domain is a set of natural numbers.
+
+\section{The Entscheidungsproblem}
+
+Move to beginning of ch.5?
+
+Suppose we wonder whether a sentence is valid.
+
+We can tackle this question from two directions.
+We could try to construct a proof.
+From the other direction, we could try to construct a countermodel.
+
+Completeness means that if the target sentence is valid then there \textit{is} a proof.
+And obviously,
+if the target sentence is invalid then there is a countermodel.
+But will we able to find one or the other?
+Is there an algorithm for doing so -- in principle?
+
+This is the Entscheidungsproblem.
+
+In general:
+A property P of strings is said to be decidable if ... there is a total Turing machine that accepts input strings that have property P and rejects those that do not.
+
+Here's an idea.
+Go through all possible proofs, with increasing length.
+If there is a proof of the target sentence, you'll eventually hit it.
+
+This means that there is an algorithm for establishing that a sentence is valid if it is valid.
+(This algorithm is horribly inefficient. We can do better. But the task is NP-complete.)
+
+This algorithm doesn't return anything if a sentence is invalid. It just runs forever.
+
+\begin{exercise}
+What if we simultaneously try out all models, with increasing size?
+\end{exercise}
+
+Models can be infinite. If a sentence has only infinite countermodels, our algorithm will never find them.
+
+It turns out that there is NO algorithm for deciding whether a sentence is invalid.
+This is called the \textit{undecidability} of predicate logic.
+
+To prove this, we need a general concept of algorithm. It won't do to just show
+that a given algorithm doesn't do the job. The problem was raise in 1928 by
+Hilbert and Ackerman, and prompted a search for a general concept of algorithms
+or computations. This concept was found in 1936. With it, the
+Entscheidungsproblem could be answered, negatively.

@@ -1,0 +1,1027 @@
+\chapter{Propositional Logic}
+
+\section{Syntax}
+
+% ** Preview
+
+We are going to introduce formal languages in which one can regiment
+mathematical and philosophical reasoning, without the distracting complexities
+and vagaries of natural languages.
+
+We begin with the language of propositional logic: the logic of the
+propositional connectives `$\neg$', `$\to$', `$\land$', `$\lor$', etc. This
+language is woefully inadequate for any serious applications, but it serves as a
+valuable prototype to introduce general ideas and techniques that we'll also use
+for more powerful languages.
+
+% We'll explain how the language works and how one can reason in it. Unlike in intro logic courses, we won't spend much time doing this. Instead, we'll consider some general properties of this calculus. We'll also explain the role of models in logic, and prove that the calculus is sound and complete with respect to a certain conception of models.
+
+% ** Syntax
+
+In classical propositional logic, all connectives can be defined in terms of
+`$\neg$' and `$\to$'. For reasons of economy, we will therefore assume that the
+language we're about to study -- our \textit{object language} -- has only these
+two connectives.
+
+Overall, the \emph{primitive expressions} of our propositional language fall
+into three kinds, whose instances must be distinct:
+%
+\begin{itemize*}
+\item a non-empty set of \textit{sentence letters},
+\item the \textit{connectives} `$\neg$' and `$\to$',
+\item the parentheses, `(' and `)'.
+\end{itemize*}
+
+The sentence letters as classified as \emph{non-logical} expressions. The other
+expressions are \emph{logical}. (The point of this classification will become
+clear in section \ref{sec:semantics0}.)
+
+\begin{definition}{}{L0}
+  A \emph{sentence} of $\L_{0}$ is a finite string of sentence letters and
+  connectives, built up according to the following formation rules:
+  \begin{enumerate*}
+    \item[(i)] Every sentence letter is a sentence.
+    \item[(ii)] If $A$ is a sentence, then so is $\neg A$.
+    \item[(iii)] If $A$ and $B$ are sentences, then so is $(A \to B)$.
+  \end{enumerate*}
+\end{definition}
+
+% ** Remark on metalanguage
+
+A few comments on this definition:
+
+\begin{enumerate}
+  \item I use `$A$' and `$B$' to stand for arbitrary sentences of $\L_0$. I will keep
+using capital letters from the beginning of the alphabet in this fashion, as
+variables in the metalanguage (in which these notes are written) to denote
+arbitrary sentences in the object language. I will sometimes use the lowercase
+letters `$p$' and `$q$' to denote arbitrary sentence letters.
+
+\item I haven't said what the sentence letters of $\L_{0}$ look like. It doesn't
+matter. Strictly speaking, $\L_{0}$ is therefore not a single language, but a
+family of languages, with different stocks of sentence letters.
+
+\item When I say `if $A$ is a sentence then $\neg A$ is a sentence', what I mean is
+that putting `$\neg$' in front of any $L_0$-sentence yields another
+$L_0$-sentence. That is, I use the expression '$\neg A$' to denote the
+object-language string that consists of the negation symbol followed by whatever
+string $A$ picks out. Similarly for `$(A \to B)$' and other such cases. It would
+be tedious to always write: `\,`(' followed by $A$ followed by `$\to$' followed
+by `)'\,'.
+% (This can be explained as follows: The metalanguage in which these notes are
+% written is an extended version of English in which the symbol '$\neg$' is sometimes
+% used as a name for itself, and in which concatenations of expressions that
+% denote expressions in the object-language, like '$\neg$' and '$A$', denote the
+% concatenation of these object-language expressions.)
+
+\end{enumerate}
+% \begin{exercise}
+% 'Distinct' is stronger than 'different'; it rules out overlapping
+% symbols. Explain why it might be problematic if we allowed for basic symbols
+% that have a part in common.
+% \end{exercise}
+
+\begin{exercise}
+How many sentences are there in $\L_{0}$?
+\end{exercise}
+
+% % ** Use and mention
+
+% It's important to not confuse use and mention. When we list some people, we do
+% this by listing the names of the people. We "use" a name to "mention" a person.
+% The more contemporary expression for "mention" is "refer to" or "talk about".
+% The object referred to is not part of the sentence.
+
+% This is less obvious when we talk about linguistic items. But here, two, we need
+% to distinguish between, say, the negation symbol `$\neg$' and various names for the negation symbol -- such as `the negation symbol' or ''$\neg$''.
+
+% ** Abbreviations
+
+Now for some notational shortcuts.
+
+\begin{enumerate}
+
+\item We introduce `$\land$', `$\lor$', and `$\leftrightarrow$' as metalinguistic abbreviations. That is, if $A$ and $B$ are $\L_{0}$-sentences, we write
+\begin{itemize*}
+\item $(A \land B)$ for $\neg(A \to \neg B)$;
+\item $(A \lor B)$ for $(\neg A \to B)$;
+\item $(A \leftrightarrow B)$ for $\neg ((A \to B) \to \neg(B \to A))$.
+\end{itemize*}
+
+  \item It is also convenient to have a zero-ary connective $\top$ that is
+        always true, and its dual $\bot$ that is always false. Where $A$ is an
+        arbitrary sentence letter (say, the alphabetically first), we write
+
+\begin{itemize*}
+\item $\top$ for $A \to A$;
+\item $\bot$ for $\neg(A \to A)$.
+\end{itemize*}
+
+\item Where no ambiguity threatens, we'll often omit parentheses. For example,
+    $A \to B$ is short for $(A \to B)$.
+
+\end{enumerate}
+
+% Note that these are not signs of the formal language, nor are they "defined signs
+% of the formal language" (whatever that would mean), nor are we proposing a new
+% formal language that incorporates them (although that, of course, could be done).
+% They are signs of the metalanguage, used to provide short names of long formulas.
+
+% We could, of course, have added the further connectives (and yet others) to the
+% language. This would have been convenient for using the language, but we'll be
+% much more concerned with proving facts \textit{about} L0, and for this, a smaller stock
+% of basic symbols is useful.
+
+% ** How to prove that infinitely many sentences have some property
+
+To conclude this section on the syntax of propositional logic, I want to
+introduce (or review) an important method of proof that we're going to use a
+lot.
+
+Suppose we want to show that every $\L_{0}$-sentence has a certain property.
+Since there are infinitely many sentences, we can't go through the sentences one
+by one. What we can do instead is this. We first show that all sentence letters
+have the property. This is called the \emph{base case}. [Hmm, still infinitely
+many]. Then we show that \emph{if} some sentences have the property \emph{then}
+so does every sentence built up from them by one of the formation rules in
+definition \ref{def:L0}. Since all sentences are built up from sentence letters
+by the formation rules, it follows that all sentences have the property.
+
+This is called a proof \emph{by induction}. More precisely, it is a proof by
+induction \emph{on complexity} of formulas because the proof works up from
+formulas of lowest complexity to formulas of higher complexity.%
+\footnote{%
+  This sense of `induction' is only loosely related to the kind of ``inductive
+  reasoning'' that is often contrasted with deductive reasoning.%
+}
+
+% ** Subformulae
+
+% Every formula is built up from sentence letters by finitely many applications of
+% the construction rules. Any formula that is formed in this construction process
+% is a \textit{subformula} of the resulting formula. The subformulae of a formula are the
+% parts of it that are themselves formulae.
+
+% ** Balanced parentheses proposition
+
+To illustrate the method, let's prove that every $\L_{0}$-sentence has an even
+number of parentheses.
+
+For the base case, we need to show that every sentence letter has an even number
+of parentheses. A sentence letter has zero parentheses. Zero is even. So the
+property holds for sentence letters.
+
+For the inductive step, we need to show that \textit{if} some sentences have an
+even number of parentheses then so does every sentence generated from these
+sentences by the formation rules in definition \ref{def:L0}. We need to consider
+two cases, because there are two formation rules.
+
+\begin{enumerate}
+\item[(i)] If $A$ has an even number of parentheses, then $\neg A$ has the same even number of parentheses.
+
+\item[(ii)] If $A$ and $B$ have an even number mf parentheses, then $(A \to B)$ has that same number plus two, which is still even.
+\end{enumerate}
+
+% ** Proof by induction
+
+The method of inductive proof can be applied not just to $\L_{0}$-sentences. Whenever a set of objects is generated from some base objects by finitely many applications of some operations, we can use the method to show that all of the objects have some property.
+
+% For example, all natural numbers are generated from 0 by application of the "add one" operation.
+
+\begin{exercise}
+  Prove by induction on complexity that in any $\L_{0}$-sentence $A$, the
+  initial symbol does not belong to any $\L_{0}$-sentence that is a proper part
+  of $A$. [Bostock pp52f.]
+\end{exercise}
+
+\begin{exercise}
+  Prove by induction on $n$ that a set consisting of $n$ elements has $2^n$
+  subsets, for all $n \geq 0$. (That is, first show that the claim holds for
+  $n=0$; then show that if it holds for some $n$ then it also holds for $n+1$.)
+\end{exercise}
+
+
+\section{The propositional calculus}
+
+% ** Proofs as derivations from axioms
+
+We want to formalize proofs in our language. What is a proof? The traditional
+answer is: a derivation from some axioms. More precisely, a \textit{proof} of a
+sentence A is a list of sentences, each of which is either an axiom or follows
+from [?] earlier sentences in the list by a rule of inference, and whose last
+element is $A$.
+
+% ** Axioms and rule of propcal
+
+We'll say that all instances of the following are \textit{logical axioms}.
+
+\begin{principles}
+\pri{A1}{A \to (B \to A)}\\
+\pri{A2}{(A \to (B \to C)) \to ((A \to B) \to (A \to C))}\\
+\pri{A3}{(\neg A \to \neg B) \to (B \to A)}
+\end{principles}
+
+Our only rule of inference is detachment or MP. It is again schematic:
+
+\begin{principles}
+\pri{MP}{\text{From }A\text{ and }A \to B\text{ one may infer }B.}
+\end{principles}
+
+The axioms and rules together are called an \textit{axiomatization}. The present
+axiomatization is due to Lukasiewicz; it is a simplification of Frege's first
+axiomatization.
+
+% ** Example proof
+
+Example: Here's a proof of p → p:
+
+\begin{align}
+&p \to ((p \to p) \to p) \tag{Instance of Axiom 1}\\
+&(p \to ((p \to p) \to p)) \to ((p \to (p \to p)) \to (p \to p)) \tag{Instance of Axiom 2}\\
+&(p \to (p \to p)) \to (p \to p) \tag{From 1, 2 by MP}\\
+&p \to (p \to p) \tag{Instance of Axiom 1}\\
+&p \to p \tag{From 3, 4 by MP}
+\end{align}
+
+% ** Independence of the axioms
+
+How could we know that all three axioms are needed? Bostock 195ff.
+Need to show that all formulas derivable with the others have some property that some instance of the axiom lacks. Typically, the property is "valid on some deviant interpretation". E.g., interpret ¬ as vacuous, then
+
+% ** The method is unnatural
+
+The example illustrates that our proof technique is hard. It is also unnatural
+because it focuses on logical truth. More often than not, when we turn to logic,
+we're interested in \textit{inference}: we want to know whether some conclusion follows
+from -- or can be logically derived from -- some premises, which aren't
+themselves logical truths. In the strict axiomatic method, one shows that some
+premises $A_1,...A_n$ entail $B$ by proving the conditional $(A_1 \land ...\land A_n) \to
+B$.
+
+% ** Deductions
+
+But our concept of proof is naturally generalized to handle derivations from
+non-logical premises.
+
+\begin{definition}{Deduction}{deduction}
+  A (propositional) \emph{deduction} of a sentence A from a set Γ ("gamma") of
+  sentences is a finite sequence of sentences whose last element is A and each
+  of which is either an axiom, an element of Γ, or follows from previous
+  sentences by MP.
+\end{definition}
+
+We write Γ $\vdash_{0}$ A to mean that there is a deduction of A from Γ. So $\{ p,q \} \vdash_{0}
+p$ is a sentence in our metalanguage saying that $p$ is deducible from the set
+containing $p$ and $q$. A proof, as defined above, is a deductions from the
+empty set of premises. We write $\vdash_{0} A$ to say that there is a proof of $A$ in
+our calculus.
+
+% ** Structural properties of deductions
+
+The following "structural principles" immediately follow from definition xxx.
+
+\begin{principles}
+\pri{Assumptions}{\text{For all sentences }A\text{, }A \vdash A}\\
+\pri{Monotonicity or Thinning}{\text{For all sets of sentences }\Gamma\text{ and sentences }A\text{, If }\Gamma \vdash A\text{ then }\Gamma \cup \{ B \} \vdash A}\\
+\pri{Cut}{\text{For all ... If }\Gamma \vdash A\text{ and }\Delta,A \vdash B\text{ then }\Gamma,\Delta \vdash B}
+\end{principles}
+
+$\Delta \cup \Gamma$ is the \textit{union} of $\Gamma$ and $\Delta$. (The union of two sets is the set that contains all and only elements that are in either of the sets.) To remove cutter, we will henceforth remove the parentheses and write a comma instead of $\cup$. We'll also omit the metalinguistic quantifiers over sentences. I.e., we'll write
+
+Assumptions: $A \vdash A$
+...
+
+\begin{exercise}
+Explain why these principles follow.
+\end{exercise}
+
+% ** Modus Ponens
+
+The fact that MP can be used to extend deductions means that we also have the
+following principle:
+
+\begin{principles}
+  \pri{MP$^{*}$}{\text{If }\Gamma \vdash A\text{ and }\Gamma \vdash A \to B\text{ then }\Gamma \vdash B}
+\end{principles}
+
+% ** Deduction theorem
+
+The following theorem, due to Herbrand (1930), shows that every deduction can be converted into a proof.
+
+\begin{theorem}{Deduction Theorem}{deduction-theorem}
+  If $\Gamma,A \vdash B$ then $\Gamma \vdash A \to B$.
+\end{theorem}
+
+\begin{proof}
+By induction. Machover pp.122f. or Bostock p.203.
+\end{proof}
+
+I said that the theorem shows that every deduction can be converted into a
+proof. For suppose there is a deduction of B from A1...An. Then we can move the
+used premises to the right.
+
+Note that we needed MP and ax.1 and ax.2. From the DT and MP, one can prove ax 1
+and ax 2.
+
+\begin{exercise}
+The converse of the DT is true as well. [It's equivalent to MP, in fact. Bostock 207]
+\end{exercise}
+
+% ** Example meta-derivation
+
+With the help of the deduction theorem, we can show that $A\to B, B \to C \vdash A \to C$:
+[Argh, I use this example later for sequent/ND. Also has the wrong format.]
+
+\begin{enumerate*}
+\item $A \to B \vdash A \to B$   (Ass.)
+\item $B \to C \vdash B \to C$   (Ass.)
+\item $A \vdash A$ (Ass.)
+\item $A, A \to B \vdash B$    (1,3, MP)
+\item $A,A \to B, B \to C \vdash C$ (2,4, MP)
+\item $A \to B, B \to C \vdash A \to C$ (5, DT)
+\end{enumerate*}
+
+This is not a deduction. It shows that a deduction exists.
+
+\begin{exercise}
+Show in the same way that A1 and A2 are provable. [Bostock 206f.]
+\end{exercise}
+
+The exercise shows that if we're only interested in whether a deduction or proof exists, we never need to look at A1 and A2 any more.
+
+% ** Negation rules
+
+Now for some facts about negation:
+
+\begin{theorem}{Ex Falso Quodlibet}{ex-falso}
+If Γ $\vdash$ A and $\Gamma \vdash \neg A$, then Γ $\vdash$ B
+\end{theorem}
+
+\begin{proof}
+\begin{enumerate*}
+\item Γ $\vdash$ A
+\item Γ $\vdash$ $\neg$ A
+\item $\Gamma, \neg B \vdash \neg A$ (2, Mon)
+\item Γ $\vdash$ $\neg B \to \neg A$ (3, DT)
+\item $\vdash (\neg B \to \neg A) \to (A \to B)$ (A3)
+\item Γ $\vdash$ $A \to B$ (3,5, MP)
+\item Γ $\vdash$ B (1,6, MP)
+\end{enumerate*}
+\end{proof}
+
+\begin{theorem}{Double Negation Elimination}{dne}
+If Γ $\vdash$ $\neg\neg A$ then Γ $\vdash$ A.
+\end{theorem}
+
+\begin{proof}
+\begin{enumerate*}
+\item Γ $\vdash$ $\neg\neg A$
+\item Γ, $\neg A \vdash \neg\neg A$ (1, Mon)
+\item Γ, $\neg A \vdash \neg A$ (Ass)
+\item Γ, $\neg A \vdash A$ (1,2, EFQ)
+\item Γ $\vdash$ $\neg A \to A$ (4, DT)
+\item Γ,A $\vdash$ A (Ass, Mon)
+\end{enumerate*}
+???
+Need to get to:
+6. Γ $\vdash$ $\neg A \to \neg(\neg A \to A)$
+See Bostock 209f.
+\end{proof}
+
+\begin{theorem}{Reductio ad Absurdum}{raa}
+If Γ,A $\vdash$ B and Γ,A $\vdash$ $\neg B$, then Γ $\vdash$ $\neg A$.
+\end{theorem}
+
+\begin{proof}
+\begin{enumerate*}
+\item Γ,A $\vdash$ B
+\item Γ,A $\vdash$ $\neg B$
+\item Γ,A $\vdash$ $\neg A$ (1, 2, Ex Falso)
+\item Γ $\vdash$ $A \to \neg A$ (3, DT)
+\item $\neg\neg A \vdash \neg\neg A$
+\item $\neg\neg A \vdash A$ (5, DNE)
+\item Γ $\vdash$ $\neg A$ (4,6,MP)
+\end{enumerate*}
+\end{proof}
+
+% This is intuitionistically valid, so there should be a derivation without DNE,
+% but it's hard to find one.
+
+% \begin{theorem}{Indirect Proof}{indirect}
+% If Γ,$\neg α \vdash \bot$ then Γ $\vdash$ α.
+% \end{theorem}
+
+\begin{exercise}
+Show that $\Gamma \vdash \bot$ iff there is a sentence $A$ for which $\Gamma \vdash A$ and $\Gamma \vdash \neg A$. [needed in completeness.]
+\end{exercise}
+
+% ** Axioms are less important that deduction principles
+
+With DT and MP, we never need to look at A1 and A2 any more. With RAA and DNE added, we don't need to invoke A3.
+
+The axioms are somewhat arbitrary. The heart of the propositional calculus
+consists in the structural deduction principles Assumptions, Monotonicity, Cut, MP, DT, RAA, and DNE.
+
+\begin{exercise}
+  Show:
+  \begin{enumerate*}
+    \item[(a)] $A \to \neg A \vdash \neg A$ % Bostock 211
+    \item[(b)] $A \vdash \neg\neg A$ % dito
+  \end{enumerate*}
+\end{exercise}
+
+\begin{exercise}
+  Show, by first expanding the definition of $\land$:
+  \begin{enumerate*}
+    \item[(a)] $\text{If }\Gamma \vdash A\text{ and }\Gamma \vdash B\text{ then }\Gamma \vdash A \land B$
+    \item[(b)] $\text{If }\Gamma \vdash A \land B\text{ then }\Gamma \vdash A\text{ and }\Gamma \vdash B$
+    % \pri{$\lor$I}{\text{If }\Gamma \vdash A\text{ or }$\Gamma \vdash B$\text{ then }\Gamma \vdash A \lor B}\\
+    % \pri{$\lor$E}{\text{If }\Gamma \vdash A \lor B\text{ and }\Gamma, A \vdash C\text{ and }\Gamma, B \vdash C\text{ then }\Gamma \vdash C}
+ \end{enumerate*}
+\end{exercise}
+
+% ** Non-classical logics
+
+The principles we've introduced so far determine \textit{classical} propositional
+logic. By varying the principles, we can obtain other logics. \textit{Intuitionistic
+logic}, for example, rejects DNE. It is motivated by a "constructivist"
+philosophy of mathematics according to which mathematical statements describe
+the results of mental constructions, rather than an independent realm of
+mathematical facts. To say that a statement is false, on this view, is to say
+that there is no way demonstrate its truth. $\neg\neg A$ therefore means that one
+can't demonstrate that one can't demonstrate $A$; and this doesn't entail that
+one can demonstrate $A$.
+
+A wide class of \textit{substructural logics}, for examples, ...
+
+\textit{Relevance logic} rejects monotonicity and explosion.
+The guiding intuition is that the conclusion of a good proof must be genuinely connected to the premises.
+Monotonicity fails because every premise must be used.
+Contradictions don't allow deriving arbitrary propositions.
+
+\textit{Paraconsistent logic} gives up Explosion.
+
+IP proofs are common in maths. But they are a bit strange.
+If we wan to know why α follows from Γ,
+finding out that its negation leads to contradiction with Γ is not very informative.
+We'd like to assume Γ and derive α directly,
+learning more and more about what Γ worlds look like along the way.
+This aesthetic point becomes important if we assume that
+we're not describing an independent reality.
+
+Note that in int logic ∨ and ∧ can't be defined in terms of conditional and negation!
+...
+
+% ** A sequent calculus
+
+Return to our main thread.
+
+Our metalinguistic arguments can be seen as a different type of calculus.
+It is a version of \textit{the sequent calculus}.
+Here, we use the "shortcuts" not as means to show that there is a Hilbert proof,
+but as their own set of rules.
+In this calculus, each line is a \textit{sequent} $\Gamma \Rightarrow B$.
+To show that $B$ follows from $\Gamma$, one tries to derive the sequent $\Gamma \Rightarrow B$.
+We use the double right arrow instead of the turnstile because the turnstile means that B is deducible from $A_1,\ldots,A_n$,
+In a sequent calculus, one shows $A_1,\ldots,A_n \vdash B$ by deriving the sequent $A_1,\ldots,A_n \Rightarrow B$.
+
+% Not treating the list on the left as a set, we need to explicitly state some
+% more rules that we got for free before: repetitions and arrangement don't
+% matter.
+
+Each line is either an \textit{Assumption}, of the following form,
+
+\begin{principles}
+  \pri{Ass}{\Gamma, A \Rightarrow A}
+\end{principles}
+
+or follows from previous lines by one of the rules, which are:
+
+% BBJ 183 list (essentially) these rules and states that they are sound and complete.
+
+\begin{principles}
+  \pri{Cut}{\text{From }\Gamma \Rightarrow A\text{ and }\Delta,A \Rightarrow B\text{ infer }\Gamma,\Delta \Rightarrow B.}\\
+  \pri{MP}{\text{From }\Gamma \Rightarrow A\text{ and }\Gamma \Rightarrow A \to B\text{, infer }\Gamma \Rightarrow B.}\\
+  \pri{DT}{\text{From }\Gamma, A \Rightarrow B\text{, infer }\Gamma \Rightarrow A \to B.}\\
+  \pri{RAA}{\text{From }\Gamma, A \Rightarrow B\text{ and }\Gamma, A \Rightarrow \neg B\text{, infer }\Gamma \Rightarrow \neg A.}\\
+  \pri{DNE}{\text{From }\Gamma \Rightarrow \neg\neg A \text{, infer }\Gamma \Rightarrow A.}
+\end{principles}
+
+Note that we no longer get the structural rules of Assumptions, Monotonicity,
+and Cut for free, as we did when we used the turnstile. The required parts of
+Assumptions and Monotonicity have been folded into the 'Ass' rule. The Cut rule
+turns out to be redundant: Gerhard Gentzen (1934) showed that any derivation
+using Cut can be transformed into a (possibly much longer) cut-free derivation.
+
+To see how this sequent calculus works, here is a simple schematic derivation,
+showing that $A \to B$ and $B \to C$ together entail $A \to C$.
+
+\[
+\begin{array}{rcl}
+ 1.& A\!\to\! B,\; B\!\to\! C,\; A \Rightarrow A\!\to\! B& \text{ Ass}\\
+ 2.& A\!\to\! B,\; B\!\to\! C,\; A \Rightarrow B\!\to\! C& \text{ Ass}\\
+ 3.& A\!\to\! B,\; B\!\to\! C,\; A \Rightarrow A         & \text{ Ass}\\
+ 5.& A\!\to\! B,\; B\!\to\! C,\; A \Rightarrow B         & \text{MP 1,3}\\
+ 7.& A\!\to\! B,\; B\!\to\! C,\; A \Rightarrow C         & \text{MP 2,5}\\
+ 8.& A\!\to\! B,\; B\!\to\! C      \Rightarrow A\!\to\! C& \text{DT 7}
+\end{array}
+\]
+
+When writing out this kind of derivation, it becomes tedious to repeat the same
+assumptions on the left over and over. In introductory logic textbooks, one
+often finds proofs that look more like this:
+
+\[
+\begin{fitch}
+\fa A\to B          & \text{Premise}\\
+\fa B\to C          & \text{Premise}\\
+\fh A               & \text{Assumption}\\
+\fa B               & \to\!\text{E}\;1,3\\
+\fa C               & \to\!\text{E}\;2,4\\
+\fa A\to C          & \to\!\text{I}\;3\text{–}5
+\end{fitch}
+\]
+
+This is really the same proof, just written in a more convenient style. The
+correspondence between the two styles becomes apparent if you read the formulas
+to the left of `$\Rightarrow$' in the sequent derivation as the list of
+currently undischarged assumptions in the Fitch proof.
+
+This is a form of Natural Deduction. The rules are called ``introduction'' and
+``elimination'' rules. MP is $\to$E. DT yields $\to$I. RAA is $\neg I$. EFQ is
+$\neg E$. Full natural deduction systems usually include designated rules for
+the other connectives, mirroring what you've established in exercise xxx above
+for the case of $\land$.
+
+% ** Tableau
+
+You may also be familiar with \textit{tableau proofs} or \emph{tree proofs}.
+These, too, can be seen as variations on sequent proofs, with all sentences
+pushed to the left of the arrow, and the proofs written upside down in a tree
+format.
+
+All these techniques are equivalent in the sense that if any of them allows
+showing that $\Gamma \vdash A$ then so do all the others. For practical
+applications, natural deduction and tableau proofs are often the most
+convenient, but -- as I said -- we'll rarely spell out object-level derivations
+in the following chapters.
+
+% ** Rules for other connectives
+
+\section{Semantics}\label{sec:semantics0}
+
+% ** Inferential role semantics and truth-conditional semantics
+
+You may have noticed that I have introduced the language L0 without saying
+anything about what the expressions of the language mean. Introductory logic
+texts often suggest that '$\neg$' and '$\to$' have (roughly) the same meaning as the
+English 'not' and 'if ... then'. But we haven't built any such connection to
+English into the construction of L0. In this chapter, we're going to give a
+formal theory of meaning for L0.
+
+The status of this kind of theory is philosophically controversial. Some hold
+that the meaning of a logical expression is given by the rules for reasoning
+with the expression, and we've already described these rules in the previous
+chapter. This approach to meaning is sometimes called \textit{inferential role
+semantics}. (\textit{Semantics} is the study of meaning.)
+
+The kind of theory we're going to describe is a form of \textit{truth-conditional
+semantics}. The guiding idea of truth-conditional semantics is that the meaning
+of a sentence can be given by stating what (typically non-linguistic) conditions
+must be satisfied for the sentence to be true. The German sentence 'Schnee ist
+weiss', for example, is true iff snow is white, and arguably this information
+captures the core of its meaning. The meaning of sub-sentential expressions like
+'weiss' or '$\neg$' and '$\to$' is given by their contribution to the
+truth-conditions of sentences in which they occur.
+
+% ** Truth-conditions for sentence letters
+
+If we apply this approach to L0, we first need to assign truth-conditions to the
+sentence letters. To a first approximation, this might look as follows:
+
+\begin{quote}
+p : snow is white\\
+q : grass is blue
+\end{quote}
+
+Here I give the truth-conditions with the help of English sentences. This is not
+ideal, because English sentences generally don't have fully precise and
+determinate truth-conditions. It isn't clear what, exactly, must be the case for
+'snow is white' to be true. Fortunately, we'll see in a moment that we don't
+need to worry about this problem because we won't actually need to assign a
+meaning to the sentence letters at all.
+
+% ** Recursive definition of truth for complex sentences
+
+Next, we need to explain how the logical operators contribute to the
+truth-conditions of sentences in which they occur. This is the important part.
+We do this inductively.
+
+\begin{enumerate*}
+\item $\neg A$ is true iff A is not true.
+\item A→ B is true iff A is not true or B is true.
+\end{enumerate*}
+
+To see what this is saying, suppose I had managed to assign precise
+truth-conditions to the sentence letter $p$. We would then know, for any
+conceivable scenario -- for any way the world might be -- whether $p$ is true in
+that scenario or not. Call the scenarios in which $p$ is true the
+\textit{$p$-scenarios}. The above statement about $\neg$ now tells us $\neg p$ is true in
+precisely those scenarios in which $p$ is not true. That is, $\neg p$ is true in
+all the scenarios that aren't $p$-scenarios. In general, it tells us how to
+determine the conditions under which $\neg A$ is true based on the conditions under
+which $A$ is true. Similarly, the statement about $\to$ tells us how to determine
+the conditions under which $A \to B$ is true based on the conditions under which $A$ and $B$ are true.
+
+A consequence of our rules is that $\neg\neg p$ has the same meaning as $p$, for it is
+true under the exact same conditions (in all and only the $p$-scenarios). With a
+little effort, you can check that the same holds for $(p\to q) \to p$: this, too,
+is true in all and only the $p$-scenarios.
+
+% ** Entailment
+
+The truth-conditional conception of meanings is useful in logic because it ties
+in with a natural conception of entailment. Intuitively, some premises entail
+a conclusion iff the truth of the premises guarantee the truth of the
+conclusion; that is, if there is no conceivable scenario in which the premises
+are true while the conclusion is false. If that's right then all we need to know
+to determine whether the premises entail the conclusions is their
+truth-conditions.
+
+% ** Logical entailment
+
+In fact, logic is about a particular type of entailment, which we call
+\textit{logical entailment}. For example, suppose we give the following
+truth-conditions to $p$ and $q$:
+
+   $p$: Snow is white.
+   $q$: Snow is green.
+
+Then $p$ entails $\neg q$. (There is no conceivable scenario in which snow is white
+while it is not the case that snow is not green.) But the inference from $p$ to
+$\neg q$ is not logically valid.
+
+Why not? Because it depends on the meaning of the non-logical expressions $p$
+and $q$. Logic abstracts away from the interpretation of the non-logical
+expressions. Some premises \textit{logically entail} a conclusion iff there's no
+conceivable scenario in which premises are true and conclusion false, on any
+interpretation of the non-logical expressions.
+
+This obviously requires a distinction between "logical" and "non-logical"
+expressions. There was once a debate over which expressions in English belong
+into which group, but it is best not to think of this as an absolute
+distinction. In \textit{epistemic logic}, for example, a regimented concept of 'it is
+known that' counts as logical. Since propositional logic is the logic of the
+truth-functional connectives, we count $\neg$ and $\to$ as logical and the sentence
+letters as non-logical.
+
+It's because propositional logic abstracts away from the meaning of the sentence
+letters that we don't need to worry about how to assign them a particular
+meaning. We can leave them uninterpreted.
+
+% ** Models
+
+Our definition of logical entailment quantifies over all conceivable scenarios
+and all interpretations of the sentence letters: $A_1, \ldots A_n$ entail $B$
+iff every scenario and interpretation that makes $A_1, \ldots A_n$ true also
+makes $B$ true. We can make this much simpler, and also more precise.
+
+Think of what you need to know about a pair of a scenario $S$ and an
+interpretation $I$ of the sentence letters to determine whether an arbitrary
+L0-sentence -- say, $\neg p$ -- is true. I could tell you that $p$ means that
+snow is blue, and that the scenario is one in which snow is red. You could then
+figure out that $\neg p$ is true, relative to $S$ and $I$. But you don't need
+all that information. It would be enough if I merely told you that $p$ means
+something that isn't true in $S$. By the interpretation rule for negation, this
+is enough to determine that $\neg p$ is true in $S$ under the interpretation
+$I$. Generalizing, all the information we need about a pair of a scenario $S$
+and an interpretation $I$ to determine whether an arbitrary L0-sentence is true
+in $S$ under $I$ is which sentence letters are true and which are false in $S$
+under $I$. This means that instead of quantifying over scenarios and
+interpretations, we can simply quantify over assignments of truth-values to the
+sentence letters.
+
+\begin{definition}{Model}{model}
+  A \emph{model} for L0 is an assignment $\sigma$ ("sigma") of truth-values to
+  the sentence letters of L0.
+\end{definition}
+
+That is, a model is a function that assigns to each sentence letter one of the two truth values, which I'll label 'T' (true) and 'F' (false).
+
+% ** Recursive definition of truth
+
+We extend this assignment to all sentences in accordance with our above interpretation rules for '$\neg$' and '$\to$'. We write σ $\models$ A (read: $\sigma$ satisfies A, σ models A, or p is true under σ) to mean that A is true in the model A. It is defined as follows:
+
+\begin{definition}{Satisfaction}{satisfaction}
+  For any sentence letter $p$ and sentences $A$ and $B$:
+  \begin{enumerate*}
+    \item $\sigma \models p$ iff $\sigma(p) = T$.
+    \item $\sigma \models \neg A$ iff $\sigma \not\models A$.
+    \item $\sigma \models A \to B$ iff $\sigma \not\models A$ or
+    $\sigma \models B$.
+  \end{enumerate*}
+\end{definition}
+
+% ** Entailment
+
+Finally, we can define logical entailment in terms of models:
+
+\begin{definition}{Logical Entailment}{entailment}
+A set of sentences Γ entails a sentence A, written Γ $\models$ A, iff for every model σ, if σ satisfies every sentence in Γ, then σ satisfies A.
+\end{definition}
+
+\begin{exercise}
+Explain why Γ $\models$ A iff there is no conceivable scenario in which every sentence in Γ is true while A is false, on any interpretation of the sentence letters.
+\end{exercise}
+
+\begin{exercise}
+Show that A is valid iff A is entailed by $\emptyset$.
+\end{exercise}
+
+As in the case of the single-barred turnstile, we often drop the curly braces and use a comma instead of '$\cup$'.
+
+We allow Γ to be infinite, and to be empty. If something is entailed by the
+empty set of premises, it is \textit{valid}.
+
+\begin{definition}{Validity}{validity}
+A is \emph{valid} if $\models$ A, i.e., if it is satisfied by every truth-assignment.
+\end{definition}
+
+\begin{exercise}
+Which of these claims are true: (a) $\models$ $\top$, (b) $\models$ $\bot$, (c) $\top$ $\models$ $\bot$, (d) $\bot$ $\models$ $\top$.
+\end{exercise}
+
+\begin{exercise}
+Show that A,$\neg$ B $\models$ $\bot$ iff A $\models$ B.
+\end{exercise}
+
+% ** Warning: arrows
+
+Warning (or exercise?): We now have four arrow-like symbols: $\vdash$, $\models$, $\models$, and →. (We also have the $\Rightarrow$ symbol mentioned in discussion of the sequent calculus, but we'll never use that again.) Make sure you can tell the difference!
+
+% ** Truth-functionality and modal logic
+
+Of course there's more to meaning than truth-value. But the operators ¬ and → are truth-functional, so any further difference doesn't affect whether an L\_0 sentence is true in a scenario.
+
+We need more fine-grained models if we add non-truth-functional operators, such as an operator □ that regiments a sense of 'necessarily'. Intuitionistic logic interprets ¬ and → in a non-truth-functional way.
+
+The standard models of modal logic have possible worlds. One also adds some axioms for how □ behaves.
+
+At this point I could mention that intuitionistic logic requires a different
+kind of interpretation. What could ¬ mean so that ¬¬p doesn't entail p, or so
+that LEM fails? In intuitionistic logic, we don't assume we're describing a
+fixed reality. ¬p means that one can refute p. p→q means that one can derive q
+from p.
+
+\section{Soundness and Completeness}
+
+% ** Proof systems
+
+% There are many different and equivalent proof systems.
+% There's generally a trade-off between user-friendliness and elegance.
+
+% A general requirement for proof systems is that there must be an algorithm for checking whether something is a genuine proof. That is, while it might require insight or ingenuity to \textit{find} a proof, no insight or ingenuity must be required to verify a proof. In an axiomatic calculus, this means that it must be mechanically testable whether something is an axiom, and whether something follows from other statements by a rule.
+
+% All proof systems must be \textit{verifiable},
+% meaning that there must be a mechanical algorithm for checking that
+% something is a genuine proof.
+% This is clear for our Hilbert-style proofs.
+
+% (It seems that verifying is a lot easier than creating a proof.)
+
+% ** Proof theory and model theory
+
+In the last two sections, we have explored two very different perspectives on
+logic, called \textit{proof-theoretic} and \textit{model-theoretic}. The central concept of
+proof theory is $\vdash$. Here we study whether some sentences can be proved or
+derived from others, without caring about what the sentences mean or what it
+would take for them to be true. The sentences are simply arrangements of
+symbols, and proofs are manipulations of such arrangements symbols. In model
+theory, by contrast, we think of formal sentences as describing some putative
+aspect of reality, although we generally don't fix a particular interpretation.
+The central concepts of model theory are $\models$ and $\models$.
+
+% We interpret ¬ and → as truth-functional. Note that this interpretation of → is not at all obvious from our inference rules. (We introduce A→B by DERIVING B from A!)
+
+% ** Preview soundness and completeness
+
+Ideally, we'd like the two perspectives to harmonize, so that $\Gamma \vdash A$
+iff $\Gamma \models A$. That is, a sentence is deducible from some premises iff
+it is entailed by the premises. This is by no means obvious. We'll show that
+it is true.
+
+We have two directions to show. We first show that if Γ $\vdash$ A, then Γ
+$\models$ A. This shows that the calculus is \textit{sound} with respect to our
+model-theoretic conception of entailment and validity: anything that can be
+proved is valid, and anything that can be deduced from some premises is entailed
+by the premises.
+
+Then we show that if Γ $\models$ A, then Γ $\vdash$ A. This shows that the
+calculus is \textit{complete}: anything that is valid can be proved, and
+anything that is entailed by some premises can be deduced from the premises.
+
+% ** Proof
+
+The soundness proof is straightforward. Assume there is a sequence
+$A_1, A_2, \ldots, A_n$ such that $A_n = A$ and each $A_i$ is either an axiom, a
+member of Γ, or follows from previous sentences by MP. We prove by induction on
+$k$ that Γ $\models$ $A_{k}$ for all k from 1 to n.
+
+\begin{enumerate*}
+\item If $A_i$ is an axiom, then it is satisfied by every truth-assignment σ. [Exercise?]
+
+\item If $A_i$ is a member of Γ, then obviously it is satisfied by every truth-assignment σ that satisfies Γ.
+
+\item If $A_i$ follows from previous sentences by MP, then there are sentences $A_j$ and $A_k$ such that $A_i = A_j \to A_k$. By the induction hypothesis, both $A_j$ and $A_k$ are satisfied by σ. Since σ satisfies $A_j$, it must also satisfy $A_i$, because $\sigma \models A_j \to A_k$ iff $\sigma \not\models A_j$ or $\sigma \models A_k$.
+\end{enumerate*}
+
+\begin{exercise}
+We might wonder whether a given proof system is consistent. Explain why soundness provides an answer. (This shows that model theory can be useful for proof theory.)
+\end{exercise}
+
+The first published proof of the truth-functional completeness of an axiomatic system was due to the American logician Emil Post (1921).
+
+% ** Strong completeness
+
+Next, completeness. This is harder. It was first established by Paul Bernays
+in 1918. We're going to use a later technique due to Leon Henkin (1949) that
+we'll re-use in chapter 3 to prove completeness for first-order logic.
+
+% ** Consistency
+
+Before we start, we need to two key concepts for Henkin's proof.
+
+\begin{definition}{Consistency}{consistency}
+A set of sentences Γ is \emph{consistent} if one cannot derive a sentence and its negation from it.
+\end{definition}
+
+Strictly speaking, consistency is relative to a calculus.
+
+\begin{definition}{Satisfiability}{satisfiability}
+A set of sentences Γ is \emph{satisfiable} if there is a model $\sigma$ that satisfies every sentence in Γ.
+\end{definition}
+
+\begin{exercise}
+Show that $\Gamma$ is consistent iff (a) there is some sentence that cannot be derived from it; (b) one cannot derive $\bot$ from it.
+\end{exercise}
+
+\begin{exercise}
+Show that $\Gamma \cup \{\neg A\}$ is satisfiable iff $\Gamma \not\models A$.
+\end{exercise}
+
+% ** Start: Γ ∪ \{ ¬A \ is consistent}
+
+Now we have to show that if $\Gamma \models A$, then $\Gamma \vdash A$. The
+proof is by contraposition. That is, we assume $\Gamma \not\vdash A$ and show
+that, in any such case, $\Gamma \not\models A$. The following lemma allows us to
+reformulate this task.
+
+\begin{lemma}
+  $\Gamma \not\vdash A$ iff $\Gamma \cup \{\neg A\}$ is consistent.
+\end{lemma}
+
+\begin{proof}
+  If $\Gamma \cup \{\neg A\}$ were inconsistent, we could deduce $A$ from
+  $\Gamma$ by PIP. Contraposing, this means that if $\Gamma \not\vdash A$ then
+  $\Gamma \cup \{ \neg A \}$ is consistent.
+
+  Conversely, if $\Gamma \vdash A$ then $\Gamma, \neg A \vdash A$ by
+  Monotonicity, and $\Gamma, \neg A \vdash \neg A$ by Assumptions; so
+  $\Gamma \cup \{ \neg A \}$ is inconsistent. \qed
+\end{proof}
+
+% ** Preview: show that Γ ∪ \{ ¬A \ is satisfiable}
+
+Now suppose we can show that any consistent set of sentences is satisfiable.
+Since $\Gamma \cup \{\neg A\}$ is consistent, it will follow that it is satisfiable. This
+means that $\Gamma \not\models A$. So all we need to show is that every consistent set of
+sentences is satisfiable.
+
+To this end, we first show that $\Gamma \cup \{ \neg A \}$ can be extended to a \textit{maximal
+consistent} set that contains, for each sentence, either that sentence or its
+negation. Then we show that every maximally consistent set is satisfied by the
+truth-assignment that assigns 1 to every sentence letter in the set and 0 to
+every sentence letter not in the set.
+
+% ** Step 1. Observation.
+
+En route to the first step, we start with an easy observation.
+
+\begin{theorem}{Extension Consistency}{extension-consistency}
+If a set $\Gamma$ is consistent, then for any sentence $A$, either
+  $\Gamma \cup \{ A \}$ or $\Gamma \cup \{ \neg A \}$ is consistent.
+\end{theorem}
+
+\begin{proof}
+Let $\Gamma$ be any consistent set and $A$ any sentence.
+
+That $\Gamma \cup \{ A \}$ is inconsistent means there are sentences $A_1,\ldots,A_n$ in
+$\Gamma$ such that $A_{1},\ldots,A_{n}, A \vdash \bot$. By reductio, it would follow that
+$A_{1},\ldots,A_{n} \vdash \neg A$.
+
+That $\Gamma \cup \{\neg A \}$ is inconsistent means that there are sentences $B_{1},\ldots,B_{m}$ in $\Gamma$ such that $B_{1},\ldots,B_{m},\neg A \vdash \bot$. By reductio, it would follow that $B_{1},\ldots,B_{m} \vdash \neg\neg A$.
+
+If both $\Gamma \cup \{ A \}$ and $\Gamma \cup \{ \neg A \}$ were inconsistent, it would follow by monotonicity that
+there are sentences $A_1,\ldots,A_n, B_{1},\ldots B_{m}$ in $\Gamma$ from which one can infer both $\neg A$ and $\neg\neg A$. By exercise above, this means that $\Gamma$ is inconsistent.
+
+(Exercise: $\neg A,A \vdash \bot$, by ex falso?)
+\end{proof}
+
+% ** Step 1. Lindenbaum's Lemma
+
+Now the first step:
+
+\begin{theorem}{Lindenbaum's Lemma}{lindenbaum}
+Every consistent set is a subset of some maximal consistent set.
+\end{theorem}
+
+\begin{proof}
+Let $S_0$ be some consistent set of sentences. Let $A_1,A_2,\ldots$ be a list of all sentences in some arbitrary order. For every number $i\geq 0$, define
+
+  \[
+    S_{i+1} = \begin{cases} S_i \cup \{ A_i \} & \text{if $S_i \cup \{ A_i \}$ is consistent}\\
+      S_i \cup \{ \neg A_i \} & \text{otherwise}.
+    \end{cases}
+  \]
+
+  This gives us an infinite list of sets $S_0,S_1,S_2,\ldots$. Each set in the
+  list is consistent: $S_0$ is consistent by assumption. And if some set
+  $S_i$ in the list is consistent, then either $S_i \cup \{ A_i \}$ is
+  consistent, in which case $S_{i+1} = S_i \cup \{ A_i \}$ is consistent, or
+  $S_i \cup \{ A_i \}$ is not consistent, in which case $S_{i+1}$ is
+  $S_i \cup \{ \neg A_i \}$, which is consistent by observation
+  \ref{obs:extensionconsistency}. So if any set in the list is consistent, then
+  the next set in the list is also consistent. It follows that
+  $S_0,S_1,S_2,\ldots$ are all consistent.
+
+  Now let $S$ be the set of sentences that occur in at least one of the sets
+  $S_{0},S_1, S_2,S_3\ldots$. (That is, let $S$ be the union of
+  $S_{0},S_1,S_2,S_3,\ldots$.) Evidently, $S_0$ is a subset of $S$. And $S$ is
+  maximal. Moreover, $S$ is consistent. For if $S$ were not consistent, then
+  it would contain some sentences $B_1,\ldots,B_n$ from which $\bot$ is provable. All of these sentences would
+  have to occur somewhere on the list $A_1,A_2,\ldots$. Let $A_j$ be a sentence
+  from $A_1,A_2,\ldots$ that occurs after all the $B_1,\ldots,B_n$. If
+  $B_1,\ldots,B_n$ are in $S$, they would have to be in $S_j$ already, so $S_j$
+  would be inconsistent. But we've seen that all of $S_0,S_1,S_2,\ldots$ are
+  consistent. $\qed$
+\end{proof}
+
+Note that the only axioms we needed to prove Lindenbaum's Lemma were whatever was needed to prove Reductio, for observation \ref{extension-consistency}.
+
+% ** How to enumerate* all sentences?
+
+We also assumed that there's an enumeration of all sentences. How could that be?
+Zig-zag.
+
+The lemma actually still holds if there's no enumeration, but it then requires AoC.
+
+% ** Constructing a model from a max cons set
+
+Now we show that every maximal consistent set is satisfied by a truth-assignment that assigns 1 to every sentence letter in the set and 0 to every sentence letter not in the set.
+
+% ** Step 2: Maximal consistent sets are satisfied by a truth-assignment
+
+\begin{theorem}{Truth Lemma}{truth-lemma}
+Every maximal consistent set is satisfied by a truth-assignment that assigns 1 to every sentence letter in the set and 0 to every sentence letter not in the set.
+\end{theorem}
+
+\begin{proof}
+Let $S$ be a maximal consistent set. Define a truth-assignment $\sigma$ as follows: for every sentence letter $p$, $\sigma \models p$ iff $p \in S$. We show that $\sigma$ satisfies every sentence in $S$ by induction on the complexity of sentences.
+
+\begin{enumerate*}
+\item $A$ is a sentence letter. Then $A \in S$ iff $\sigma \models A$ by definition.
+
+\item $A$ is a $\neg B$. If $A \in S$ then $B \not\in S$ by consistency, and by induction hypothesis, $\sigma \not\models B$. By truth definition, $\sigma \models A$. Conversely, if $A \not\in S$ then $B \in S$ by maximality, and by induction hypothesis, $\sigma \models B$. By truth definition, $\sigma \not\models A$.
+
+\item $A$ is $B\to C$. Assume $A\in S$. If B in S then by MP so is C. Both are true at sigma by i.h. A is true by def truth. If B not in S then by i.h. B is false at sigma and so A is true at sigma by def truth.
+\end{enumerate*}
+
+Assume conversely that $B \to C$ true at sigma By truth def, either $B$ is false at sigma or $C$ is true at sigma. Let's go through both cases.
+
+If $B$ is false at sigma, by i.h. and maximality, $\neg B$ in S. But $\neg B \vdash B \to C$. So $B \to C$ in sigma. (Why $\neg B \vdash B \to C$? We have $\neg B,B \vdash \bot$; so $\neg B,B \vdash C$ by ex falso; so $\neg B \vdash B\to C$ by DT.)
+
+If C is true at sigma, by i.h. C in S. And $C \vdash B \to C$. (Why? Well, $C,B \vdash C$, so by DT..)
+\end{proof}
+
+Corollary: $\vdash$ is \textit{consistent}, meaning that $\bot$ is not derivable.
+
+% ** Post-Completeness
+
+\begin{exercise}
+Show that if we add to the axioms (A1)-(A3) any axiom schema that is
+not already provable in our calculus, we get an inconsistent calculus. (This
+means that our axiomatization is \textit{Post-complete}, after Emil Post, who first
+proved the present fact in 1921.) Hint: By the completeness theorem, any schema
+that isn't provable in our calculus has invalid instances. Can you see why a
+schema with invalid instances must have inconsistent instances?
+\end{exercise}
+
+[Answer, I guess: take an instance that is false under some valuation; now
+replace all sentence letters in the instance that are false under that valuation
+by $\bot$ and all true ones by $\top$; the result is still an instance, and it is false
+under every valuation. By completeness, it is refutable.]
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "logic3.tex"
+%%% End:

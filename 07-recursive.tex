@@ -1,0 +1,431 @@
+\chapter{Recursive Functions}
+
+\section{Primitive recursive functions}
+
+% ** Review: computable functions on N
+
+Remember: an effectively computable function is one for which there is a finite list of precise instructions to determine the output for any given input, without drawing on external resources or creativity.
+
+We will concentrate on functions from natural numbers to natural numbers.
+
+% ** Bottom-up definition of computable functions
+
+Here's a natural ideal of how to approach the definition of computable functions.
+
+The computable arithmetical functions are composed out of simpler functions, and
+we can use this composition to compute them.
+
+Addition is repeated successor, and that's how children learn to add, with the
+counting on strategy.
+
+Similarly, multiplication is repeated addition. This isn't the most efficient
+way to multiply, but it's an algorithm.
+
+So maybe we can define the computable functions as functions that are in this
+way definable?
+
+% ** Base functions
+
+We start some base functions.
+
+\begin{definition}{Base Functions}{base-functions}
+The first is the \emph{successor function} s, whose value for any input number is the next larger number:
+\[ s(n) = n + 1 \]
+
+The second is the \emph{zero function} z that returns 0 for number given as input.
+\[ z(n) = 0 \]
+
+Finally, we have a supply of \emph{identity} or \emph{projection functions} $id^{n}_{i}$ that take some numbers as inputs and return one of those numbers. For example, $id^{1}_{1}$ is the function that takes a single number and outputs that same number. $id^{2}_{1}$ takes two numbers and outputs the first; $id^{2}_{2}$ outputs the second. In general,
+\[ id^{n}_{i}(x_1, \ldots, x_n) = x_i \]
+\end{definition}
+
+These functions are trivially computable, without any sub-computations. We might say that they are computable \textit{in one step}.
+
+% ** Composition
+
+Given some computable functions f and g, we can define a new function h by composing them, applying one to the output of the other:
+
+        h(x) = f(g(x))
+
+Here we assume that f and g both take one number as input. For the general case, assume that f is a function of m arguments, and each of $g_1, \ldots, g_m$ is a function of n arguments. Then we define the \textit{composition} of f and $g_1, ..., g_m$ as:
+
+\[
+        h(x_1, \ldots, x_n) = f(g_1(x_1, \ldots, x_n), \ldots, g_m(x_1, \ldots, x_n))
+\]
+
+Instead of introducing a new name 'h' for the composed function, we can also write the composition as $Cn[f, g_1, \ldots, g_m]$.
+
+% ** Examples
+
+For example, $Cn[s,z]$ is the function that takes a number as input, then passes
+it to the zero function and passes the output to the successor function. This is
+the constant function that always outputs 1.
+
+$Cn[s, Cn[s,z]]$ is another function that takes a number, passes it to $Cn[s,z]$, which outputs 1, and then passes that to the successor function, which outputs 2. This is the constant function that always outputs 2.
+
+% ** Still computable
+
+Evidently, the result of composing effectively computable functions is still
+computable. To compute $f(g_{1}, \ldots, g_{m})$, one only needs to go through the
+computation of $g_{1}(x_{1}, \ldots, x_{n})$, ..., $g_{m}(x_{1}, \ldots, x_{n})$, and then apply
+$f$ to the results. The number of steps this takes is the sum of the number of
+steps needed to compute each $g_i(x_{1},...,x_{n})$ plus the number of steps needed to
+compute $f$ for the result.
+
+In fact, there might be simpler ways to compute the composite function, with
+fewer steps. So this is the upper bound on the number of steps needed.
+
+% ** Primitive recursion intro
+
+Another way of defining functions.
+
+Consider addition, which can be defined in terms of counting, as follows (where free variables are assumed to be universally bound):
+
+\begin{gather*}
+   x+0 = x\\
+   x+s(n) = s(x+n)
+\end{gather*}
+
+This says that to add 0 to a number, you leave the number unchanged; to add a larger number, you add 1 to the result of adding 1 less than that number. We've encountered this pair of equations as part of PA.
+
+Similarly for multiplication:
+
+\begin{gather*}
+   x \cdot 0 = 0\\
+   x \cdot s(n) = x \cdot n + x
+\end{gather*}
+
+Two different types of example. First, the factorial:
+
+\begin{align}
+0! &= 1\\
+(k + 1)! &= k! \cdot (k + 1)
+\end{align}
+
+Second, the \textit{delta} or \textit{anti-signum} function that takes every positive integer to 0, and 0 to 1:
+
+\begin{align}
+\alpha(0) &= 1\\
+\alpha(k + 1) &= 0
+\end{align}
+
+% ** Official definition of primitive recursion
+
+\begin{definition}{Primitive Recursion}{primitive-recursion}
+In the most general case, a function h is defined by primitive recursion from
+two other functions, f and g. f specifies the value of h for the case of 0, and
+g specifies the value of h for larger inputs based on the value of h for smaller
+inputs. I.e., we assume the following format:
+\begin{align}
+h(x,0) &= f(x)\\
+h(x,s(y)) &= g(x,y,h(x,y))
+\end{align}
+
+(Actually can allow for multiple arguments for x.)
+
+We can compress this into the notation Pr[f,g].
+\end{definition}
+
+For example, addition is Pr[z,$Cn[s,id^{3}_{3}]$]. For
+
+$x + 0 = z(x) = 0$,
+and $x + s(y) = Cn[s, id^{3}_{3}](x,y,x+y) = s(x+y)$.
+
+% ** Loops
+
+If the functions f and g are computable, then so is Pr[f,g].
+
+The definition of a pr function tells us how to compute the value for a given
+input n. To compute h(x,y), we first compute $c_{0} = f(x,0)$ using the function f.
+Then we compute $c_{1} = g(x,0,x_{0})$ to get h(x,1), then $c_{2} = g(x,1,c_{1})$ to get h(x,2),
+and so on until we reach h(x,y). The number of steps needed is the sum of the
+steps needed to make these computations.
+
+E.g. factorial in JavaScript:
+
+\begin{verbatim}
+function factorial(n) {
+    let result = 1;
+    for (let i = 1; i <= n; i++) {
+        result *= i;
+    }
+    return result;
+}
+\end{verbatim}
+
+% ** More examples of primitive recursion
+
+Exponentiation/Power
+
+\begin{align}
+n^0 &= 1\\
+n^{k+1} &= (n^k) \cdot n
+\end{align}
+
+Truncated predecessor
+
+\begin{align}
+\text{pred}(0) &= 0\\
+\text{pred}(k + 1) &= k
+\end{align}
+
+Truncated difference
+
+\begin{align}
+n \dotminus 0 &= n\\
+n \dotminus (k + 1) &= \text{pred}(n \dotminus k)
+\end{align}
+
+Thus $n \dotminus k$ is the difference between n and k if $n \geq k$ and is 0 if $n \leq k$.
+
+% ** p.r. sets and relations
+
+\begin{definition}{Primitive Recursive Relations}{pr-relations}
+We also want a notion of a relation's being primitive recursive. A suitable
+notion can be defined in terms of primitive recursive functions as follows. The
+characteristic function of an m-place relation R is the m-place function χ such
+that if R($n_1, \ldots, n_m$) holds then χ($n_1, \ldots, n_m$) = 1, and if R($n_1,
+\ldots, n_m$) does not hold then χ($n_1, \ldots, n_m$) = 0. We define: a relation is
+primitive recursive iff its characteristic function is primitive recursive.
+\end{definition}
+
+E.g. the set of odd numbers is p.r. because its characteristic function can be
+defined thus: χ(0) = 0, χ(k + 1) = α(χ(k)).
+
+\begin{exercise}
+Show that if a relation is p.r. then so is its negation. Solution:
+if χ is the characteristic function of R, then the complement of R has
+characteristic function $χ'$, where $χ'(n_1, \ldots, n_m) = α(χ(n_1, \ldots, n_m))$.
+\end{exercise}
+
+\begin{exercise}
+Conjunction -- simply multiplication.
+\end{exercise}
+
+\section{The extent of primitive recursive functions and sets}
+
+Additional methods of definition are allowable in defining primitive recursive
+functions and relations, provided they can be reduced to applications of
+recursion and composition. Three methods in particular will be of great use to
+us.
+
+% ** Truth-functional combination
+
+New relations can be defined from given ones by truth-functional (Boolean)
+combination. For example, k > n iff not $n \leq k$; and $k \geq n$ iff $k > n$ or $k = n$.
+We claim that any truth-functional combination of primitive recursive relations is
+primitive recursive.
+
+% ** Definition by cases
+
+If is defined by cases from p.r. functions, with conditions whose characteristic function is p.r., then it is p.r. itself.
+
+Composition also gives us the
+means to capture definition by cases. For example, suppose we wanted to define the
+function of k and n that yields $k^2$ if $k \leq n$ and $n^2$ if $n < k$. We can do this by using
+addition, multiplication, truncated difference, and switcheroo thus, thereby showing
+that this function is primitive recursive:
+$k \cdot k \cdot α(k \dotminus n) + n \cdot n \cdot α(n + 1 \dotminus k)$
+
+[BBJ p.74]
+
+% ** Bounded quantification
+
+If a function is defined by bounded quantification over primitive recursive functions, then it is primitive recursive.
+
+Another definition method we will want to use for relations is bounded quantifi-
+cation. For example,
+
+k divides n iff $\exists p \leq n (p \cdot k = n)$.
+
+n is prime iff $n > 1 \land \forall k \leq n(k \text{ divides } n \to (k = 1 \lor k = n))$.
+
+It is straightforward to show that if a relation R(k, n) is primitive recursive
+then so is the relation $(\forall k \leq p)R(k, n)$, which has arguments p and n. Let χ be
+the characteristic function of R, and define $χ'$ by recursion thus: $χ'(0, n) = χ(0, n)$,
+$χ'(p + 1, n) = χ'(p, n) \cdot χ(p + 1, n)$. Thus $χ'$ is primitive recursive, and is the
+characteristic function of $(\forall k \leq p)R(k, n)$, since $χ'(p, n)$ is 1 just in case each
+of $χ(0, n), \ldots, χ(p, n)$ is 1, that is, just in case each of $R(0, n), \ldots, R(p, n)$ holds.
+Bounded existential quantification can be obtained from bounded universal quan-
+tification by truth-functional operations
+
+% ** Bounded minimization
+
+A final definition-method we shall use frequently is bounded leastness. This is
+used to define a new function from a given relation. The notation we use is this: an
+expression
+$(μk \leq p)R(k)$
+denotes the least number $k \leq p$ such that R holds of k, if there is such a number, and denotes 0 otherwise.
+
+% ** Operations on code numbers are p.r.
+
+Of special importance later will be the fact that certain operations on code numbers are primitive recursive.
+
+Specifically, suppose x is a number that codes a sequence of numbers $x_1...x_n$. Then the following functions are p.r.:
+
+len(x)
+entry(x, i)
+
+Also pr is
+
+seq(x)
+
+% ** Prime(x) is pr
+
+(a) Divides(a,b) $\coloneqq$ $\exists k\leq b (k\cdot a = b)$. (Bounded existential → p.r.)
+
+(b) Pow(p,0)=1, Pow(p,n+1)=Pow(p,n)·p. (Primitive recursion → p.r.)
+
+(c) Prime(x). x is prime iff x>1 and  $\forall y < x \forall z < x (y*z \neq x)$.
+
+% ** exp(x,i) is pr
+
+exp(x,i) is the exponent of the prime $p_i$ in the prime factorization of x.
+
+Intuitively: start at n=0 and go up until $p_i^{(n+1)}$ stops dividing x; the last n for which it did divide is the exponent.
+
+% ** len(x) is pr
+
+We want the least k such that every prime $p_j$ with $j\geq k$ occurs with exponent 0.
+
+Define an auxiliary predicate
+
+TailZero(x , k)  $\coloneqq$  $\forall j\leq x ( j\geq k \to \text{exp}(x , j) = 0 )$.
+
+TailZero is a bounded universal statement whose matrix is p.r., hence itself p.r.
+
+Now put
+
+len(x)  =  $μk\leq x$  TailZero(x , k).
+
+% ** entry(x, i) is pr
+
+entry(x , i)  =  if i < len(x) then exp(x , i) else 0.
+
+\section{Minimization}
+
+% ** Diagonalizing out
+
+But these can't be all the computable functions. We can diagonalize out.
+
+The antidiagonal is computable, but not primitive recursive.
+
+Somehow, this trick must not work for set of all computable functions. But if we define the functions in terms of applying operations to the base functions, then we can always mechanically enumerate the set. So how could the argument fail?
+
+Think about it.
+
+The argument will fail because sometimes one can't effectively compute the output of a function $f_i$ for a given input i, even though $f_i$ is effectively computable. That's because $f_i$ may be partial: it may be undefined for input i. Moreover, for a tweak to the argument not go through, there must be no general way to tell if a function is defined for some input.
+
+This curious argument shows that a general account of computable functions must include \textit{partial} functions.
+
+Or maybe there's no way of listing the total computable functions. I.e., we can't define all total computable functions in terms of the base functions and operations on them.
+
+% ** Goodstein function
+
+Almost any function you can think of is primitive recursive. But some functions
+are computable but not primitive recursive. We already know one: the
+antidiagonal of the primitive recursive functions. Another, more directly
+mathematical example is the Goodstein function. It is defined as follows. (Feel
+free to skip the details.)
+
+https://risingentropy.com/the-mindblowing-goodstein-sequences/
+
+To explain this function, note first that, for any $n>1$, any number x can be
+expressed as a sum of powers of $n$. For example, $266 = 2^8 + 2^3 + 2^1$. We
+can push this idea further by writing each exponent as a sum of powers of $n$ as
+well, until all numbers in the representation are less than or equal to $n$:
+$266 = 2^{2^{2+1}}+ 2^{2+1} + 2^1$. This is called the "hereditary base-2
+representation" of 266.
+
+Next, we define the "Goodstein sequence" for a number $n$. The first item in the
+sequence is $n$. For the second item, we replace each 2 in the hereditary base-2
+representation of $n$ by 3, and subtract 1. For the third item, we then replace
+each 3 in the hereditary base-3 representation by 4, and subtract 1. And so on.
+
+Example.
+
+These sequences grow very large very quickly. Surprisingly, however, their
+growth eventually stalls and reverses, until the process reaches 0, where it
+ends. This is \textit{Goodstein's Theorem}, proved by Reuben Goodstein in 1944.)
+
+The \textit{Goodstein function} now simply maps any number $n$ to the length of the
+Goodstein sequence that starts with $n$. This function maps each natural number
+n to the number of steps it takes for the Goodstein sequence for n to reach 0.
+This function is computable, but not primitive recursive.
+
+The function that returns the next item from the previous item in a Goodstein
+sequence is primitive recursive. But to determine how long it takes for a
+sequence to reach zero, one must simply go through the items in the sequence, in
+an unbounded loop.
+
+% ** Minimization
+
+\begin{definition}{Minimization}{minimization}
+Formally, the third operation we need is called \emph{minimization}. The minimization
+of a function $f$ of $n+1$ arguments is a function $h$ of $n$ arguments that
+returns, for any $x_{1},\ldots,x_{n}$, the smallest number $y$ for which
+
+(a) $f(x_{1},\ldots,x_{n}, y) = 0$, and
+(b) $f(x_{1},\ldots,x_{n}, v)$ is defined for all $v<y$.
+
+If there is no such $y$, the function returns nothing. So even if $f$ is total, its minimization Mn[f] may be partial.
+\end{definition}
+
+\begin{exercise}
+What is Mn[+]? What is Mn[*]?
+\end{exercise}
+Mn[+] is defined only for x=0, in which case it returns 0; Mn[*] is z.
+
+% ** How to compute Mn[f]
+
+If f is computable then so is Mn[f]: we simply need to compute
+$f(x_{1},\ldots,x_{n},i)$ for each $i$ starting at 0 until we find a case where
+$f(x_{1},\ldots,x_{n},i) = 0$, in which case we return $i$.
+
+\section{Every μ-recursive function is Turing computable}
+
+Copy from IGT sec. 42.2?
+Or: https://www.cs.utep.edu/vladik/cs5315.21/equiv.pdf
+
+% ** Plan
+
+The task is straightforward. We need to show that (i) the base functions are computable by a TM, and (ii) that if some functions are turing-computable then so is any function definable from them by composition, primitive recursion, and minimization.
+
+% ** Zero
+
+\textit{The zero function.} We can describe a TM that returns the output 0 for any
+input. In unary notation, 0 is the empty tape. See exercise ex-erase.
+
+% ** Successor
+
+\textit{The successor function.}
+
+\section{Every Turing-computable function is μ-recursive}
+
+Copy proof sketch from Smith's Intro, sec. §42.3? But very sketchy.
+
+The converse is more involved but entirely number-theoretic.
+
+\textbf{Step A} Gödel numbering of configurations
+
+• Represent a single configuration C = (q, head, tape) by a natural number $\langle C\rangle$ using a pairing function or prime codes.
+• Encode an entire TM M as an integer e = $\langle M\rangle$.
+
+\textbf{Step B} The "next configuration'' function is primitive recursive
+
+Lemma 1 (Key): there exists a primitive-recursive function NEXT(e,$\langle C\rangle$) = $\langle C'\rangle$ that returns the code of the configuration obtained by applying one transition of machine e to configuration C (or C itself if it is already halting). Proof sketch: look up the current state/symbol in e's transition table (which is encoded in a bounded, hence primitive-recursive, search), perform the symbol rewrite, move the head, and adjust the state field—all by bounded arithmetic.
+
+\textbf{Step C: Primitive-recursive predicates for "halts in ≤ s steps''} Define by bounded iteration
+\begin{align}
+\text{CONF}^0(e,x) &= \langle\text{initial configuration of }e\text{ on }x\rangle \\
+\text{CONF}^{s+1}(e,x) &= \text{NEXT}(e, \text{CONF}^s(e,x))
+\end{align}
+Both are primitive recursive because NEXT is, and s is a bound.
+
+Then HALT$\leq$(e,x,s) $\equiv$ "state of CONF$^s$(e,x) is halting'' is primitive recursive as well.
+
+\textbf{Step D: μ-operator captures the exact stopping time} Use unbounded search: t = μ s. HALT$\leq$(e,x,s) which is defined iff M halts on x. Because the predicate under μ is primitive recursive, the resulting partial function t(e,x) is μ-recursive by definition.
+
+\textbf{Step E} Extracting the output A primitive recursive function RESULT($\langle C\rangle$) returns the contents of the designated output track of configuration C. Compose: Out(e,x) = RESULT(CONF$^{t(e,x)}$(e,x)) where t is from Step D. Therefore Out is μ-recursive and agrees exactly with the function computed by machine e.
+
+Conclusion: for every Turing machine M there is a μ-recursive function $f_M$ that coincides with M's input/output behaviour.

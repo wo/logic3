@@ -1,0 +1,67 @@
+\chapter{Incompleteness}
+
+See handout wk10.
+
+A theory is \emph{axiomatizable} if it is axiomatized by a decidable set of axioms.
+
+Robinson's Lemma. Every recursive function is numeralwise representable in Q.
+
+\section{The diagonal lemma}
+
+I began with an informal presentation of the diagonal lemma. If we find a sentence that says that it's not provable, we'll get incompleteness. But how can we find such a sentence?
+
+Let's first try to do it in English, without using indexicals. We want to pick out the sentence by its syntactic properties.
+
+Begin with the observation that predicates can be applied to predicates:
+\begin{itemize}
+\item 'is English' is English.
+\item 'is made of stone' is made of stone.
+\end{itemize}
+
+Call a predicate applied to itself the \textit{diagonalisation} of the predicate. In English, diagonalising a predicate simply means to write it twice next to each other, the first in quotes.
+
+Now consider this predicate:
+\begin{itemize}
+\item 'has a diagonalisation that is not provable'.
+\end{itemize}
+
+Let's diagonalise it:
+\begin{itemize}
+\item 'has a diagonalisation that is not provable' has a diagonalisation that is not provable.
+\end{itemize}
+
+What does this say? It says that the predicate has a diagonalisation. Well every predicate has exactly one. What else does it say about that diagonalisation? That it's not provable. So it says of the diagonalisation of 'has...' that it's not provable. But it \textit{is} that diagonalisation!
+
+Now we do this in the language of arithmetic, using numerals of gns instead of quoted predicates.
+
+\section{Tarski's Theorem}
+
+A proof of Tarski's Theorem that does not mention formal systems at all can
+be obtained if we replace this step by a use of a semantic form of the Fixed
+Point Theorem, to wit: for every formula F (y) of L there is a formula H such
+that F (H) $\equiv$ H is true. Given this, for every formula T (y) of L there will be
+a sentence H such that $\neg$T (H) $\equiv$ H is true, and so T (y) fails to be a truth
+predicate.
+
+To prove the semantic Fixed Point Theorem, we introduce the notion of
+definability in L. A formula F ($v_1, \ldots, v_m$) of L defines an m-place
+relation R just in case, for all $n_1, \ldots, n_m$, F ($n_1, \ldots, n_m$) is true iff
+R($n_1, \ldots, n_m$). A relation is definable in L iff there exists a formula of
+L that defines it.
+
+Definability is a semantic correlate of numeralwise representability. Indeed, if
+F ($v_1, \ldots, v_m$) numeralwise represents R in a formal system that is sound for the
+intended interpretation of L, then F ($v_1, \ldots, v_m$) defines R in L.
+
+The proof of the semantic FPT is just like the proof of the syntactic FPT except
+that we assume that diag defines, rather than numeralwise represents,
+diagonalisation. Note that the only properties of L needed are these: the
+function diag is definable in L; and L contains the usual logical signs
+
+\section{Church's Theorem}
+
+Gödel's work immediately tells us that there is no primitive recursive decision
+procedure for PA; and that work is extendible to any notion that will be
+representable in PA. All that was necessary after 1931, then, was to formulate
+the appropriate general notion of computability, and show that all computable
+functions were numeralwise representable.
