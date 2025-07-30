@@ -252,12 +252,16 @@ instead of adding a new inference rule, we'll add a corresponding axiom schema:
 
 With this, we can reason from $\forall x A$ to $A(x/c)$ by Modus Ponens.
 
-We'll introduce a genuine rule -- called /(Universal) Generalization/ -- for the
-converse inference, from $A(x/c)$ to $\forall x A$.
+We'll introduce a genuine rule -- called \emph{(Universal) Generalization} -- for the
+converse inference:
+
 
 \begin{principles}
-    \pri{Gen}{\text{From }A(x/c)\text{ one may infer }\forall x A.}
+    \pri{Gen}{\text{From }A \text{ one may infer }\forall x A(t/x).}
 \end{principles}
+
+% Careful: This isn't sound: From A(x/c) one may infer \forall x A.
+% Counterexample: From a=a to \forall x x=a.
 
 This rule is obviously unsound when reasoning from assumptions: from the
 assumption that Joan sleeps we can't infer that everyone sleeps. But remember
@@ -289,9 +293,13 @@ can't be replicated after we've replace Universal Instantiation by the axiom
 schema (A4). So we add (A5), which allows inferring $\forall x B(x)$ by two
 applications of Modus Ponens.
 
+\begin{definition}{Proof}{proof0}
+  A \emph{proof} of a sentence $A$ in the basic first-order predicate calculus is a finite sequence of sentences $A_{1},A_{2},\ldots A$,
+  each of which is either an instance of A1-A5 or follows from earlier sentences in the sequence by MP or Gen.
+\end{definition}
+
 I'll use `$\vdash A$' to express that $A$ is provable in the first-order
-predicate calculus. That is: $A$ can be derived from some instances of A1-A5 by
-MP and Gen.
+predicate calculus.
 
 As in the case of propositional logic, it's convenient to have a more general
 notion of proof that covers deductions from premises.
@@ -487,6 +495,9 @@ a list of $n$ objects. A 1-tuple is simply an object. So a ``set of 1-tuples of
 objects'' is simply a set of objects; a set of 2-tuples of objects is a set of
 pairs of objects, and so on.
 
+Note that it is not obvious whether every model represents a genuinely possible interpretation and scenario. There are lots of infinite sets of numbers, for example, many of which are not specifiable in English in any finite way. Could each of them possibly be the meaning of a predicate? We could restrict the possible interpretations of predicates to some subsets of the domain. But to which? Anyway, it makes no difference to the logic. We'll return to this in the case of 2nd-order logic though. (There, if we leave open the higher-order domain, only saying that it's some subset of the powerset of the domain, the class of models becomes much larger. As a result, the logic becomes much weaker.)
+
+
 Exercise: what about zero-ary predicates? can you make this work?
 
 % ** Truth Atomic sentences and boolean connectives
@@ -546,6 +557,10 @@ Here, then, is the full definition of truth in a model.
   \end{enumerate*}
 \end{definition}
 
+\begin{exercise}
+  State the truth conditions for $\exists x A(x)$.
+\end{exercise}
+
 % ** Entailment and validity defined
 
 We can now define entailment. Every model of Γ is a model of A.
@@ -563,6 +578,14 @@ A and B are logically equivalent iff each entails the other.
 
 \begin{exercise}
 Show that substituting a subformula by an equivalent subformula results in an equivalent formula.
+\end{exercise}
+
+\begin{exercise}\label{ex:coincidence-lemma}
+  Show by induction that if $M$ and $M'$ are two models that differ only in the
+  object assigned to an individual constant $c$,
+  and $A$ is an $\L_{1}$-sentence in which $c$ does not occur,
+  then $M \models A$ iff $M' \models A$.
+  % Beckermann 297ff.
 \end{exercise}
 
 % ** Prenex normal form
@@ -755,11 +778,11 @@ The axiomatic calculus can stay the same, except that we now allow for closed te
   \pri{Gen}{\text{From }A(x/t)\text{ infer }\forall x A.}
 \end{principles}
 
-We'll add some new axiom schemas for identity: for any terms $t_{1}$ and $t_{2}$ and formulas $A$ in which only $x$ is free,
+We'll add some new axiom schemas for identity: for any closed terms $t_{1}$ and $t_{2}$ and formulas $A$ in which only $x$ is free,
 
 \begin{principles}
-\pri{SI}{t_1=t_2 \text{for any closed terms $t_1$ and $t_2$}}\\
-\pri{LL}{t_1 = t_2 \to (A(x/t_1 )\to A(x/t_2))}
+\pri{A6}{t_1=t_1}\\
+\pri{A7}{t_1 = t_2 \to (A(x/t_1 )\to A(x/t_2))}
 \end{principles}
 
 The somewhat strange formulation of LL is a trick that allows replacing only some occurrences of $t_{1}$ by $t_{2}$.
@@ -878,3 +901,165 @@ Show that isomorphisms are equivalence relations
 
 % ** Exercises
 
+\section{Soundness}
+\label{sec:soundness}
+
+% We show that if $\Gamma \vdash A$, then $\Gamma \models A$.
+% By def xxx and the DT and its converse,
+% $\Gamma \vdash A$ iff there are sentences $B_1,\ldots,B_n \in \Gamma$ such that
+% $\vdash (B_{1} \land \ldots \land B_n) \to A$.
+% [Make this a lemma?]
+
+% Moreover,
+% if $\models (B_{1} \land \ldots \land B_n) \to A$ then $B_{1} \land \ldots \land B_n \models A$.
+
+% So it suffices to show that if $\vdash A$ then $\models A$.
+
+We want to show that if $\Gamma \vdash A$, then $\Gamma \models A$.
+We first show that if $\vdash A$, then $\\models A$.
+To this end,
+we need two simple lemmas.
+
+%-----------------------------------------------------------------
+%  Auxiliary lemmas
+%-----------------------------------------------------------------
+\begin{lemma}{}{lemma:identity}
+  If $M \models t_{1}=t_{2}$ and $M \models A(x/t_{1})$, then
+  $M \models A(x/t_{2})$.
+\end{lemma}
+\begin{proof}
+  Induction on the complexity of $A$.  The base case is the semantic
+  clause~(1); the inductive steps are immediate for $\neg$, $\to$ and
+  $\forall$.
+\end{proof}
+
+\begin{lemma}{}{lemma:coincidence}
+  Let $M$ and $M'$ be models that differ at most in the object assigned
+  to a constant~$c$, and let $A$ be an $\mathcal L_1$–sentence in which
+  $c$ does not occur.  Then $M\models A$ iff $M'\models A$.
+\end{lemma}
+\begin{proof}
+  Straight induction on the complexity of $A$; clause (1) is used in the
+  base case.
+\end{proof}
+
+%-----------------------------------------------------------------
+%  Soundness theorem
+%-----------------------------------------------------------------
+\begin{theorem}{Soundness of the first–order calculus}{soundness=}
+  If $\vdash A$ then $\models A$.
+\end{theorem}
+
+\begin{proof}
+  Let $B_{1},\dots,B_{n}$ be a proof of $A$.
+  We show by induction on $i$ that
+
+  \smallskip
+  \centerline{(*)\quad$\models B_{i}$,\; $1 \le i \le n$.}
+  \smallskip
+
+  The result for $i=n$ yields $\models A$.
+
+  We go through all possible cases of $B_{i}$.
+  \begin{enumerate}
+  \item[(i)] \textit{$B_{i}$ is an instance of A1–A3.}
+    These are propositional tautologies; the semantic clauses for
+    $\neg$ and $\to$ coincide with the classical truth tables, so they
+    are true in every model.
+
+  \item[(ii)] \textit{$B_{i}$ is A4: $\forall x\,B \to B(x/t)$.}
+    Let $M$ be any model for which $M\models\forall x\,B$.
+    Clause~(5) of the semantics supplies a constant $c$ not occurring in
+    $B$ such that for \emph{every} model $M'$ that differs from $M$ only
+    by the object interpreting $c$, we have $M'\models B(x/c)$.
+    Choose $a=[t]^{M}$ and form $M'$ by giving $c$ the value $a$ while
+    leaving everything else as in $M$.
+    Then $M'\models B(x/c)$; since $c$ and $t$ denote the same object in
+    $M'$, Lemma~\ref{lemma:identity} gives $M'\models B(x/t)$.
+    Because $c$ is absent from $B(x/t)$,
+    Lemma~\ref{lemma:coincidence} transfers truth back to $M$:
+    $M\models B(x/t)$.
+    Thus every model that satisfies the antecedent satisfies the
+    consequent; the instance is valid.
+
+  \item[(iii)] \textit{$B_{i}$ is A5:
+      $\forall x (A\to B)\to(A\to\forall x\,B)$, $x\notin\!\mathsf{FV}(A)$.}
+    Let $M\models\forall x(A\to B)$ and $M\models A$.
+    For an arbitrary constant $c$ and an arbitrary
+    $M'$ differing from $M$ only in the value of $c$,
+    clause (5) gives $M'\models (A\to B)(x/c)$, i.e.
+    $M'\models A\to B(x/c)$.
+    As $c\notin A$, Lemma~\ref{lemma:coincidence} yields $M'\models A$,
+    hence $M'\models B(x/c)$.
+    Because $c$ and $M'$ were arbitrary, $M\models\forall x\,B$.
+    Therefore the axiom instance is valid.
+
+  \item[(iv)] \textit{$B_{i}$ is A6: $t_1=t_2$.}
+    Every closed term has a denotation, and any object equals itself, so
+    $M\models t_1=t_2$ for every model~$M$.
+
+  \item[(v)] \textit{$B_{i}$ is A7:
+      $t_1=t_2\to\bigl(B(x/t_1)\to B(x/t_2)\bigr)$.}
+    Suppose $M\models t_1=t_2$ and $M\models B(x/t_1)$.
+    Then $[t_1]^M=[t_2]^M$, and Lemma~\ref{lemma:identity} gives
+    $M\models B(x/t_2)$.  Hence the conditional is true in all models.
+
+  \item[(vi)] \textit{$B_{i}$ is obtained by MP from earlier lines
+      $C$ and $C\to B_{i}$.}
+    By the induction hypothesis $C$ and $C\to B_{i}$ are valid; in every
+    model clause~(4) for $\to$ forces $B_{i}$ to be true.
+
+  \item[(vii)] \textit{$B_{i}$ is obtained from an earlier line $B$ by Gen.}
+
+    Fix an arbitrary model $M$ and assume $M\models B$
+    (true by the induction hypothesis).
+    To prove $M\models\forall x\,B(t/x)$ we must show:
+    for \emph{every} constant $c$ not in $B$ and \emph{every} model $M'$
+    differing from $M$ only in the value of $c$, we have
+    $M'\models B(x/c)$.
+
+    Choose such $c$ and $M'$.
+    Build a model $M''$ that agrees with $M'$ except that it interprets
+    $t$ as the object that $M'$ assigns to $c$.
+    Because $t\notin B$ (by (G)), $M''$ and $M'$ interpret every symbol
+    of $B(x/c)$ alike; by Lemma~\ref{lemma:coincidence} it suffices to
+    verify $M''\models B(x/c)$.
+    But in $M''$ the two closed terms $c$ and $t$ denote the same
+    element, and $M''\models B(x/t)$ (truth is preserved when we changed
+    only the value of $t$), so Lemma~\ref{lemma:identity} gives
+    $M''\models B(x/c)$, completing the requirement.  Clause~(5) now
+    yields $M\models\forall x\,B$.
+  \end{enumerate}
+
+  This shows that every axiom is valid and that MP and Gen preserve validity.
+\end{proof}
+
+\begin{corollary}
+  If $\Gamma \vdash A$, then $\Gamma \models A$.
+\end{corollary}
+\begin{proof}
+  Assume there is a deduction of $B_{1},\ldots,B_{n}$ of $A$ from $\Gamma$.
+  This deduction can involve only finitely many sentences $A_{1},\ldots,A_{m}$ in $\Gamma$.
+  So we also have
+  \[
+    A_{1},\ldots,A_{m} \vdash A.
+  \]
+  By the deduction theorem, it follows that
+  \[
+    \vdash A_{1} \to (A_{2} \to (\ldots (A_{m} \to A) \ldots)).
+  \]
+  By the soundness theorem, it implies that
+  \[
+    \models A_{1} \to (A_{2} \to (\ldots (A_{m} \to A) \ldots)).
+  \]
+  But if $\Gamma \models A \to B$ then $\Gamma,A \models B$ [exercise!].
+  So we have
+  \[
+    A_{1},\ldots,A_{m} \models A.
+  \]
+  Since $\{A_{1},\ldots,A_{m}\} \subseteq \Gamma$, it follows that $\Gamma \models A$.
+\end{proof}
+
+\begin{exercise}
+Can we still use soundness to prove consistency of the axiomatization? Yes.
+\end{exercise}

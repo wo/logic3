@@ -194,12 +194,18 @@ The method of inductive proof can be applied not just to $\L_{0}$-sentences. Whe
   of $A$. [Bostock pp52f.]
 \end{exercise}
 
-\begin{exercise}
-  Prove by induction on $n$ that a set consisting of $n$ elements has $2^n$
-  subsets, for all $n \geq 0$. (That is, first show that the claim holds for
-  $n=0$; then show that if it holds for some $n$ then it also holds for $n+1$.)
-\end{exercise}
+% \begin{exercise}
+%   Prove by induction on $n$ that a set consisting of $n$ elements has $2^n$
+%   subsets, for all $n \geq 0$. (That is, first show that the claim holds for
+%   $n=0$; then show that if it holds for some $n$ then it also holds for $n+1$.)
+% \end{exercise}
 
+\begin{exercise}\label{ex:gauss-sum}
+  Prove by induction that for every natural number $n$, $0 + 1 + \ldots + n = \frac{n(n+1)}{2}$.
+  (That is, first show that the claim holds for $n=0$;
+  then show that if it holds for some $n$ then it also holds for $n+1$.)
+  % Beckermann 284; useful for the zig zag function later
+\end{exercise}
 
 \section{The propositional calculus}
 
@@ -231,6 +237,13 @@ The axioms and rules together are called an \textit{axiomatization}. The present
 axiomatization is due to Lukasiewicz; it is a simplification of Frege's first
 axiomatization.
 
+\begin{definition}{Proof}{proof0}
+  A \emph{proof} of a sentence $A$ in the propositional calculus is a finite sequence of sentences $A_{1},A_{2},\ldots A$,
+  each of which is either an instance of A1--A3 or follows from earlier sentences in the sequence by MP.
+\end{definition}
+
+We write $\vdash_{0} A$ to mean that there is a proof of $A$.
+
 % ** Example proof
 
 Example: Here's a proof of p → p:
@@ -243,10 +256,16 @@ Example: Here's a proof of p → p:
 &p \to p \tag{From 3, 4 by MP}
 \end{align}
 
+This result can be generalized.
+If we replace the sentence letter $p$ by any sentence $A$,
+we still get a proof -- of $A \to A$ -- that conforms to our definition.
+That is,
+we've effectively shown that $\vdash_{0} A \to A$ for any sentence $A$.
+
 % ** Independence of the axioms
 
-How could we know that all three axioms are needed? Bostock 195ff.
-Need to show that all formulas derivable with the others have some property that some instance of the axiom lacks. Typically, the property is "valid on some deviant interpretation". E.g., interpret ¬ as vacuous, then
+% How could we know that all three axioms are needed? Bostock 195ff.
+% Need to show that all formulas derivable with the others have some property that some instance of the axiom lacks. Typically, the property is "valid on some deviant interpretation". E.g., interpret ¬ as vacuous, then
 
 % ** The method is unnatural
 
@@ -264,21 +283,20 @@ But our concept of proof is naturally generalized to handle derivations from
 non-logical premises.
 
 \begin{definition}{Deduction}{deduction}
-  A (propositional) \emph{deduction} of a sentence A from a set Γ ("gamma") of
-  sentences is a finite sequence of sentences whose last element is A and each
-  of which is either an axiom, an element of Γ, or follows from previous
-  sentences by MP.
+  A (propositional) \emph{deduction} of a sentence $A$ from a set $\Gamma$ ("gamma") of
+  sentences is
+  a finite sequence of sentences $A_{1}, A_{2}, \ldots A$ each of which is
+  either an axiom, an element of $\Gamma$, or follows from previous sentences by MP.
 \end{definition}
 
-We write Γ $\vdash_{0}$ A to mean that there is a deduction of A from Γ. So $\{ p,q \} \vdash_{0}
+We write $\Gamma \vdash_{0} A$ to mean that there is a deduction of A from Γ. So $\{ p,q \} \vdash_{0}
 p$ is a sentence in our metalanguage saying that $p$ is deducible from the set
 containing $p$ and $q$. A proof, as defined above, is a deductions from the
-empty set of premises. We write $\vdash_{0} A$ to say that there is a proof of $A$ in
-our calculus.
+empty set of premises.
 
 % ** Structural properties of deductions
 
-The following "structural principles" immediately follow from definition xxx.
+The following "structural principles" immediately follow from definition \label{def:deduction}.
 
 \begin{principles}
 \pri{Assumptions}{\text{For all sentences }A\text{, }A \vdash A}\\
@@ -286,10 +304,18 @@ The following "structural principles" immediately follow from definition xxx.
 \pri{Cut}{\text{For all ... If }\Gamma \vdash A\text{ and }\Delta,A \vdash B\text{ then }\Gamma,\Delta \vdash B}
 \end{principles}
 
-$\Delta \cup \Gamma$ is the \textit{union} of $\Gamma$ and $\Delta$. (The union of two sets is the set that contains all and only elements that are in either of the sets.) To remove cutter, we will henceforth remove the parentheses and write a comma instead of $\cup$. We'll also omit the metalinguistic quantifiers over sentences. I.e., we'll write
+$\Delta \cup \Gamma$ is the \textit{union} of $\Gamma$ and $\Delta$.
+(The union of two sets is the set that contains all and only elements that are in either of the sets.)
+To remove cutter,
+we will henceforth remove the parentheses and write a comma instead of $\cup$.
+We'll also omit the metalinguistic quantifiers over sentences.
+I.e., we'll write:
 
-Assumptions: $A \vdash A$
-...
+\begin{principles}
+\pri{Assumptions}{A \vdash A}\\
+\pri{Monotonicity or Thinning}{\text{If }\Gamma \vdash A\text{ then }\Gamma, B \vdash A}\\
+\pri{Cut}{\text{If }\Gamma \vdash A\text{ and }\Delta,A \vdash B\text{ then }\Gamma,\Delta \vdash B}
+\end{principles}
 
 \begin{exercise}
 Explain why these principles follow.
@@ -297,7 +323,7 @@ Explain why these principles follow.
 
 % ** Modus Ponens
 
-The fact that MP can be used to extend deductions means that we also have the
+The fact that MP can be used in deductions means that we also have the
 following principle:
 
 \begin{principles}
@@ -320,8 +346,17 @@ I said that the theorem shows that every deduction can be converted into a
 proof. For suppose there is a deduction of B from A1...An. Then we can move the
 used premises to the right.
 
-Note that we needed MP and ax.1 and ax.2. From the DT and MP, one can prove ax 1
-and ax 2.
+Note that we needed MP and ax.1 and ax.2.
+With the DT and MP, one can prove ax 1 and ax 2, in the following sense:
+
+xxx prove ax 1
+
+So if we're only interested in whether a deduction or proof exists,
+we never need to look at A1 and A2 any more.
+
+\begin{exercise}
+Show in the same way that A2 is provable. [Bostock 206f.]
+\end{exercise}
 
 \begin{exercise}
 The converse of the DT is true as well. [It's equivalent to MP, in fact. Bostock 207]
@@ -329,25 +364,19 @@ The converse of the DT is true as well. [It's equivalent to MP, in fact. Bostock
 
 % ** Example meta-derivation
 
-With the help of the deduction theorem, we can show that $A\to B, B \to C \vdash A \to C$:
-[Argh, I use this example later for sequent/ND. Also has the wrong format.]
+% With the help of the deduction theorem, we can show that $A\to B, B \to C \vdash A \to C$:
+% [Argh, I use this example later for sequent/ND. Also has the wrong format.]
 
-\begin{enumerate*}
-\item $A \to B \vdash A \to B$   (Ass.)
-\item $B \to C \vdash B \to C$   (Ass.)
-\item $A \vdash A$ (Ass.)
-\item $A, A \to B \vdash B$    (1,3, MP)
-\item $A,A \to B, B \to C \vdash C$ (2,4, MP)
-\item $A \to B, B \to C \vdash A \to C$ (5, DT)
-\end{enumerate*}
+% \begin{enumerate*}
+% \item $A \to B \vdash A \to B$   (Ass.)
+% \item $B \to C \vdash B \to C$   (Ass.)
+% \item $A \vdash A$ (Ass.)
+% \item $A, A \to B \vdash B$    (1,3, MP)
+% \item $A,A \to B, B \to C \vdash C$ (2,4, MP)
+% \item $A \to B, B \to C \vdash A \to C$ (5, DT)
+% \end{enumerate*}
 
-This is not a deduction. It shows that a deduction exists.
-
-\begin{exercise}
-Show in the same way that A1 and A2 are provable. [Bostock 206f.]
-\end{exercise}
-
-The exercise shows that if we're only interested in whether a deduction or proof exists, we never need to look at A1 and A2 any more.
+% This is not a deduction. It shows that a deduction exists.
 
 % ** Negation rules
 

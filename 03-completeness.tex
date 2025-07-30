@@ -1,15 +1,42 @@
 \chapter{Completeness}
 
-In this chapter, we meet some important metalogical results. The first is the completeness theorem. This shows that different approaches to first-order logical consequence coincide. It shows that there is a mechanical way to check for first-order entailment. This is a great strength of first-order logic (not shared by second-order logic). But it is tightly connected to some limitations: compactness and Löweheim-Skolem.
+\iffalse
 
-\section{Soundness}
+A1. A \to (B \to A)
+A2. (A \to (B \to C)) \to ((A \to B) \to (A \to C))
+A3. (\neg A \to \neg B) \to (B \to A)
+A4. \forall x A \to A(x/t), where c is a closed term
+A5. \forall x(A \to B) \to (A \to \forall x B), if x is not free in A
+A6. t_1=t_1, for any closed term t_1
+A7. t_1 = t_2 \to (A(x/t_1 )\to A(x/t_2))
+MP. From A and A \to B one may infer B
+Gen. From A one may infer \forall x A(t/x), where t is a closed term
 
- If Σ $\vdash$ φ, then Σ $\models$ φ.
+(Only closed sentences may occur in a proof.)
+
+An $\L_{1}^{=}$-sentence $A$ is true in a model $M$ (for short, $M \models A$)
+if one of the following conditions holds.
+\begin{enumerate*}
+\item $A$ is an identity sentence $t_{1} = t_{2}$ and $[t_{1}]^{M} = [t_{2}]^{M}$.
+\item $A$ is any other atomic sentence $Pt_{1}\ldots t_{n}$ and
+    $([t_{1}]^{M},\ldots,) \in \iota_{M}(P)$.
+\item $A$ is of the form $\neg B$ and $M \not\models B$.
+\item $A$ is of the form $(B \to C)$ and $M \not\models B$ or $M \models C$.
+\item $A$ is of the form $\forall x B$ and $M' \models B(x/c)$ for every
+    model $M'$ that differs from $M$ at most in the object assigned to $c$,
+    where $c$ is the alphabetically first individual constant that does not occur in $B$.
+\end{enumerate*}
+
+\fi
 
 
-\begin{exercise}
-Can we still use soundness to prove consistency of the axiomatization? Yes.
-\end{exercise}
+
+In this chapter, we meet some important metalogical results.
+The first is the completeness theorem.
+This shows that different approaches to first-order logical consequence coincide.
+It shows that there is a mechanical way to check for first-order entailment.
+This is a great strength of first-order logic (not shared by second-order logic).
+But it is tightly connected to some limitations: compactness and Löwenheim-Skolem.
 
 \section{Completeness preview}
 
@@ -47,14 +74,21 @@ Arithmetical entailment is not mirrored by any finite proof system!
 
 The proof of completeness will proceed much like in ch.1.
 
+Completeness entails that all (first-order) logical truths are provable.
+Obviously, not all truths are logical truths.
+So completeness doesn't mean that all truths are provable.
+
+
 \begin{exercise}
 Which, if any, of these statements are correct? (1) The soundness theorem implies that every sentence provable from the Peano axioms is a true sentence of arithmetic; (2) The completeness theorem implies that every true sentence of arithmetic is provable from the Peano axioms. [yes/no]
 \end{exercise}
 
+
 \section{Completeness proof}
 
-We'll use not Gödel's technique, but Henkin's. We've already used this tehnique
-in ch.1. It works for a wide range of logics. In overview, it goes like this.
+
+We'll use not Gödel's 1929 technique, but Henkin's. We've already used this
+technique in ch.1 as a warm up. In overview, it goes like this.
 
 The proof is by contraposition. That is, we assume $\Gamma \not\vdash A$ and show that, in any such case, $\Gamma \not\models A$.
 
@@ -67,6 +101,540 @@ The proof is by contraposition. That is, we assume $\Gamma \not\vdash A$ and sho
 \end{enumerate}
 
 Why this fails for SOL: https://math.stackexchange.com/questions/4913675/how-completeness-fails-in-second-order-logic
+
+\begin{lemma}{}{negation-consistency}
+  If $\Gamma \nproves A$ then $\Gamma \cup {\neg A}$ is consistent.
+\end{lemma}
+\begin{proof}
+  Assume the contrary.
+  Then $\Gamma \cup {\neg A} \proves B$ and $\Gamma \cup {\neg A} \proves \neg B$ for some closed sentence $B$.
+  By the deduction theorem,
+  $\Gamma \proves \neg A \to B$ and $\Gamma \proves \neg A \to \neg B$.
+  So $\Gamma \proves \neg\neg A$ (by \emph{Ex Falso Quodlibet}),
+  and therefore $\Gamma \proves A$ (by double negation elimination).
+  Contradiction.
+\end{proof}
+
+It remains to show that every consistent set of $\L$-sentences has a model.
+
+---
+Lemma: If $\Gamma$ is maximal consistent then (i) $\neg A \in \Gamma$ iff $A \not\in \Gamma$ and (ii) $A \to B \in \Gamma$ iff $A \not\in \Gamma$ or $B \in \Gamma$.
+
+Proof: Exactly as in ch.1.
+
+Main Lemma: If $M_{\Gamma}$ is the Henkin model of a maximal consistent set $\Gamma$, then for any sentence $A$ in the extended language, $M_{\Gamma} \models A$ iff $A \in \Gamma$.
+
+Proof by induction on complexity.
+
+---
+
+Lemma: If $\Gamma \not\vdash A$, then $\Gamma \cup \{ \neg A \}$ is consistent.
+
+Proof: Exactly as in ch.1.
+
+Given this lemma, all that we need to show is that every consistent set of
+sentences has a model. We want to read off that model from the set.
+To this end,
+it helps to first extend the set to a maximal consistent set $\Gamma^{+}$.
+If, say, $\Gamma$ contains $Fa \lor Gb$,
+it's not obvious if
+we should have build model in which $Fa$ is true,
+or $Gb$ is true, or both.
+$\Gamma^{+}$ will contain $Fa$ or $Gb$ or both, so it will answer this question.
+Clearly, if our model is a model of $\Gamma^{+}$,
+then it will be a model of $\Gamma$.
+
+Now suppose we have $Fa$ in $\Gamma^{+}$.
+Our model $M$ must then contain an object $[a]^{M}$ denoted by $a$ that falls in the extension $[F]^{M}$ of $F$.
+The nature of that object doesn't matter.
+For convenience, we'll choose \emph{the individual constant} $a$ as the object denoted by $a$.
+Then we can say that the extension of $F$ comprises all individual constants $c$ for which
+$Fc \in \Gamma^{+}$.
+
+But there's a problem.
+Suppose $\Gamma$ contains $\exists x Fx$.
+This means that the extension of $F$ in $M$ must be non-empty.
+If, as I just said,
+the extension of $F$ comprises all individual constants $c$ for which $Fc \in \Gamma^{+}$,
+we need to ensure that
+there's some constant $c$ such that $Fc \in \Gamma^{+}$,
+otherwise $\exists x Fx$ would not be true in $M$.
+The problem is that
+$\Gamma$ may already contain $\neg Fc$ for every individual constant $c$.
+
+The solution to this problem is to extend the language with new individual constants.
+$\Gamma^{+}$ will contain these new constants,
+and we can use them every existential sentence in $\Gamma$ has a ``witness''.
+
+There are a few complication,
+arising from the fact that we have identity and function symbols in our language.
+If we let each individual constant denote itself,
+any identity statement involving different individual constants will be false.
+After all,
+no constant is identical to any other constant.
+But $a=b$ is consistent,
+and might occur in $\Gamma$ and therefore in $\Gamma^{+}$.
+So, really, we let each constant denote a \emph{set} of terms.
+The constant $a$ will denote the set $\{ c \mid a\!=\!t \in \Gamma^{+} \}$.
+% We can't just use sets of terms,
+% because we need to interpret f for all possible inputs,
+% even if there's no constant c for which f(a)=c is in the Henkin set.
+
+(We'll need a lemma that the relation E that holds between two constants $a$ and $b$ iff $a=b$ is in $\Gamma^{+}$ is an equivalence relation.)
+
+What shall we say about function symbols in $M$?
+To define $[f]^M$,
+we have to specify,
+for each $n$-tuple of objects (in the domain of $M$)
+the object that is the value of $f$ for that $n$-tuple.
+The objects in the domain are sets of constants.
+Suppose $Fg(a) \in \Gamma^{+}$.
+Then $\exists x Fx \in \Gamma^{+}$,
+and $Fc \in \Gamma^{+}$ for some constant $c$.
+Let $[t]^{M} = \{ c \mid c \text{ is a constant and } t\!=\!c \in \Gamma^{+} \}$.
+(Will this work? Machover adds $g(a)$ itself to $[t]^{M}$. Why?)
+
+
+
+
+
+\section{THE PROOF}
+
+
+\begin{definition}{}{consistent}
+  A set $\Gamma$ of sentences in a first-order language $\L$ is \emph{consistent} (within $\L$)
+  if there is no $\L$-sentence $A$ in the language such that
+  $\Gamma \proves A$ and $\Gamma \proves \neg A$.
+\end{definition}
+
+Let $\Gamma$ be a consistent set of $\L$-sentences.
+We'll extend $\Gamma$ to a maximal consistent set in a language $\L^{+}$
+with infinitely many new individual constants.
+
+We first confirm that $\Gamma$ is consistent within the extended language $\L^{+}$.
+This is not entirely trivial
+because there are axioms in $\L^{+}$ that aren't in $\L$.
+We need to confirm that
+these new axioms don't allow deriving a contradiction from $\Gamma$.
+
+\begin{lemma}{}{consistency-in-Lplus}
+  If $\Gamma$ is a set of $\L$-sentences that is consistent within $\L$,
+  and $\L^{+}$ extends $\L$ by a set of new individual constants,
+  then $\Gamma$ is consistent within $\L^{+}$.
+\end{lemma}
+
+\begin{proof} \emph{Proof sketch}.
+  Assume for contraposition that $\Gamma$ is inconsistent within $\L^{+}$.
+  Then there is a deduction $A_{1},\ldots,A_{n}$ of $\bot$ from $\Gamma$ and the axioms in $\L^{+}$.
+  Being finite,
+  this deduction only uses finitely many of the new constants in $\L^{+}$.
+  Call them $c_{1},\ldots,c_{k}$.
+  The deduction also uses only finitely many of the old constants in $\L$.
+  Since $\L$ has infinitely many constants,
+  we can choose $k$ distinct constants $d_{1},\ldots,d_{k}$ from $\L$
+  that don't occur in the deduction.
+  Consider the sequence of sentences $A_{1}',\ldots,A_{n}'$ that results from
+  $A_{1},\ldots,A_{n}$ by replacing each new $c_{i}$ by $d_{i}$.
+  It is easy to see that
+  \begin{enumerate*}[(i)]
+    \item If $A_{i}$ is an axiom then so is $A_{i}'$;
+    \item If $A_{i} \in \Gamma$ then $A_{i}' \in \Gamma$
+      (because sentences in $\Gamma$ contain no new constants);
+    \item If $A_{i}$ follows from $A_{1},\ldots,A_{i-1}$ by MP or Gen,
+      then $A_{i}'$ follows from $A_{1}',\ldots,A_{i-1}'$ by MP or Gen.
+  \end{enumerate*}
+  So $A_{1}',\ldots,A_{n}'$ is a deduction of $\bot$ from $\Gamma$ and the axioms in $\L$,
+  meaning that $\Gamma$ is inconsistent within $\L$.
+\end{proof}
+
+Now we show that we can extend $\Gamma$ to a maximal consistent set $\Gamma^{+}$ in which every sentence $\neg \forall x A$ has a witness $\neg A(x/c)$.
+Recall that by definition \ref{def:max-cons},
+a set of sentences is \emph{maximal consistent} within a language $\L$ if
+it is consistent and contains either $A$ or $\neg A$,
+for every $\L$-sentence $A$.
+
+\begin{lemma}{}{maxcons-closure}
+  If $\Gamma$ is maximal consistent and $\Gamma \proves A$ then $A \in \Gamma$.
+\end{lemma}
+\begin{proof}
+  [exactly as in the propositional case?]
+  Assume $\Gamma$ is maximal consistent and $\Gamma \proves A$.
+  If $A \not\in \Gamma$ then $\neg A \in \Gamma$ by maximality,
+  and $\Gamma \proves \neg A$ by the Identity property of $\proves$.
+  This would render $\Gamma$ inconsistent.
+  So $A \in \Gamma$.
+\end{proof}
+
+\begin{definition}{}{henkin-set}
+  A set of sentences $\Gamma$ in a first-order language $\L$ is a \emph{Henkin set in $\L$} if
+  it is maximal consistent and
+  for every $\L$-formula $A$ in which a single variable $x$ is free,
+  if $\neg \forall x A$ is in $\Gamma$ then there is an individual constant $c$ for which $\neg A(x/c)$ is in $\Gamma$.
+\end{definition}
+
+\begin{lemma}{}{henkin-extension}
+  Every consistent set of $\L$-sentences $\Gamma$ can be extended
+  to a Henkin set in any language $\L^{+}$ that adds infinitely many individual constants to $\L$.
+\end{lemma}
+
+\begin{proof}
+  Let $\Gamma$ be a consistent set of $\L$-sentences.
+  Let $A_{1}, A_{2}, \ldots$ be a list of all $\L^{+}$-formulas with exactly one free variable.
+  We define a sequence of sets $\Gamma_{0}, \Gamma_{1}, \ldots$ as follows:
+  \begin{align*}
+    \Gamma_{0} & := \Gamma \\
+    \Gamma_{n+1} & := \Gamma_{n} \cup \{ \neg \forall x A_{n} \to \neg A_{n}(x/c_{n}) \},
+  \end{align*}
+  where $x$ is the free variable in $A_{n}$ and
+  $c_{n}$ is a new $\L^{+}$-constant that does not occur in $\Gamma_{n}$.
+  (There must be some such constant because $\L^{+}$ contains infinitely many constants
+  that don't occur in $\Gamma$.)
+  Let $\Gamma'$ be the union $\bigcup_{n} \Gamma_{n}$ of all sets in this sequence.
+  (That is, a sentence $A$ is in $\Gamma'$ iff it is in some $\Gamma_{n}$.)
+
+  We show that $\Gamma'$ is consistent.
+  Suppose not.
+  Then there is a derivation of $\bot$ from $\Gamma$
+  and the ``Henkin sentences'' $\neg \forall x A_{n} \to \neg A_{n}(x/c_{n})$.
+  This derivation can use only finitely many of the Henkin sentences.
+  So one of the $\Gamma_{n}$ must be inconsistent.
+  But we can show by induction on $n$ that each $\Gamma_{n}$ is consistent.
+
+  The base case, for $n=0$, hold by assumption: $\Gamma$ is consistent.
+
+  For the inductive step, assume $\Gamma_{n}$ is consistent and
+  suppose for reductio that $\Gamma_{n+1}$ is inconsistent.
+  Then $\Gamma_{n} \proves \neg (\neg\forall x A_{n} \to \neg A_{n}(x/c_{n}))$ by lemma xxx.
+  % ------- NEED: ------
+  % If Γ,A ⊢ then Γ ⊢ A.
+  % --------------------
+  And then by lemma xxx and DNE,
+  \begin{enumerate*}[(i)]
+    \item $\Gamma_{n} \proves \neg \forall x A_{n}$, and
+    \item $\Gamma_{n} \proves \neg\neg A_{n}(x/c_{n})$.
+  \end{enumerate*}
+  % ------- NEED: ------------------------
+  % If Γ ⊢ ¬(A → B) then Γ ⊢ A and Γ ⊢ ¬B.
+  % --------------------------------------
+  From (ii), we get $\Gamma_{n} \proves A_{n}(x/c_{n})$ by DNE.
+  As $c_{n}$ does not occur in $\Gamma_{n}$,
+  we have
+  \begin{enumerate*}
+    \item[(iii)] $\Gamma_{n} \proves \forall x A_{n}$ by UG.
+  \end{enumerate*}
+  % ------ NEED: ----------------------------------
+  % UG: If Γ ⊢ A(x/c) then Γ ⊢ ∀x A, if c not in Γ.
+  % -----------------------------------------------
+  (i) and (iii) contradict the assumption that $\Gamma_{n}$ is consistent.
+
+  % Careful: it's not enough to add witnesses for all existential sentences,
+  % or to loop only over the universal sentences in $\L$.
+  % E.g., if $\Gamma$ contains ∃x∃yRxy, we'd only get the witness ∃yRay.
+  % We also want a witness for that, which isn't in Γ and not even in \L, due to the new constant a.
+
+  Next, we need to extend $\Gamma'$ to a maximal consistent set $\Gamma^{+}$.
+  The construction follows the proof of Lindenbaum's Lemma (xxx).
+  Let $S_{1}, S_{2}, \ldots$ be a list of all $\L^{+}$-sentences.
+  Starting with $\Gamma'$,
+  We define another sequence of sets $\Gamma'_{0}, \Gamma'_{1}, \ldots$:
+  \begin{align*}
+        \Gamma'_{0} & := \Gamma' \\
+        \Gamma'_{n+1} & := \begin{cases}
+        \Gamma'_{n} \cup \{ S_{n} \} & \text{if } \Gamma'_{n} \cup \{ S_{n} \} \text{ is consistent,} \\
+        \Gamma'_{n} \cup \{ \neg S_{n} \} & \text{otherwise.}
+        \end{cases}
+  \end{align*}
+  Let $\Gamma^{+}$ be the union $\bigcup_{n} \Gamma'_{n}$ of all sets in this sequence.
+
+  The maximal consistency of $\Gamma^{+}$ follows exactly as in the proof of Lindenbaum's Lemma.
+  % ------ NEED: ------------------------------------
+  % Every cons set can be extended to a max cons set.
+  % -------------------------------------------------
+  It remains to show that $\Gamma^{+}$ has the witnessing property,
+  meaning that for every sentence $\neg \forall x A$ in $\Gamma^{+}$,
+  there is a corresponding sentence $\neg A(x/c)$ in $\Gamma^{+}$.
+
+  Let $A$ be any formula in which $x$ is the only free variable.
+  By construction,
+  $\Gamma'$ contains $\neg \forall x A \to \neg A(x/c)$,
+  for some constant $c$.
+  Since $\Gamma^{+}$ extends $\Gamma'$,
+  it also contains this sentence.
+  If $\Gamma^{+}$ contains $\neg \forall x A$,
+  it must contain $\neg A(x/c)$ as well,
+  as otherwise it would contain $A(x/c)$,
+  which would make it inconsistent.
+\end{proof}
+
+Next, we show how to read off a model $M_{\Gamma^{+}}$ from a Henkin set $\Gamma^{+}$.
+The domain $D$ of $M_{\Gamma^{+}}$ will consist of sets of $\L^{+}$-terms.
+We could simply say that
+\[
+  D = \{ \{ s \mid t\!=\!s \in \Gamma^{+} \} \mid t \text{ is a closed $\L^{+}$ term} \}.
+\]
+But let's be more explicit about what this amounts to.
+
+\begin{definition}{}{equivalence}
+  A binary relation $R$ on some domain $D$ is an \emph{equivalence relation} if it is
+  \begin{enumerate}
+    \item[(i)] \emph{reflexive}: for every $x \in D$, $x R x$;
+    \item[(ii)] \emph{symmetric}: for every $x, y \in D$, if $x R y$ then $y R x$; and
+    \item[(iii)] \emph{transitive}: for every $x, y, z \in D$, if $x R y$ and $y R z$ then $x R z$.
+  \end{enumerate}
+\end{definition}
+
+\begin{lemma}{}{=equivalence}
+  If $\Gamma$ is a Henkin set then
+  the relation $\equiv_{\Gamma}$ that holds between $\L^{+}$-terms $t,s$ iff $t=s \in \Gamma$ is an equivalence relation.
+\end{lemma}
+\begin{proof}
+  check!
+    \begin{itemize}
+        \item Reflexivity: by axiom A6, $\Gamma^{+} \proves^+ t=t$; so $t=t \in \Gamma^{+}$.
+        \item Symmetry: $\Gamma^{+} \proves^+ t=s \to s=t$, from A7 with $A$ the formula $x=y$). So if $t=s \in \Gamma^{+}$ then $s=t \in \Gamma^{+}$.
+        \item Transitivity: $\Gamma^{+} \proves t=s \to (s=u \to t=u)$, by xxx.
+        So if $t=s \in \Gamma^{+}$ and $s=u \in \Gamma^{+}$ then $t=u \in \Gamma^{+}$.
+    \end{itemize}
+\end{proof}
+
+An equivalence relation \emph{partitions} the domain over which it is defined into distinct cells,
+within which all objects stand in the relation to one another.
+These cells are called \emph{equivalence classes}.
+If $R$ is an equivalence relation and $x$ an object in the domain,
+we write `$[x]_{R}$' for the equivalence class (of $R$) that contains $x$.
+That is, $[x]_{R} = \{ y \in D \mid x R y \}$.
+
+We can now specify the domain of $M_{\Gamma^{+}}$ as follows:
+\[
+  D = \{ [t]_{\equiv} \mid t \text{ is a closed $\L^{+}$-term} \},
+\]
+where $\equiv$ is $\equiv_{\Gamma^{+}}$.
+
+Each individual constant $c$ will denote $[c]_{\equiv}$.
+We'll extend this idea to function terms:
+$f(c)$ will denote $[f(c)]_{\equiv}$.
+But we can't directly assign a denotation to $f(c)$.
+Instead, we have to interpret $f$ as denoting a function on $D$.
+By definition \ref{def:satisfaction},
+the denotation of $f(c)$ is the denotation of $f$ applies to that of $c$.
+Since the denotation of $c$ is $[c]_{\equiv}$,
+we want the denotation of $f$ to be a function that returns $[f(c)]_{\equiv}$ for input $[c]_{\equiv}$.
+So we'll stipulate that for any one-place function symbol $f$ and closed term $t$,
+\[
+  [f]^M([t]_{\equiv}) = [f(t)]_{\equiv}.
+\]
+
+This kind of stipulation can go wrong.
+Suppose $[t]_{\equiv}$ contains two terms $s$ and $t$,
+and $[f(s]_{\equiv} \neq [f(t)]_{\equiv}$.
+Then what is the value of $[f]^{M}$ for $[t]_{\equiv}$?
+Our stipulation appears to say that
+\[
+  [f]^{M}([s]_{\equiv}) = [f(s]_{\equiv})
+\]
+and
+\[
+  [f]^{M}([t]_{\equiv}) = [f(t]_{\equiv}),
+\]
+But $[s]_{\equiv}$ is the same object as $[t]_{\equiv}$,
+and a function must return the same value for the same input.
+To legitimize our stipulation,
+we must therefore show that this problem can never arise.
+
+A similar issue arises when we define the interpretation of predicates.
+To ensure that $Ft$ is in $\Gamma$ iff it is true in $M$,
+we'll stipulate that
+\[
+  [t]_{\equiv} \in [F]^{M} \text{ iff } Ft \in \Gamma.
+\]
+Here, too, we have to ensure that
+if $s$ and $t$ are both in $[t]_{\equiv}$,
+we can never have only one of $Fs$ and $Fs$ in $\Gamma$.
+
+The following lemma shows that neither problem can arise,
+legitimizing the following definition.
+
+\begin{lemma}{}{congruence}
+  If $f$ is an $n$-ary function symbol,
+  $P$ an $n$-ary predicate symbol,
+  and $s_{1}, \ldots, s_{n}, t_{1}, \ldots, t_{n}$ are terms such that
+  $[s_{1}]_{\equiv} = [t_{1}]_{\equiv}, \ldots, [s_{n}]_{\equiv} = [t_{n}]_{\equiv}$,
+  then
+  \begin{enumerate}[(i)]
+    \item $[f(s_1,\ldots,s_n)]_{\equiv} = [f(t_{1},\ldots,t_{n})]_{\equiv}$;
+    \item $P(s_1,\ldots,s_n) \in \Gamma \quad \text{iff} \quad P(t_1,\ldots,t_n) \in \Gamma$.
+  \end{enumerate}
+\end{lemma}
+
+\begin{proof}
+  Assume $[s_{i}]_{\equiv} = [t_{i}]_{\equiv}$, for $i=1,2,\ldots,n$.
+  Then $s_{i}\!=\!t_{i}$ is in $\Gamma$, for each such $i$.
+
+  (i). By axiom A6, $f(s_{1},\ldots,s_{n})=f(s_{1},\ldots,s_{n})$ is in $\Gamma$.
+  By $n$ instances of A7 and MP,
+  it follows that $f(s_{1},\ldots,s_{n})=f(t_{1},\ldots,t_{n})$ is in $\Gamma$,
+  which entails that $[f(s_1,\ldots,s_n)]_{\equiv} = [f(t_{1},\ldots,t_{n})]_{\equiv}$.
+
+  (ii). Assume $P(s_{1},\ldots,s_{n}) \in \Gamma$.
+  By $n$ instances of A7 and MP,
+  $P(t_{1},\ldots,t_{n})$ is in $\Gamma$ as well.
+  The converse holds by the same reasoning.
+\end{proof}
+
+\begin{definition}{henkin-model}
+  The \emph{Henkin model} $M_{\Gamma}$ for a Henkin set $\Gamma$ in a language $\L$ is defined as follows.
+
+  The domain $D$ of $M_{\Gamma}$ is the set $\{ [t]_{\equiv} \mid t \text{ is a closed $\L$-term} \}$,
+  where $\equiv$ is the equivalence relation $\equiv_{\Gamma}$.
+
+  The interpretation function of $M$ is defined as:
+  \begin{enumerate}[(i)]
+    \item If $c$ is an individual constant then $c^M = [c]_{\equiv}$.
+    \item If $f$ is an $n$-ary function symbol then
+          $f^M([t_1]_{\equiv},\ldots,[t_n]_{\equiv}) = [f(t_1,\ldots,t_n)]_{\equiv}$.
+    \item If $P$ is an $n$-ary predicate symbol then
+          $([t_1]_{\equiv},\ldots,[t_n]_{\equiv}) \in R^M$ iff $R(t_1,\ldots,t_n) \in \Gamma$
+  \end{enumerate}
+\end{definition}
+
+Now we can prove our key lemma:
+that a sentence is true in the Henkin model $M_{\Gamma}$ iff it is in the Henkin set $\Gamma$.
+First, a lemma about terms.
+
+\begin{lemma}{}{terms}
+  $t^{M} = [t]_{\equiv}$ for every closed term $t$.
+\end{lemma}
+\begin{proof}
+  The proof is by induction on the complexity of $t$.
+  The base case is covered by clause (i) in definition \ref{def:henkin-model}.
+  So let $t$ be $f(t_{1},\ldots,t_{n})$.
+  Then
+  \begin{align*}
+    [f(t_{1},\ldots,t_{n}]^{M} &= [f]^{M}([t_{1}]^{M},\ldots,[t_{n}]^{M}) &\text{ by def.\ \ref{def:satisfaction=}}\\
+                               &= [f]^{M}([t_{1}]_{\equiv},\ldots,[t_{n}]_{\equiv}) &\text{ by ind.\ hyp.}
+                                                                                      &= [f(t_{1},\ldots,t_{n}]_{\equiv} &\text{ by def.~\ref{def:henkin-model}.}
+
+  \end{align*}
+\end{proof}
+
+\begin{lemma}{Truth Lemma}{truth}
+  For every closed sentence $A$,
+  \[
+    M_\Gamma \models A \quad \text{iff} \quad A \in \Gamma.
+  \]
+\end{lemma}
+
+\begin{proof}
+  By induction on $A$.
+
+  \begin{enumerate}[(i)
+    \item $A$ is an atomic sentence $P(t_{1},\ldots,t_{n})$,
+          where $P$ is non-logical.
+          $M_{\Gamma} \models P(t_{1},\ldots,t_{n})$
+          iff $([t_{1}]^{M},\ldots,[t_{n}]^{M}) \in [P]^{M}$,
+          by definition \ref{def:satisfaction=},
+          iff $[t_{1}]_{\equiv},\ldots,[t_{n}]_{\equiv}) \in [P]^{M}$,
+          by lemma~\ref{lem:terms},
+          iff $P(t_{1},\ldots,t_{n}) \in \Gamma$,
+          by definition \ref{def:henkin-model}.
+
+    \item $A$ is an identity sentence $s=t$.
+          $M_{\Gamma} \models s=t$ iff $[s]^{M} = [t]^{M}$,
+          by definition \ref{def:satisfaction=},
+          iff $[s]_{\equiv} = [t]_{\equiv}$,
+          by lemma~\ref{lem:terms},
+          iff $s=t \in \Gamma$,
+          by xxx.
+
+    \item $A$ is a $\neg B$.
+          We first show that if $M_{\Gamma} \models \neg B$ then $\neg B \in \Gamma$.
+          Assume $M_{\Gamma} \models \neg B$.
+          Then $M_{\Gamma} \not\models B$ by definition \ref{def:satisfaction=},
+          so $B \notin \Gamma$ by induction hypothesis.
+          By maximality,
+          we must have $\neg B \in \Gamma$.
+
+          Next we show that if $\neg B \in \Gamma$ then $M_{\Gamma} \models \neg B$.
+          Assume $\neg B \in \Gamma$.
+          Then $B \not\in \Gamma$ because $\Gamma$ is consistent.
+          So $M_{\Gamma} \not\models B$, by induction hypothesis.
+
+    \item $A$ is $B \to C$.
+          Again we take the two directions in turn.
+          Assume $M_{\Gamma} \models B \to C$.
+          Then $M_{\Gamma} \not\models B$ or $M_{\Gamma} \models C$ by definition \ref{def:satisfaction=}.
+          If $M_{\Gamma} \not\models B$, then by induction hypothesis $B \notin \Gamma$,
+          so by maximality $\neg B \in \Gamma$.
+          Since $\neg B \proves B \to C$,
+          it follows that $B \to C \in \Gamma$.
+          If $M_{\Gamma} \models C$, then by induction hypothesis $C \in \Gamma$.
+          Since $C \proves B \to C$,
+          it again follows that $B \to C \in \Gamma$.
+
+          For the converse direction,
+          assume $B \to C \in \Gamma$.
+          We consider two cases,
+          depending on whether $B \in \Gamma$.
+          If $B \in \Gamma$, then $C \in \Gamma$ by MP,
+          and by induction hypothesis $M_{\Gamma} \models C$.
+          By definition \ref{def:satisfaction=}, this means that
+          $M_{\Gamma} \models B \to C$.
+          If, on the other hand, $B \not\in \Gamma$
+          then by induction hypothesis $M_{\Gamma} \not\models B$,
+          and $M_{\Gamma} \models B \to C$ by definition \ref{def:satisfaction=}.
+
+    \item $A$ is $\forall x B$.
+          We first show that $M_{\Gamma} \models \forall x B$ iff
+          $M_{\Gamma} \models B(x/t)$ for every closed term $t$.
+          By definition \ref{def:satisfaction=},
+          $M_{\Gamma} \models \forall x B$ iff
+          $M' \models B(x/c)$ for every model $M'$ that differs from $M_{\Gamma}$ at most in the object assigned to $c$,
+          where $c$ is a constant that does not occur in $B$.
+          Since $M'$ has the same domain as $M$,
+          any object assigned to $c$ in $M'$ must be a set of closed terms.
+          That is, there must be a term $t$ such that $[c]^{M'} = [t]^{M}$.
+          By the transportation theorem [???],
+          $B(x/c)$ is true in $M'$ iff $B(x/t)$ is true in $M$
+          [because the two sentences only differ wrt the choice of a name,
+          and the two models coincide wrt the interpretation of the chosen name].
+          So $M_{\Gamma} \models \forall x B$ iff
+          $M_{\Gamma} \models B(x/t)$ for every closed term $t$.
+
+          Now we can prove the two directions of the equivalence.
+          Assume $M_{\Gamma} \models \forall x B$.
+          Then $M_{\Gamma} \models B(x/t)$ for every closed term $t$,
+          as we just showed.
+          By induction hypothesis, $B(x/t) \in \Gamma$ for every such $t$.
+          Suppose for contradiction that $\forall x B \notin \Gamma$.
+          Then $\neg \forall x B \in \Gamma$ by maximality
+          and by the Henkin property [xxx] there is a constant $c$ such that $\neg B(x/c) \in \Gamma$,
+          contradicting the fact that $B(x/t) \in \Gamma$ for every closed term $t$.
+
+          Conversely, assume $\forall x B \in \Gamma$.
+          Since $\forall x B \proves B(x/t)$ for every closed term $t$,
+          we have $B(x/t) \in \Gamma$ for every closed term $t$ by Lemma~\ref{lem:deductive_closure}.
+          By induction hypothesis, $M_{\Gamma} \models B(x/t)$ for every closed term $t$.
+          So $M_{\Gamma} \models \forall x B$.
+  \end{enumerate}
+\end{proof}
+
+Phew! 
+
+\begin{theorem}{Completeness Theorem (Gödel 1929)}{completeness}
+  If $\Gamma \models A$ then $\Gamma \proves A$.
+\end{theorem}
+
+\begin{proof}
+  Contraposition.
+  Assume $\Gamma \nproves A$.
+  Then $\Gamma \cup \{\neg A\}$ is consistent by Lemma~\ref{lem:negation_consistency}.
+  By Lemma~\ref{lem:henkin-extension}, we can extend $\Gamma$ to a Henkin set $\Gamma^{+}$ in an extended language $\L^{+}$.
+  By the Truth Lemma,
+  every sentence in $\Gamma^{+}$ is true in the Henkin model $M_{\Gamma^{+}}$.
+  So in particular,
+  xxx
+\end{proof}
+
 
 \section{Counting beyond infinity}
 

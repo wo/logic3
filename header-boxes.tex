@@ -35,8 +35,8 @@
   fontupper=\normalfont,
   }{def}
 
-% Observation environment without title bar:
-\newtcbtheorem[number within=chapter]{obs}{Observation}{%
+% Proposition environment without title bar:
+\newtcbtheorem[number within=chapter]{obs}{Proposition}{%
   theorem style=plain,
   enhanced,
   colback=terra!2!white,
@@ -67,6 +67,26 @@
     drop small lifted shadow,
     beforeafter skip=\baselineskip,
     ]\label{thm:#2}%
+  }%
+  {\end{tcolorbox}}
+
+% Lemma environment:
+\newenvironment{lemma}[2]{%
+  \begin{tcolorbox}[%
+    enhanced,
+    title={#1},
+    colframe=terra!80,
+    colback=terra!2!white,
+    colframe=terra!80!white,
+    colbacktitle=terra!2!white,
+    coltitle=terra!90!black,
+    boxrule=0.3mm,
+    titlerule=-0.5mm,
+    toptitle=2mm,
+    fonttitle=\upshape\bfseries\rmfamily,
+    drop small lifted shadow,
+    beforeafter skip=\baselineskip,
+    ]\label{lem:#2}%
   }%
   {\end{tcolorbox}}
 
