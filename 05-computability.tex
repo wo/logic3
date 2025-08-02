@@ -1,5 +1,50 @@
 \chapter{Computability}
 
+\section{The Entscheidungsproblem}
+
+Move to beginning of ch.5?
+
+Suppose we wonder whether a sentence is valid.
+
+We can tackle this question from two directions.
+We could try to construct a proof.
+From the other direction, we could try to construct a countermodel.
+
+Completeness means that if the target sentence is valid then there \textit{is} a proof.
+And obviously,
+if the target sentence is invalid then there is a countermodel.
+But will we able to find one or the other?
+Is there an algorithm for doing so -- in principle?
+
+This is the Entscheidungsproblem.
+
+In general:
+A property P of strings is said to be decidable if ... there is a total Turing machine that accepts input strings that have property P and rejects those that do not.
+
+Here's an idea.
+Go through all possible proofs, with increasing length.
+If there is a proof of the target sentence, you'll eventually hit it.
+
+This means that there is an algorithm for establishing that a sentence is valid if it is valid.
+(This algorithm is horribly inefficient. We can do better. But the task is NP-complete.)
+
+This algorithm doesn't return anything if a sentence is invalid. It just runs forever.
+
+\begin{exercise}
+What if we simultaneously try out all models, with increasing size?
+\end{exercise}
+
+Models can be infinite. If a sentence has only infinite countermodels, our algorithm will never find them.
+
+It turns out that there is NO algorithm for deciding whether a sentence is invalid.
+This is called the \textit{undecidability} of predicate logic.
+
+To prove this, we need a general concept of algorithm. It won't do to just show
+that a given algorithm doesn't do the job. The problem was raise in 1928 by
+Hilbert and Ackerman, and prompted a search for a general concept of algorithms
+or computations. This concept was found in 1936. With it, the
+Entscheidungsproblem could be answered, negatively.
+
 \section{Preview Gödel}
 
 % ** Hilbert's programme

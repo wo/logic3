@@ -1,5 +1,5 @@
 % !TEX program = xelatex
-\ProvidesClass{logic2}
+\ProvidesClass{logic3}
 \NeedsTeXFormat{LaTeX2e}
 
 % parent class scrbook:
@@ -14,6 +14,7 @@
 
 \usepackage{amsthm}
 \usepackage[fleqn, leqno]{amsmath}
+\usepackage{fitch}
 \setlength\mathindent{1.6cm}
 \everydisplay{\displayindent=1cm}
 % \usepackage{amsfonts}
@@ -174,27 +175,6 @@
 % \renewcommand\Box{\scaleobj{1.2}{\oldbox}}
 % \let\olddiamond\Diamond
 % \renewcommand\Diamond{\scaleobj{1.2}{\olddiamond}}
-% \let\oldvdash\vdash
-% \renewcommand\vdash{\scaleobj{1.3}{\oldvdash}}
-
-% \renewcommand\models{x\mathrel{|}\joinrel=}
-
-\AtBeginDocument{ % otherwise ignored by unicode-math
-  \renewcommand{\models}{\mathrel{|}\joinrel=}
-}
-\newcommand{\notmodels}{\mathrel{|}\joinrel\not=}
-
-% define inverted \models:
-\makeatletter
-\providecommand*{\invmodels}{%
-  \mathrel{%
-    \mathpalette\@invmodels\models
-  }%
-}
-\newcommand*{\@invmodels}[2]{%
-  \reflectbox{$\m@th#1#2$}%
-}
-\makeatother
 
 % make \to smaller and with less spacing to the sides:
 \let\oldto\to
@@ -207,36 +187,49 @@
 \DeclareMathSymbol{\strictif}{\mathrel}{symbolsC}{74}
 \DeclareMathSymbol{\boxright}{\mathrel}{symbolsC}{128}
 
-% define boxes and diamonds for specialist logics:
-\DeclareMathOperator{\Kn}{\mathsf{K}{}}
-\DeclareMathOperator{\Mi}{\mathsf{M}}
-\DeclareMathOperator{\Bel}{\mathsf{B}}
-\DeclareMathOperator{\EKn}{\mathsf{E}}
-\DeclareMathOperator{\CKn}{\mathsf{C}}
-\DeclareMathOperator{\tP}{\mathsf{P}}
-\DeclareMathOperator{\tF}{\mathsf{F}}
-\DeclareMathOperator{\tG}{\mathsf{G}}
-\DeclareMathOperator{\tH}{\mathsf{H}}
-\DeclareMathOperator{\tX}{\mathsf{X}}
-\DeclareMathOperator{\tY}{\mathsf{Y}}
-\DeclareMathOperator{\tS}{\mathsf{S}}
-\DeclareMathOperator{\tU}{\mathsf{U}}
-\DeclareMathOperator{\tN}{\mathsf{N}}
-\DeclareMathOperator{\Ob}{\mathsf{O}}
-\DeclareMathOperator{\Pe}{\mathsf{P}}
-\DeclareMathOperator{\tA}{\mathsf{A}}
-\DeclareMathOperator{\Always}{\mathsf{A}}
-\DeclareMathOperator{\Sometimes}{\mathsf{S}}
-\DeclareMathOperator{\Mostly}{\mathsf{M}}
-\newcommand{\stit}{\mathop{\textsf{\smallcaps{stit}}}}
-\newcommand{\OK}{\mathop{\textsf{\smallcaps{N}}}}
-\newcommand{\Ax}[1]{\smallcaps{\text{A#1}}}
-\newcommand{\prov}[1]{\vdash_{\!\scriptscriptstyle{#1}}}
-\newcommand{\notprov}[1]{\scaleobj{1.3}{\not\vdash}_{\!\scriptscriptstyle{#1}}}
-\newcommand{\CM}[1]{M_{\!\scriptscriptstyle{\Ax{#1}}}}
+% turnstiles:
+
+% \let\oldvdash\vdash
+% \renewcommand\vdash{\scaleobj{1.3}{\oldvdash}}
+
+\newcommand{\proves}{\vdash}
+\newcommand{\notproves}{\not\vdash}
+
+% \AtBeginDocument{ % otherwise ignored by unicode-math
+%   \renewcommand{\entails}{\mathrel{|}\joinrel=}
+% }
+% \newcommand{\nentails}{\mathrel{|}\joinrel\not=}
+
+\AtBeginDocument{ % otherwise ignored by unicode-math
+  \renewcommand{\models}{\vDash}
+}
+\newcommand{\notmodels}{\not\vDash}
+
+\newcommand{\entails}{\Vdash}
+\newcommand{\notentails}{\not\Vdash}
+
+% inverted \entails:
+\makeatletter
+\providecommand*{\inventails}{%
+  \mathrel{%
+    \mathpalette\@inventails\entails
+  }%
+}
+\newcommand*{\@inventails}[2]{%
+  \reflectbox{$\m@th#1#2$}%
+}
+\makeatother
+
+
+
 
 % better smallcaps:
 \newcommand{\smallcaps}[1]{{\text{\footnotesize \MakeUppercase{#1}}}}
+
+% compact enumerate environment for single-line items:
+\newenvironment{cenumerate}[1][]
+  {\begin{enumerate}[itemsep=2pt,parsep=0pt,topsep=6pt,partopsep=2pt,#1]}
+  {\end{enumerate}}
 
 %========= graphs for models ========
 
@@ -264,9 +257,6 @@ reflexive right/.style={->,loop,looseness=7,in=30,out=330}
 \usetikzlibrary{automata, positioning, arrows}
 \usepackage{mathtools} % coloneq
 
-% fitch
-
-\usepackage{fitch}
 
 % ========== Tree proofs ===========
 

@@ -1,30 +1,42 @@
 \chapter{Propositional Logic}
 
+We are going to introduce formal languages
+in which one can regiment mathematical and philosophical reasoning,
+without the distracting complexities and vagaries of natural languages.
+In this chapter,
+we begin with the language of propositional logic:
+the logic of the propositional connectives `$\neg$', `$\to$', `$\land$', `$\lor$', etc.
+This language is woefully inadequate for any serious applications,
+but it serves as a valuable prototype to introduce general ideas and techniques
+that we'll also use for more powerful languages.
+
+After defining the syntax of the propositional language,
+I'll describe a calculus for reasoning in it.
+Then I'll give a semantics for the language,
+which is used to define the concept of validity.
+Finally,
+I'll prove that the calculus is ``sound'' and ``complete'',
+meaning that it allows proving all and only the valid sentences.
+
 \section{Syntax}
 
-% ** Preview
+When talking about a language,
+it is important to distinguish between the language that is being talked about
+-- called the \emph{object language} --
+and the \emph{meta-language} in which the talking takes place.
+Throughout these notes,
+the meta-language will be English,
+with some added technical vocabulary that will be introduced as we go along.
+Our first object language is the language of propositional logic.
 
-We are going to introduce formal languages in which one can regiment
-mathematical and philosophical reasoning, without the distracting complexities
-and vagaries of natural languages.
+In classical propositional logic,
+all connectives can be defined in terms of `$\neg$' and `$\to$'.
+For reasons of economy,
+we will therefore assume that
+the language we're about to study -- our \textit{object language} -- has only these two connectives.
 
-We begin with the language of propositional logic: the logic of the
-propositional connectives `$\neg$', `$\to$', `$\land$', `$\lor$', etc. This
-language is woefully inadequate for any serious applications, but it serves as a
-valuable prototype to introduce general ideas and techniques that we'll also use
-for more powerful languages.
-
-% We'll explain how the language works and how one can reason in it. Unlike in intro logic courses, we won't spend much time doing this. Instead, we'll consider some general properties of this calculus. We'll also explain the role of models in logic, and prove that the calculus is sound and complete with respect to a certain conception of models.
-
-% ** Syntax
-
-In classical propositional logic, all connectives can be defined in terms of
-`$\neg$' and `$\to$'. For reasons of economy, we will therefore assume that the
-language we're about to study -- our \textit{object language} -- has only these
-two connectives.
-
-Overall, the \emph{primitive expressions} of our propositional language fall
-into three kinds, whose instances must be distinct:
+Overall, the \emph{primitive expressions} of our propositional language fall into three kinds,
+whose instances must be distinct:
 %
 \begin{itemize*}
 \item a non-empty set of \textit{sentence letters},
@@ -32,9 +44,9 @@ into three kinds, whose instances must be distinct:
 \item the parentheses, `(' and `)'.
 \end{itemize*}
 
-The sentence letters as classified as \emph{non-logical} expressions. The other
-expressions are \emph{logical}. (The point of this classification will become
-clear in section \ref{sec:semantics0}.)
+The sentence letters as classified as \emph{non-logical} expressions.
+The other expressions are \emph{logical}.
+(The point of this classification will become clear in section \ref{sec:semantics0}.)
 
 \begin{definition}{}{L0}
   A \emph{sentence} of $\L_{0}$ is a finite string of sentence letters and
@@ -46,35 +58,36 @@ clear in section \ref{sec:semantics0}.)
   \end{enumerate*}
 \end{definition}
 
-% ** Remark on metalanguage
-
 A few comments on this definition:
 
 \begin{enumerate}
-  \item I use `$A$' and `$B$' to stand for arbitrary sentences of $\L_0$. I will keep
-using capital letters from the beginning of the alphabet in this fashion, as
-variables in the metalanguage (in which these notes are written) to denote
-arbitrary sentences in the object language. I will sometimes use the lowercase
-letters `$p$' and `$q$' to denote arbitrary sentence letters.
+  \item I use `$A$' and `$B$' to stand for arbitrary sentences of $\L_0$.
+  I will keep using capital letters from the beginning of the alphabet in this fashion,
+  as variables in the metalanguage to denote arbitrary sentences in the object language.
+  I will sometimes use the lowercase letters `$p$' and `$q$' to denote arbitrary sentence letters.
 
-\item I haven't said what the sentence letters of $\L_{0}$ look like. It doesn't
-matter. Strictly speaking, $\L_{0}$ is therefore not a single language, but a
-family of languages, with different stocks of sentence letters.
+  \item I haven't said what the sentence letters of $\L_{0}$ look like.
+  It doesn't matter.
+  Strictly speaking, $\L_{0}$ is therefore not a single language,
+  but a family of languages, with different stocks of sentence letters.
 
-\item When I say `if $A$ is a sentence then $\neg A$ is a sentence', what I mean is
-that putting `$\neg$' in front of any $L_0$-sentence yields another
-$L_0$-sentence. That is, I use the expression '$\neg A$' to denote the
-object-language string that consists of the negation symbol followed by whatever
-string $A$ picks out. Similarly for `$(A \to B)$' and other such cases. It would
-be tedious to always write: `\,`(' followed by $A$ followed by `$\to$' followed
-by `)'\,'.
+  \item When I say `if $A$ is a sentence then $\neg A$ is a sentence',
+  what I mean is that putting `$\neg$' in front of any $L_0$-sentence
+  yields another $L_0$-sentence.
+  That is, I use the expression '$\neg A$' to denote
+  the object-language string that consists of
+  the negation symbol followed by whatever string $A$ picks out.
+  Similarly for `$(A \to B)$' and other such cases.
+  It would be tedious to always write:
+  `\,`(' followed by $A$ followed by `$\to$' followed by `)'\,'.
+
 % (This can be explained as follows: The metalanguage in which these notes are
 % written is an extended version of English in which the symbol '$\neg$' is sometimes
 % used as a name for itself, and in which concatenations of expressions that
 % denote expressions in the object-language, like '$\neg$' and '$A$', denote the
 % concatenation of these object-language expressions.)
-
 \end{enumerate}
+
 % \begin{exercise}
 % 'Distinct' is stronger than 'different'; it rules out overlapping
 % symbols. Explain why it might be problematic if we allowed for basic symbols
@@ -82,7 +95,7 @@ by `)'\,'.
 % \end{exercise}
 
 \begin{exercise}
-How many sentences are there in $\L_{0}$?
+  How many sentences are there in $\L_{0}$?
 \end{exercise}
 
 % % ** Use and mention
@@ -108,13 +121,13 @@ Now for some notational shortcuts.
 \item $(A \leftrightarrow B)$ for $\neg ((A \to B) \to \neg(B \to A))$.
 \end{itemize*}
 
-  \item It is also convenient to have a zero-ary connective $\top$ that is
-        always true, and its dual $\bot$ that is always false. Where $A$ is an
-        arbitrary sentence letter (say, the alphabetically first), we write
+\item It is also convenient to have a zero-ary connective $\top$ that is
+      always true, and its dual $\bot$ that is always false. Where $p$ is an
+      arbitrary sentence letter (say, the alphabetically first), we write
 
 \begin{itemize*}
-\item $\top$ for $A \to A$;
-\item $\bot$ for $\neg(A \to A)$.
+\item $\top$ for $p \to p$;
+\item $\bot$ for $\neg(p \to p)$.
 \end{itemize*}
 
 \item Where no ambiguity threatens, we'll often omit parentheses. For example,
@@ -498,7 +511,7 @@ learning more and more about what Γ worlds look like along the way.
 This aesthetic point becomes important if we assume that
 we're not describing an independent reality.
 
-Note that in int logic ∨ and ∧ can't be defined in terms of conditional and negation!
+Note that in int logic $\lor$ and $\land$ can't be defined in terms of conditional and negation!
 ...
 
 % ** A sequent calculus
@@ -561,14 +574,16 @@ assumptions on the left over and over. In introductory logic textbooks, one
 often finds proofs that look more like this:
 
 \[
-\begin{fitch}
-\fa A\to B          & \text{Premise}\\
-\fa B\to C          & \text{Premise}\\
-\fh A               & \text{Assumption}\\
-\fa B               & \to\!\text{E}\;1,3\\
-\fa C               & \to\!\text{E}\;2,4\\
-\fa A\to C          & \to\!\text{I}\;3\text{–}5
-\end{fitch}
+\begin{nd}
+\hypo{1} {A\to B}          \text{Premise}\\
+\hypo{2} {B\to C}          \text{Premise}\\
+\open
+\hypo{3} {A}               \text{Assumption}\\
+\have{4} {B}               \to\!\text{E}\;1,3\\
+\have{5} {C}               \to\!\text{E}\;2,4\\
+\close
+\have{6} {A\to C}          \to\!\text{I}\;3\text{–}5
+\end{nd}
 \]
 
 This is really the same proof, just written in a more convenient style. The
@@ -905,7 +920,7 @@ proof is by contraposition. That is, we assume $\Gamma \not\vdash A$ and show
 that, in any such case, $\Gamma \not\models A$. The following lemma allows us to
 reformulate this task.
 
-\begin{lemma}
+\begin{lemma}{}{consistency-lemma}
   $\Gamma \not\vdash A$ iff $\Gamma \cup \{\neg A\}$ is consistent.
 \end{lemma}
 

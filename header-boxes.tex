@@ -70,25 +70,41 @@
   }%
   {\end{tcolorbox}}
 
-% Lemma environment:
-\newenvironment{lemma}[2]{%
-  \begin{tcolorbox}[%
-    enhanced,
-    title={#1},
-    colframe=terra!80,
-    colback=terra!2!white,
-    colframe=terra!80!white,
-    colbacktitle=terra!2!white,
-    coltitle=terra!90!black,
-    boxrule=0.3mm,
-    titlerule=-0.5mm,
-    toptitle=2mm,
-    fonttitle=\upshape\bfseries\rmfamily,
-    drop small lifted shadow,
-    beforeafter skip=\baselineskip,
-    ]\label{lem:#2}%
-  }%
-  {\end{tcolorbox}}
+% Lemma environment with automatic numbering:
+\newtcbtheorem[number within=chapter]{lemma}{Lemma}{%
+  enhanced,
+  breakable,
+  enhanced jigsaw,
+  colback=terra!2!white,
+  colframe=terra!80!white,
+  colbacktitle=terra!2!white,
+  boxrule=0.3mm,
+  drop small lifted shadow,
+  titlerule=-0.5mm,
+  toptitle=2mm,
+  beforeafter skip=\baselineskip,
+  fonttitle=\upshape\bfseries\rmfamily,
+  coltitle=terra!90!black,
+  fontupper=\normalfont,
+  }{lem}
+
+% Corollary environment with automatic numbering:
+\newtcbtheorem[number within=chapter]{corollary}{Corollary}{%
+  enhanced,
+  breakable,
+  enhanced jigsaw,
+  colback=terra!2!white,
+  colframe=terra!80!white,
+  colbacktitle=terra!2!white,
+  boxrule=0.3mm,
+  drop small lifted shadow,
+  titlerule=-0.5mm,
+  toptitle=2mm,
+  beforeafter skip=\baselineskip,
+  fonttitle=\upshape\bfseries\rmfamily,
+  coltitle=terra!90!black,
+  fontupper=\normalfont,
+  }{cor}
 
 % Proof:
 \renewtcolorbox{proof}{
