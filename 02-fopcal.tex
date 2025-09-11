@@ -1,72 +1,110 @@
+\setcounter{chapter}{1}
 \chapter{First-Order Predicate Logic}
 
-\section{Syntax}
+In this chapter,
+we'll review the syntax and semantics of first-order predicate logic.
+In contrast to propositional logic,
+most
+(some would say: all)
+mathematical reasoning can be formalized in first-order logic.
 
-% ** Motivation
+\section{Syntax}\label{sec:syntax1}
 
-In this chapter, we'll review the syntax and semantics of first-order predicate
-logic. Unlike with propositional logic, most -- some would even say: all --
-mathematical reasoning can be formalized in this language.
+Let's begin with the \emph{basic} language of first-order logic.
+In section \ref{sec:functions},
+we'll extend this language by adding function symbols and identity.
 
-I'll begin with a simple version the language, without function symbols and
-identity. These will be added in section \ref{sec:functions}.
-
-% ** Alphabet
-
-For the moment, then, the \emph{primitive expressions} of a first-order language
-$\L_{1}$ fall into the following kinds, whose instances must be distinct:
+The \emph{primitive symbols} of a first-order language $\L_1$ fall into
+the following categories
+(whose members must not be part of one another):
 %
 \begin{itemize*}
-\item an infinite set of \textit{individual variables},
-\item an infinite set of \textit{individual constants},
+\item an infinite set of \textit{(individual) variables},
+\item an infinite set of \textit{(individual) constants},
 \item for each natural number $n$, a set of \textit{$n$-ary predicate symbols},
 \item the \textit{connectives} `$\neg$' and `$\to$',
 \item the \textit{universal quantifier symbol} `$\forall$',
 \item the parentheses `(' and `)'.
 \end{itemize*}
 
-The individual constants and predicate symbols are classified as non-logical.
+The individual constants and predicate symbols are classified as non-logical;
+the other symbols are logical.
 
-% As in the case of propositional logic, we define the sentences of first-order
-% logic inductively.  by first defining the class of atomic formulas, and then
-% stipulating that when certain operations are applied to a formula then the
-% result is also a formula. I.e., the class of formulas is \textit{closed} under
-% the operations.
+The individual constants and variables constitute the \emph{singular terms} of $\L_1$.
+Intuitively,
+their function is to pick out an object:
+a person, a number, a set, whatever.
+Predicate symbols are used to attribute properties or relations to these objects.
+For example,
+we might have individual constants `$a$' and `$b$' for Athens and Berlin,
+respectively,
+and a binary predicate `$R$' for \emph{being west of}.
+`$Rab$' would then state that Athens is west of Berlin,
+and `$Rba$' that Berlin is west of Athens.
+In $\L_1$, the predicate symbol always comes first.
 
-% ** Formulas
+From \emph{atomic sentences} like `$Rab$' or `$Fa$',
+we can form complex sentences in the familiar way
+with the help of `$\neg$' and `$\to$' and the parentheses:
+$\neg Rab$, \, $(Rab \to Fa)$, \, $\neg(Rab \to Fa)$, etc.
+
+The real power and complexity of first-order logic comes from
+its quantificational apparatus.
+The quantifier symbol `$\forall$' allows making general claims about all objects,
+where by `all' I mean:
+all objects in the intended domain of discourse.
+In a formal theory of arithmetic,
+for example,
+the intended domain of discourse would consist of the natural numbers 0, 1, 2, 3, etc.
+It would not include Athens.
+Here,
+`$\forall x Fx$' would state that
+every natural number has the property expressed by `$F$'.
+
+Some practice is required to become familiar with the use of `$\forall$',
+as it doesn't have a direct analog in natural language.
+The closest translation of `$\forall x Fx$' in English is something like
+
+\begin{quote}
+  Everything is such that it is $F$.
+\end{quote}
+
+This can obviously be simplified to `Everything is $F$';
+but in this sentence,
+`everything' combines directly with a predicate (`is $F$'),
+whereas `$forall x$' combines with an expression of sentential type, `$Fx$'.
+The variable `$x$' works somewhat like the pronoun `it' in English.
+Overt variables are sometimes used in English when quantifiers are nested:
+
+\begin{quote}
+  For every number $x$ there is a number $y$ greater than $x$ such that every
+  number greater than $y$ is greater than $x$.
+\end{quote}
+
+This can be easily expressed in first-order logic,
+assuming that `$G$' means `is greater than':
+
+\[
+  \forall x \exists y (Gyx \land \forall z (Gzy \to Gzx)).
+\]
 
 \begin{definition}{}{formula}
-  The \emph{singular terms} of a first-order language $\L_{1}$ are its individual constants and its variables.
-
-  A \emph{formula} of $\L_{1}$ [later use $\L_{1}^{=}$] is a finite string built up according to the following formation rules:
+  A \emph{formula} of a basic first-order language $\L_1$
+  is a finite string built up according to the following formation rules:
   \begin{enumerate*}
-    \item[(i)] If $P$ is an $n$-ary predicate symbol and $t_{1},\ldots,t_{n}$ are singular terms then $Pt_{1}\ldots t_{n}$ is a formula.
-    \item[(ii)] If $A$ is a formula, then so is $\neg A$.
-    \item[(iii)] If $A$ and $B$ are formulas, then so is $(A \to B)$.
-    \item[(iv)] If $x$ is a variable and $A$ is a formula then $\forall x A$ is a formula.
+    \item[(i)] If $P$ is an $n$-ary predicate symbol and $t_{1},\ldots,t_{n}$ are singular terms of $\L_1$ then $Pt_{1}\ldots t_{n}$ is a formula.
+    \item[(ii)] If $A$ is an $\L_1$-formula, then so is $\neg A$.
+    \item[(iii)] If $A$ and $B$ are $\L_1$-formulas, then so is $(A \to B)$.
+    \item[(iv)] If $x$ is a variable and $A$ is a formula of $\L_1$ then $\forall x A$ is a formula.
   \end{enumerate*}
 \end{definition}
 
-Here, `$P$', `$t_{1}$', `$t_{n}$', `$A$', `$B$', `$x$' are metalinguistic
-variables standing for expressions in the object language $\L_{1}$. I haven't
-specified what the predicate symbols, individual constants, and variables of
-$\L_{1}$ should look like. A popular convention is to use capital letters as
-predicate symbols, lower-case letters from the beginning of the alphabet as
-individual constants, and lower-case letters from the end of the alphabet
-(perhaps with numerical subscripts) as variables. With this convention, the
-following might be example formulas, assuming that `$F$' is 1-ary (also called
-\emph{monadic}) and `$R$' 2-ary (or \emph{binary}):
+Here, `$P$', `$t_{1}$', `$t_{n}$', `$A$', `$B$', `$x$' are metalinguistic variables
+standing for expressions in $\L_1$.
+I haven't specified what the predicate symbols, individual constants, and variables of
+the object language look like.
 
-\begin{quote}
-  $Fa$, \, $Rab$,\, $Rax$,\, $(\neg Fy \to Rax)$,\, $(Fa \to \forall x(Fx \to Rax))$
-\end{quote}
-
-\begin{exercise}
-Is $\forall x Fa$ a formula of $\L_{1}$?
-\end{exercise}
-
-As in the case of propositional logic, we introduce some shortcuts in the
-metalanguage, writing
+As in the case of propositional logic, we introduce some shortcuts in the metalanguage, writing
 
 \begin{itemize*}
 \item $(A \land B)$ for $\neg(A \to \neg B)$;
@@ -77,95 +115,40 @@ metalanguage, writing
 \item $\exists x A$ for $\neg \forall x \neg A$.
 \end{itemize*}
 
-We'll omit parentheses when they are not needed for disambiguation.
+The last of these is new.
+We'll omit parentheses and quotation marks when no ambiguity threatens.
 
-Now a few words on how this kind of language is meant to be used.
+Definition \ref{def:formula} allows for formulas like these:
+%
+\begin{gather*}
+  Rax\\
+  Fa \to Gx
+\end{gather*}
+%
+If, as before, we interpret
+`$a$' as denoting Athens and `$R$' as being west of,
+`$Rax$' could be read as `Athens is west of $x$'.
+But variables, unlike constants, don't pick out a definite object.
+Their only function is to construct quantified statements.
+`$\forall x Rax$' would say that Athens is west of everything,
+but `$Rax$' doesn't really say anything.
+It is neither true nor false.
+% (We might say that it is true ``relative
+% to some interpretations of `$x$'\,'' and false relative to others. For example,
+% it is true if we interpret `$x$' as picking out 1, and false if we interpret it
+% as picking out 0.)
 
-Individual constants function as names. Each individual constant picks out an
-object -- which might be a person, a number, a set, or whatever. Predicate
-letters express properties or relations. In a formal theory of arithmetic, for
-example, we might have individual constants `0' and `1' for the numbers 0 and 1,
-and a binary predicate `$G$' that expresses the greater-than relation. `$G10$'
-is then a true formula, stating that 1 is greater than 0. `$G11$' falsely states
-that 1 is greater than itself.
+Formulas like `$Rax$' and `$Fa \to Gx$' that contain a variable
+without a matching quantifier are called ``open''.
+Formulas that aren't open are ``closed''.
+Only closed formulas make a genuine claim about
+the intended domain of discourse.
+Only closed formulas are therefore sentences.
 
-The quantifier symbol `$\forall$' allows making general claims about all objects
--- or, more precisely, about all objects in the intended domain of discourse. In
-a theory of arithmetic, the intended domain of discourse would consist of the
-natural numbers 0, 1, 2, 3, etc. It would not include, say, Julius Caesar. Thus
-`$\forall x Gx0$ 'might state (falsely) that every natural number is greater
-than 0, while `$\forall x (Gx1 \to Gx0)$' states (truly) that every number that
-is greater than 1 is greater than 0. `$\exists x G1x$', which is short for
-`$\neg\forall x \neg G1x$', states (truly) that 1 is greater than some number.
-
-\begin{exercise}
-  I said above that the primitive expressions must be ``distinct''. To be pediantic, we should say that none is part of another.
-  Explain why it would be a problem to have '1', '2', ...
-\end{exercise}
-
-The quantificational constructions of first-order logic don't work like ordinary
-quantificational constructions in natural language, and it takes some practice
-to become fluent in their use. The closest translation of `$\forall x Gx0$' in
-English is something like
-
-\begin{quote}
-  Everything is such that it is greater than 0.
-\end{quote}
-
-Of course, this can be simplified to 'everything is greater than 0', but here
-`everything' combines directly with a predicate (`is greater than 0'), whereas
-the $\L_{1}$-quantifier `$forall x$' combines with an expression of sentential
-type, with `$Gx0$', which means something like `it is greater than 0'. The bound
-variable `$x$' appears in the English translation only once, as the pronoun
-`it'. Overt variables are rarely used in English, but they can be useful when
-quantifiers are nested:
-
-\begin{quote}
-  For every number $x$ there is a number $y$ greater than $x$ such that every
-  number greater than $y$ is greater than $x$.
-\end{quote}
-
-This can be easily expressed in $\L_{1}$:
-
-\[
-  \forall x \exists y (Gyx \land \forall z (Gzy \to Gzx)).
-\]
-
-[Exercise?]
-
-Now consider the expression
-
-\[
-  Gx0.
-\]
-
-According to definition \ref{sec:formula}, it is a formula. But what does it
-say? I'm not asking how to pronounce it. We can, of course, read it as `gee ex
-zero' or as `$x$ is greater than zero'. But `$x$' doesn't pick out any definite
-number. Only individual constants pick out definite objects. Variables are
-devices to construct quantified statements. So `$Gx0$' doesn't really say
-anything. It is neither true nor false. (We might say that it is true ``relative
-to some interpretations of `$x$'\,'' and false relative to others. For example,
-it is true if we interpret `$x$' as picking out 1, and false if we interpret it
-as picking out 0.)
-
-The problem with `$Gx0$' is not that it contains a variable. `$\forall x Gx0$'
-also contains a variable, but it raises no problems. On out arithmetical
-interpretation, it says that every number is greater than 0, which happens to be
-false. The problem with `$Gx0$' is that it contains a \emph{free} variable -- a
-variable that isn't bound by a quantifier.
-
-Formulas with free variables are called \textit{open}. Formulas with out free
-variables are \textit{closed}. Only closed formulas make an outright claim about
-the intended domain of discourse. We allow for open formulas only because they
-allow for a simple specification of the construction rules for larger sentences.
-
-% ** Definition open/closed
-
-Let's make these distinction more precise.
+Let's make this distinction more precise.
 
 \begin{definition}{}{binding}
-  A \emph{subformula} of a formula is a part of a formula that is itself a formula.
+  A \emph{subformula} of a formula $A$ is any part of $A$ that is itself a formula.
 
   A \emph{quantifier} consists of the symbol `$\forall$' followed by a variable.
   The variable is said to be \emph{bound} by the quantifier.
@@ -180,199 +163,337 @@ Let's make these distinction more precise.
 
   A formula in which some variable occurs free is \emph{open}.
 
-  A formula in which no variable occurs free is \emph{closed}.
+  A formula that isn't open is \emph{closed}.
 
   A \emph{sentence} is a closed formula.
 \end{definition}
 
 \begin{exercise}
-Why do I say that "occurrences" of a variable in a formula are free or bound? Why not simply say that a variable is free or bound?
+  Why do I say that "occurrences" of a variable in a formula are free or bound? Why not simply say that a variable is free or bound?
 \end{exercise}
 
 \begin{exercise}
-Which of these are open/closed? ...
+  Assuming that `$F$' a 1-ary (= \emph{monadic}) predicate, `$a$' a constant, and `$y$' a variable, which of these are formulas? Which are sentences? Mark the scope of each quantifier.
+
+  (a) $Fa \to \forall x Fx$\quad (b) $\forall x Fx \to Fx$\quad (c) $\forall x Fa$\quad (d) $\forall x (Fa \to \forall x \neg (Fx \to Fa))$
 \end{exercise}
 
-\begin{exercise}
-  $\L_{1}$ \textit{extends} $\L_{0}$ in the sense that every $\L_{0}$-sentence
-  is also an $\L_{1}$-sentence. Explain why this is true.
-\end{exercise}
-
-The language of first-order logic is more restrictive than the formal language
-introduced by Frege. We only allow quantifying into the position of individual
-constants. Frege also allowed quantification into the position of predicates, as
-in $\forall X Xa$. This kind of \emph{second-order} quantification has
-interesting applications in mathematics and philosophy, but we'll only turn to
-it in chapter \ref{ch:hol}.
+% \begin{exercise}
+%   $\L_{1}$ \textit{extends} $\L_{0}$ in the sense that every $\L_{0}$-sentence
+%   is also an $\L_{1}$-sentence. Explain why this is true.
+% \end{exercise}
 
 \section{The first-order predicate calculus}
 
-% ** Definition substitution
+The first complete proof system for first-order logic can be found in
+Frege's \emph{Begriffsschrift} (1879).
+However,
+the language of the \emph{Begriffsschrift} is stronger than
+our first-order language:
+it allows quantifying not only into the position of individual constants,
+but also into predicate position,
+with sentences like `$\forall X\, Xa$'.
+Such quantifiers are called \emph{second-order},
+and the resulting logic is called \emph{second-order logic}.
+We'll look at it more closely in chapter~\ref{ch:hol}.
+The first complete calculus for pure first-order logic is due to David Hilbert and Wilhelm Ackermann (1928).
+Again,
+we give a slightly simplified version of their calculs,
+which we'll call \emph{the first-order predicate calculus}.
 
-We're going to define a Hilbert-style proof calculus for $\L_{1}$. We'll have
-the same axiom schemas A1-A3 as in the propositional calculus, and the same
-inference rule of Modus Ponens:
+Like the propositional calculus from the previous chapter,
+our first-order calculus will consist of some axioms and inference rules.
+In fact,
+we'll take over all the axioms and rules of the propositional calculus.
+So all instances of A1-A3 are axioms,
+and Modus Ponens (MP) is a rule of our new calculus.
+To these,
+we add some principles for dealing with quantifiers.
 
-\begin{principles}
-\pri{A1}{A \to (B \to A)}\\
-\pri{A2}{(A \to (B \to C)) \to ((A \to B) \to (A \to C))}\\
-\pri{A3}{(\neg A \to \neg B) \to (B \to A)}\\
-\pri{MP}{\text{From }A\text{ and }A \to B\text{ one may infer }B.}
-\end{principles}
-
-In addition, we need some principles for dealing with quantifiers. For example,
-we want to allow reasoning from the universal statement $\forall x Fx$ to its
-instances like $Fa$ and $Fb$. To state this in full generality, we need to
-define the notion of substitution.
+One inference that we want to allow is to move
+from a universal statement like $\forall x Fx$ to
+instances like $Fa$ and $Fb$.
+(If \emph{everything} is $F$,
+then \emph{a} is $F$.)
+To state this in a more general way,
+we need the concept of substitution.
 
 \begin{definition}{}{substitution1}
-  If $A$ is an $\L_{1}$-formula, $x$ a variable, and $t$ a singular term, then
-  $A(x/t)$ is the formula obtained from $A$ by replacing all free occurrences of
-  $x$ in $A$ with $t$.
+  If $A$ is an formula, $x$ a variable, and $t$ a singular term,
+  then $A(x/t)$ is the formula obtained from $A$ by
+  replacing all free occurrences of $x$ in $A$ with $t$.
 \end{definition}
 
-The substitution operator `$(x/t)$' obviously belongs to our metalanguage, not
-to $\L_{1}$ itself. For example, the metalinguistic expression `$Fx(x/a)$'
-denotes the object-language sentence `$Fa$'. In informal discussions, I'll
-sometimes also write `$A(x)$' to indicate that $A$ is a formula in which the
-variable $x$ occurs freely, in which case `$A(t)$' is shorthand for `$A(x/t)$'.
+The substitution operator `$(x/t)$' belongs to our metalanguage.
+It not part of the object language.
+For example,
+the metalinguistic expression `$Fx(x/a)$' denotes the object-language sentence `$Fa$'.
+In informal contexts,
+I'll often write `$A(x)$' to indicate that
+$A$ is a formula in which the variable $x$ occurs freely;
+`$A(t)$' is then shorthand for `$A(x/t)$'.
 
-\begin{exercise}
-  Let $A$ be $\forall x (Fx \to Gy) \to  \forall y Fy$. What is $A(x/a)$?
-\end{exercise}
+Now we can state a general rule of ``Universal Instantiation'':
 
-The general rule of ``Universal Instantiation'' says that one may reason from
-$\forall xA$ to $A(x/c)$, where $c$ is an individual constant.
-In Hilbert-style axiomatic calculi, we try to minimize primitive rules. So
-instead of adding a new inference rule, we'll add a corresponding axiom schema:
+\begin{quote}
+  If $A$ is a formula, $x$ a variable and $c$ a constant,
+  one may infer $A(x/c)$ from $\forall x A$.
+\end{quote}
 
-\begin{principles}
-  \pri{A4}{\forall x A \to A(x/c)}.
-\end{principles}
+We won't actually add this as a new rule, however,
+because we can just as well add a corresponding axiom (schema):
+%
+\begin{axioms}
+  A4 & $\forall x A \to A(x/c)$
+\end{axioms}
+%
+Given A4, we can use MP to reason from $\forall x A$ to $A(x/c)$.
 
-With this, we can reason from $\forall x A$ to $A(x/c)$ by Modus Ponens.
-
-We'll introduce a genuine rule -- called \emph{(Universal) Generalization} -- for the
+We introduce a genuine rule -- called \emph{(Universal) Generalization} -- for the
 converse inference:
 
-
-\begin{principles}
-    \pri{Gen}{\text{From }A \text{ one may infer }\forall x A(t/x).}
-\end{principles}
+\begin{axioms}
+    Gen & $\text{From }A \text{ one may infer }\forall x A(c/x).$
+\end{axioms}
 
 % Careful: This isn't sound: From A(x/c) one may infer \forall x A.
 % Counterexample: From a=a to \forall x x=a.
 
-This rule is obviously unsound when reasoning from assumptions: from the
-assumption that Joan sleeps we can't infer that everyone sleeps. But remember
-that each line in a (Hilbert-style) axiomatic proof is either an axiom or
-follows from an axiom by an inference rule. None of our axioms (or rules) will
-make specific claims about a particular object $c$ that it wouldn't make about
-all objects. Thus if $A(c)$ can be derived from the axioms then one could
-equally derive $A(d)$ for any other constant $d$.
+This may require an explanation.
+Do we really want to infer $\forall x Fx$ from $Fa$?
+The inference clearly isn't valid:
+it may be that the particular object $a$ is $F$,
+while other objects aren't.
+But remember that each line in a strictly Hilbert-style axiomatic proof
+is either an axiom or follows from an axiom by an inference rule.
+None of our axioms or rules will
+make specific claims about any particular object
+that it wouldn't make about all other objects.
+$Fa$ will not be provable.
+By contrast,
+$Fa \to Fa$ is.
+And here,
+the inference to $\forall x (Fx \to Fx)$ is safe.
 
-To get a complete calculus, we need one more axiom:
+Proofs in the first-order calculus often start with a universal sentence,
+then use A4 to derive an instance,
+use other axioms and rules to derive a consequence of that instance,
+and finally use Gen to derive a universal version of that consequence.
+To get a complete calculus,
+we need one more axiom:
 
-\begin{principles}
-  \pri{A5}{\forall x(A \to B) \to (A \to \forall x B), \text{ if $x$ is not free in $A$}}.
-\end{principles}
+\begin{axioms}
+  A5 & $\forall x(A \to B) \to (A \to \forall x B), \text{ if $x$ is not free in $A$}$
+\end{axioms}
 
-To see the point of this, suppose that in the course of a proof we have
-established the following claims, for some $A$ and $B(x)$, where $x$ isn't free
-in $A$:
+To see the point of this,
+suppose that in the course of a proof we have
+established the following claims,
+for some $A$ and $B(x)$,
+where $x$ isn't free in $A$:
 
 \begin{quote}
   $\forall x (A \to B(x))$ \\
   $A$
 \end{quote}
 
-If we had a rule of Universal Instantiation, we could deduce $A \to B(c)$ from
-the first line, then use Modus Ponens to infer $B(c)$ and finally infer
-$\forall x B(x)$ by Universal Generalization. It turns out that this reasoning
-can't be replicated after we've replace Universal Instantiation by the axiom
-schema (A4). So we add (A5), which allows inferring $\forall x B(x)$ by two
-applications of Modus Ponens.
+If we had the rule of Universal Instantiation,
+we could deduce $A \to B(c)$ from the first line,
+then use MP to infer $B(c)$ and finally infer $\forall x B(x)$ by Gen.
+This reasoning can't be replicated
+after we've replace Universal Instantiation by the axiom schema A4.
+So we add A5,
+which allows inferring $\forall x B(x)$ by two applications of Modus Ponens.
+
+Here's a summary of the axioms and rules:
+
+\begin{axioms}
+A1 & $A \to (B \to A)$\\
+A2 & $(A \to (B \to C)) \to ((A \to B) \to (A \to C))$\\
+A3 & $(\neg A \to \neg B) \to (B \to A)$\\
+A4 & $\forall x A \to A(x/c)$\\
+A5 & $\forall x(A \to B) \to (A \to \forall x B), \text{ if $x$ is not free in $A$}$\\
+MP & $\text{From }A\text{ and }A \to B\text{ one may infer }B.$\\
+Gen & $\text{From }A \text{ one may infer }\forall x A(t/x).$
+\end{axioms}
 
 \begin{definition}{Proof}{proof0}
-  A \emph{proof} of a sentence $A$ in the basic first-order predicate calculus is a finite sequence of sentences $A_{1},A_{2},\ldots A$,
-  each of which is either an instance of A1-A5 or follows from earlier sentences in the sequence by MP or Gen.
+  A \emph{proof} of a sentence $A$ in the first-order predicate calculus is a finite sequence of sentences $A_{1},A_{2},\ldots A$,
+  each of which is
+  either an instance of A1-A5 or follows from earlier sentences by MP or Gen.
 \end{definition}
 
 I'll use `$\vdash A$' to express that $A$ is provable in the first-order
 predicate calculus.
 
-As in the case of propositional logic, it's convenient to have a more general
-notion of proof that covers deductions from premises.
+\begin{exercise}
+  Let $A$ be $\forall x (Fx \to Gy) \to  \forall y Fy$. What is $A(x/a)$?
+\end{exercise}
 
-% [In a strict Hilbert-style
-% calculus, one shows that a conclusion $B$ follows from premises $\Gamma$ by
-% proving $(A_{1} \to (\ldots \to (A_{n} \to B)))$ for some $A_{1},\ldots,A_{n}$
-% in $\Gamma$. -- This isn't quite right. Our concept of deduction is equivalent
-% by the DT to this one.]
+As in the case of propositional logic,
+it is convenient to have a proof system that
+directly allows for deductions from premises.
+In this case,
+we have to restrict the use of Gen:
+we don't want to infer $\forall x Fx$ from $Fa$.
 
 \begin{definition}{}{deduction1}
-  A (first-order) \emph{deduction} from a set $\Gamma$ of sentences is a finite
-  list of sentences each of which is either an axiom, an element of Γ, or
-  follows from previous sentences by MP or Gen -- but without applying Gen to
-  individual constants $c$ that occur in $\Gamma$.
-
-  A deduction \emph{of} a sentence $A$ from a set $\Gamma$ of sentences is a
-  deduction from $\Gamma$ whose last element is $A$.
+  A \emph{deduction} of a sentence $A$ from a set $\Gamma$
+  of sentences in the first-order calculus is
+  a finite sequence of sentences $A_{1}, A_{2}, \ldots A_n$,
+  with $A_n = A$,
+  each of which is
+  either an instance of A1--A5,
+  an element of $\Gamma$,
+  or follows from previous sentences by MP or Gen,
+  but without applying Gen to an individual constants $c$ that occurs in $\Gamma$.
 \end{definition}
 
-I've already mentioned that the Gen rule is not generally sound for deductions
-from premises: we don't want to infer $\forall x Fx$ from $Fa$. In a deduction,
-the individual constant $c$ that is turned into a universally bound variable
-must not occur in any premise.
+The structural principles Id, Mon, and Cut from the previous chapter hold
+for every axiomatic calculus,
+so they hold for the first-order calculus as well.
+Let's confirm that the Deduction Theorem also still holds.
 
-Let's show that, as in the propositional calculus, the notion of deduction
-reduces to our original notion of proof:
-
-\begin{theorem}{Deduction Theorem}{deduction-theorem1}
+\begin{theorem}{The Deduction Theorem (DT)}{deduction-theorem1}
   If $\Gamma,A \vdash B$ then $\Gamma \vdash A \to B$.
 \end{theorem}
 
 \begin{proof}
-  The proof is almost exactly like in the previous chapter. We only need an
-  extra clause for applications of the rule (Gen), where we appeal to the axiom
-  schema A5.
+  \emph{Proof.}
+  Let $B_{1}, B_{2}, \ldots, B_{n}$ be a deduction of $B$ from $\Gamma \cup \{ A \}$.
+  We prove by strong induction on $k$ that
+  $\Gamma \vdash_{0} A \to B_{k}$ for all $k = 1, 2, \ldots, n$.
+  That is,
+  we show that
+  \emph{if} $\Gamma \vdash_{0} A \to B_{i}$ for all $i < k$,
+  \emph{then} $\Gamma \vdash_{0} A \to B_{k}$.
+  We distinguish four cases,
+  corresponding to the ways in which $B_{k}$ can appear in the deduction:
+  as an axiom,
+  as an element of $\Gamma \cup \{ A \}$,
+  from an application of MP,
+  or from an application of Gen.
+  The proof for the first three cases is
+  exactly as in the proof of the Deduction Theorem for the propositional calculus.
+  It remains to check the case of Gen.
 
-  See e.g. Bostock 224
+  Assume $B_{k}$ follows from $B_{i}$ by an application of Gen.
+  So $B_{k}$ is of the form $\forall x B_{i}(c/x)$,
+  and $c$ doesn't occur in $\Gamma$ or $A$.
+  By induction hypothesis,
+  there is a deduction of $A \to B_{i}$ from $\Gamma$.
+  As $c$ doesn't occur in $\Gamma$,
+  we can apply Gen,
+  getting a deduction of $\forall x (A \to B_{i})(c/x)$.
+  Since $c$ doesn't occur $A$,
+  this formula can also be written as $\forall x (A \to B_{i}(c/x))$.
+  By an instance of A5,
+  $\forall x (A \to B_{i}(c/x)) \to (A \to \forall x B_{i}(c/x))$,
+  and MP
+  we get a deduction of $A \to \forall x B_{i}(c/x)$ from $\Gamma$.
+  \qed
 \end{proof}
 
-Given Gen and the DT, we can derive A5, so we won't need to look at that again.
-(Bostock 224f., probably best to use the proof from p.225)
+You may remember that
+once we have DT and MP,
+we never need to invoke A1 and A2 any more.
+Similarly,
+once we have DT, MP, and Gen,
+we no longer need A5,
+as any instance of it can be derived.
 
-From A4 and the DT, we obviously get the rule of Universal Instantiation, or
-$\forall$ Elimination:
+Here is how.
+Assume, as in the statement of A5,
+that $x$ is not free in $A$.
+Let $c$ be a constant that doesn't occur in $A$ or $B$.
+Then:
+%
+\vspace{-\baselineskip}
+\begin{flalign*}
+  \quad 1.\quad & \forall x (A \to B), A \vdash \forall x (A \to B) && \text{(Id, Mon)} & \\
+  \quad 2.\quad & \forall x (A \to B), A \vdash \forall x (A \to B) \to (A \to B(x/c)) && \text{(A4, $x$ not free in $A$)} & \\
+  \quad 3.\quad & \forall x (A \to B), A \vdash A \to B(x/c) && \text{(MP, 1, 2)} & \\
+  \quad 4.\quad & \forall x (A \to B), A \vdash A && \text{(Id)} & \\
+  \quad 5.\quad & \forall x (A \to B), A \vdash B(x/c) && \text{(MP, 3, 4)} & \\
+  \quad 6.\quad & \forall x (A \to B), A \vdash \forall x B && \text{(Gen, 5)} & \\
+  \quad 7.\quad & \forall x (A \to B) \vdash A \to \forall x B && \text{(DT, 6)} & \\
+  \quad 8.\quad & \vdash \forall x (A \to B) \to (A \to \forall x B) && \text{(DT, 7)} &
+\end{flalign*}
 
-\begin{theorem}{Universal Instantiation}
-  If $\Gamma \vdash \forall x A$ then $\Gamma \vdash A(x/c)$ for any individual
-  constant $c$.
+From A4 and DT, we get the rule of Universal Instantiation:
+
+\begin{theorem}{Universal Instantiation (UI)}
+  If $\Gamma \vdash \forall x A$ then $\Gamma \vdash A(x/c)$.
 \end{theorem}
+\begin{proof}
+  \emph{Proof.}
+  Assume $\Gamma \vdash \forall x A$.
+  By A4,
+  $\vdash \forall x A \to A(x/c)$.
+  So by MP,
+  $\Gamma \vdash A(x/c)$.
+  \qed
+\end{proof}
 
-Now we don't need A4 any more.
+From this (and DT),
+we can derive any instance of A4.
+So we won't need to invoke A4 any more.
 
-Since we have the DT, the proofs of Reductio, Ex Falso, DNE, and PIP from the
-previous chapter all go through unchanged. We also have the structural
-principles Assumptions, Monotonicity, and Cut.
+The derivations of EFQ, DNE, and RAA from the previous chapter all go through as before,
+and make any appeal to A3 unnecessary.
+In fact,
+we know from completeness theorem for propositional logic that
+all truth-functional tautologies are provable from A1--A3 and MP.
+A \emph{truth-functional tautology} is a sentence that is true on every truth-value assignment to atomic sentences.
+For example,
+$Fa \to Fa$ is a truth-functional tautology,
+and so is $\neg\neg \forall x Fx \to \forall x Fx$.
 
-In fact, we know from completeness theorem that all truth-functional tautologies are provable from P1-P3 and MP. So we have this fact:
+\begin{theorem}{}{taut}
+  $\Gamma \vdash A$ whenever $A$ is a truth-functional tautology.
+\end{theorem}
+\begin{proof}
+  \emph{Proof.}
+  Consider the propositional language $\L_0$ whose ``sentences letters'' are
+  the atomic sentences occurring of our first-order language.
+  By theorem \ref{thm:completeness0},
+  (the completeness theorem for propositional logic),
+  every sentence in this language that is true on every truth-value assignment
+  is provable from A1--A3 and MP.
+  \qed
+\end{proof}
 
-$\Gamma \vdash A$ whenever A is a tautology.
+% Let's summarize the key features of the classical first-order calculus:
 
-This could be considered a derived rule. It's an odd rule. But it's verifiable:
-there is a mechanical way to check if something is a tautology; e.g. with truth
-tables.
+% \begin{axioms}
+%   Id & $A \vdash A$\\
+%   Mon & $\text{If }\Gamma \vdash A\text{ then }\Gamma, B \vdash A$\\
+%   Cut & $\text{If }\Gamma \vdash A\text{ and }\Delta,A \vdash B\text{ then }\Gamma,\Delta \vdash B$\\
+%   MP & If $\Gamma \vdash A$ and $\Gamma \vdash A \to B$ then $\Gamma \vdash B$.\\
+%   DT & If $\Gamma,A \vdash B$ then $\Gamma \vdash A \to B$.\\
+%   Taut& $\Gamma \vdash A$ if $A$ is a truth-functional tautology.\\
+%   Gen & If $\Gamma \vdash A$ and $c$ doesn't occur in $\Gamma$ then $\Gamma \vdash \forall x A(c/x)$.\\
+%   UI & If $\Gamma \vdash \forall x A$ then $\Gamma \vdash A(x/c)$.
+% \end{axioms}
 
-% More strongly, we could have
-% $\Gamma \vdash A$ whenever A is a tautological consequence of Γ and Γ is finite.
+As in the case of propositional logic,
+we could use what we have established about the first-order calculus
+to defin a sequent calculus,
+from which we could derive the kind of natural deduction or tableau calculus
+that you probably learned in your intro logic course.
+We won't pause to explore these avenues.
 
-In the previous chapter, I should that our results about deduction can be turned
-into different types of calculi. This is still true for first-order logic. I
-won't stop to explain it again.
+\begin{exercise}
+  Show that if $\Gamma\vdash A(x/c)$ then $\Gamma \vdash \exists x A$.
+\end{exercise}
 
-Exercise: show that if $\Gamma\vdash A(x/c)$ then $\Gamma \vdash \exists x A$.
+\begin{exercise}\label{ex:vdash0-examples} xxxxxxx
+  Show:
+  (a) $\neg A \vdash_{0} A \to B$. % needed in completeness
+  \quad (b) $B \vdash_{0} A \to B$. % needed in completeness
+  \quad (c) $A \to \neg A \vdash_{0} \neg A$; % Bostock 211
+  % \quad (b) $A \vdash_{0} \neg\neg A$; % dito
+\end{exercise}
 
 Side note: I have stipulated that each line in a proof must be a sentence. In
 some versions of the first-order calculus, open formulas are allowed in proofs:
@@ -384,97 +505,76 @@ that $\L_{1}$ has an unbounded supply of such constants. End of side note.
 
 \section{Semantics}\label{sec:semantics1}
 
-A language is not just a system of meaningless sounds and scribbles, combined
-according to seemingly arbitrary syntactic rules. If we want to use a
-first-order language $\L_{1}$ to formalize statements about this or that subject
-matter, we need to give meaning to its non-logical vocabulary.
+I've already explained informally how a first-order language $\L_{1}$ is interpreted:
+individual constants are assumed to pick out objects in the intended domain of discourse;
+predicate symbols express properties or relations among these objects.
+We'll now make this more precise.
 
-On the truth-conditional approach, sentence meanings are understood in terms of
-truth-conditions: the meaning of a sentence should settle, for each conceivable
-scenario, whether the sentence is true or false (in that scenario). The meaning
-of sub-sentential expressions is determined by their contribution to sentence
-meaning. Let's think about what this implies for the expressions of $\L_{1}$,
-focusing on simple atomic sentences like `$Fa$'.
+The semantics we'll develop is based on the truth-conditional approach,
+on which
+the meaning of a sentence specifies the conditions under which the sentence is true.
+An interpretation that
+assigns objects to individual constants
+and properties or relations to predicate symbols
+arguably determines the truth-conditions of atomic sentences.
+If we know that
+`$a$' picks out Athens,
+`$b$' Berlin,
+and `$R$' the property of being west of,
+we can determine that
+`$Rab$' is true (in a possible scenario) iff Athens is west of Berlin (in that scenario).
 
-These are meant to function much like subject-predicate sentences in natural
-language: `$Fa$' might be a formal way of saying `Kurt Gödel is a logician'. In
-the English sentence, the name `Kurt Gödel' picks out an individual, and the
-predicate `is a logician' attributes a property to that individual. This
-suggests that we could fix the truth-conditions of atomic $\L_{1}$-sentences by
-assigning
-
-- a (definite, precise) object to each individual constant, and
-- a (definite, precise) property or relation to each predicate letter.
-
-We don't need to worry much about the concept of an ``object''. We'll assume
-that in any use of a first-order language, there is an intended domain of things
-we want to talk about; each such thing will qualify as an ``object'' -- as a
-candidate denotation of individual constants. But what is a property (or
-relation)?
-
+% We don't need to worry much about the concept of an ``object''. We'll assume
+% that in any use of a first-order language, there is an intended domain of things
+% we want to talk about; each such thing will qualify as an ``object'' -- as a
+% candidate denotation of individual constants. But what is a property (or
+% relation)?
+%
 % We can work backwards from the meaning of sentences. The meaning of `$Fa$' is
 % supposed to determine, for each conceivable scenario, whether `$Fa$' is true or
 % false in that scenario. Given that `$a$' can pick out any object in the intended
 % domain, the meaning of `$F$' must determine a truth-value for each object (in
 % the domain) and each scenario.
-
+%
 % Maybe cut this and directly state that we can make this simpler and more precise
 % if (a) we deal with mathematical interpretations, and (b) if our main interest
 % is in logical validity and entailment.
 
-The standard approach in the model theory of first-order logic is to represent a
-property by its \emph{extension}: by the sets of objects that have the property.
-The property of being a logician, for example, would be identified with the set
-$\{$ Kurt Gödel, Gottlob Frege, Rózsa Péter, \ldots $\}$ of all logicians.
+Now remember that logic abstracts away from the meanings of non-logical expressions:
+Some premises logically entail a conclusion
+iff there is no conceivable scenario in which
+the premises are true and the conclusion false,
+\emph{under any interpretation of the non-logical vocabulary}.
+As in the case of propositional logic,
+we will define a \emph{model} as a structure
+that contains just enough information about
+an interpretation and a scenario
+to determine the truth-values of all sentences.
 
-As a general theory of meaning, this is clearly inadequate. After all, there are
-conceivable scenarios in which Kurt Gödel is not a logician, or in which, say,
-Carla Bruni is a logician; but there is no conceivable scenario in which Gödel
-isn't in the set $\{ Kurt Gödel, \ldots \}$ or in which Carla Bruni is in that
-set. There are two reasons why we can nonetheless largely get away with the
-``extensional'' account of predicate meaning.
-
-The first is that many logicians are mostly interested in mathematical
-interpretations, where we might read `$a$' as denoting the number 2 and `$F$' as
-expressing the property of being prime. While Kurt Gödel could have failed to be
-a logician, the number 2 could not have failed to be prime: there is no
-conceivable scenario in which 2 isn't prime; nor is there a conceivable scenario
-in which, say, the number 4 is prime. In general, it is reasonable to hold that
-purely mathematical truths don't vary across conceivable scenarios. In this
-special case, truth-conditions are determined by extensions.
-
-The second reason why we can get away with an extensional construal of
-properties is analogous to the reason why we can get away with modelling
-sentence meanings as truth-values in propositional logic.
-
-Recall our intuitive gloss on logical entailment: some premises logically entail
-some conclusion if there is no conceivable scenario in which the premises are
-true and the conclusion false, under any interpretation of the non-logical
-vocabulary; equivalently: -- if there is no pair of a scenario and an
-interpretation that makes the premises true and the conclusion false. Now, what
-do you need to know about a scenario $S$ and an interpretation $I$ in order to
-figure out whether an $\L_{1}$-sentence like $Fa$ is true or false (in $S$ under
-$I$)?
-
-It would suffice to know (1) what object is picked out by `$a$' under $I$, (2)
-what property is expressed by `$F$' under $I$, and (3) whether that object has
-that property in $S$. But you don't need all that information. It would also
-suffice to know (1) what object is picked out by `$a$' under $I$, and (2) which
-objects in $S$ have the property expressed by `$F$' under $I$. For example, if I
-tell you that `$a$' picks out Kurt Gödel and that `$F$' expresses a property
-that belongs to Kurt Gödel and Carla Bruni (in $S$), you'll know enough to
-figure out that `$Fa$' is true -- although you don't really know what the
-sentence says. That is, if we're interested in interpretations only for the
-purpose of developing a precise account of (first-order) logical entailment, we
-can ignore any aspect of predicate meaning that goes beyond extension.
-
-% ** Models
+What do you need to know about a scenario $S$ and an interpretation $I$,
+to figure out whether, say, $Rab$ is true?
+It would obviously suffice to know
+(1) which objects are picked out by `$a$' and `$b$' (under $I$),
+(2) which relation is expressed by `$R$' (under $I$),
+and (3) whether that relation holds between those two objects in $S$.
+But you don't need all that information.
+It would also suffice to know
+(1) which objects are picked out by `$a$' and `$b$' under $I$,
+and (2) which pairs of objects in $S$ stand in the relation expressed by `$R$' under $I$.
+For example,
+if I told you that
+`$a$' picks out Athens,
+`$b$' Berlin,
+and `$R$' expresses a relation that holds between all and only the following pairs of objects: $(Athens, Berlin)$, $(Berlin, Paris)$, $(Paris, Rome)$,
+you'd know enough to figure out that `$Rab$' is true
+-- although you don't really know what the sentence says
+or what the scenario is like.
 
 \begin{definition}{}{model1}
-  A \emph{model} $M$ of a first-order language $\L_{1}$ consists of
+  A \emph{model} $\mathcal{M}$ of a first-order language $\L_{1}$ consists of
   \begin{enumerate*}
-    \item[(i)] a non-empty set $D$, called the \emph{domain} or \emph{universe} of $M$, and
-    \item[(ii)] a function $\iota$ that assigns
+    \item[(i)] a non-empty set $D$, called the \emph{domain} or \emph{universe} of $\mathcal{M}$, and
+    \item[(ii)] an \emph{interpretation function} $I$ that assigns
     \begin{itemize*}
       \item to each individual constant of $\L_{1}$ an object in $D$, and
       \item to each $n$-ary predicate of $\L_{1}$ a set of $n$-tuples of objects in $D$.
@@ -482,77 +582,127 @@ can ignore any aspect of predicate meaning that goes beyond extension.
   \end{enumerate*}
 \end{definition}
 
-(Models are often called `interpretations', but outside pure mathematics this is
-a dubious label, for the reasons given above.)
+An ``$n$-tuple'' is a list of $n$ objects.
+We'll assume that a 1-tuple is simply an object.
+So a ``set of 1-tuples'' is just a set of objects,
+a ``set of 2-tuples'' is a set of pairs of objects,
+and so on.
+These sets are also called the \emph{extensions} of the predicates.
 
-Again, the domain of a model is assumed to comprise all the objects one intends
-to speak about. The domain can be infinite, but it can't be empty. Each
-individual constant is associated with an object in the domain. Different
-constants can pick out the same object. (We need at least one object in the
-domain, as otherwise we couldn't interpret the names.) Each predicate symbol is
-associated with an $n$-tuple of objects from the domain. An \emph{$n$-tuple} is
-a list of $n$ objects. A 1-tuple is simply an object. So a ``set of 1-tuples of
-objects'' is simply a set of objects; a set of 2-tuples of objects is a set of
-pairs of objects, and so on.
+% The set of objects that have a property is called the property's \emph{extension};
+% similarly, a relation's extension is
+% the set of tuples of objects that stand in the relation.
+% A first-order model assigns to each predicate an extension.
 
-Note that it is not obvious whether every model represents a genuinely possible interpretation and scenario. There are lots of infinite sets of numbers, for example, many of which are not specifiable in English in any finite way. Could each of them possibly be the meaning of a predicate? We could restrict the possible interpretations of predicates to some subsets of the domain. But to which? Anyway, it makes no difference to the logic. We'll return to this in the case of 2nd-order logic though. (There, if we leave open the higher-order domain, only saying that it's some subset of the powerset of the domain, the class of models becomes much larger. As a result, the logic becomes much weaker.)
+A model's domain can be arbitrarily large, but it can't be empty.
+That's because (according to definition~\ref{def:syntax1})
+every first-order language has infinitely many individual constants,
+and definition~\ref{def:model1} requires that
+every individual constant be assigned an object in the domain.
+This wouldn't be possible if the domain were empty.
+But a single object is enough:
+different individual constants can pick out the same object.
 
+% As a general theory of meaning, this is clearly inadequate. After all, there are
+% conceivable scenarios in which Kurt Gödel is not a logician, or in which, say,
+% Carla Bruni is a logician; but there is no conceivable scenario in which Gödel
+% isn't in the set $\{ Kurt Gödel, \ldots \}$ or in which Carla Bruni is in that
+% set. There are two reasons why we can nonetheless largely get away with the
+% ``extensional'' account of predicate meaning.
 
-Exercise: what about zero-ary predicates? can you make this work?
+% The first is that many logicians are mostly interested in mathematical
+% interpretations, where we might read `$a$' as denoting the number 2 and `$F$' as
+% expressing the property of being prime. While Kurt Gödel could have failed to be
+% a logician, the number 2 could not have failed to be prime: there is no
+% conceivable scenario in which 2 isn't prime; nor is there a conceivable scenario
+% in which, say, the number 4 is prime. In general, it is reasonable to hold that
+% purely mathematical truths don't vary across conceivable scenarios. In this
+% special case, truth-conditions are determined by extensions.
 
-% ** Truth Atomic sentences and boolean connectives
+It is useful to have an expression for the denotation of a non-logical symbol in a model.
+A popular choice is `$\llbracket s \rrbracket^{\mathcal{M}}$'.
+That is,
+if $\mathcal{M}$ is a model with interpretation function $I$,
+$c$ is an individual constant and $P$ a predicate,
+then $\llbracket c \rrbracket^{\mathcal{M}}$ is $I(c)$
+and $\llbracket P \rrbracket^{\mathcal{M}}$ is $I(P)$.
 
-Now we can define what it takes for a sentence $A$ to be true in a model $M$ --
-for short, $M \models A$. Most of this is easy. For example, an atomic sentence
-$Fa$ is true in a model $M$ iff the object assigned (by $M$) to `$a$' belongs to
-the set assigned to `$F$'. The clauses for $\neg$ and $\to$ remain as in the
-previous section.
-The only difficulty arises with quantified sentences.
+\begin{exercise}
+  Definition~\ref{syntax} allows for zero-ary predicates.
+  These behave just like proposition letters.
+  (For example,
+  if $P$ and $Q$ are zero-ary predicates,
+  then $P \to Q$ is a sentence.)
+  We might expect that a model should assign a truth-value to such predicates.
+  How can we define the truth-values $T$ and $F$ to get this result?
+  (Hint:
+  A \emph{0-tuple} is a list of zero objects.
+  There is only one such list: the empty list.)
+\end{exercise}
+
+Next,
+we define what
+it takes for a sentence $A$ to be true in a model $\mathcal{M}$.
+For atomic sentences,
+this is easy.
+`$Rab$', for example, is true in $\mathcal{M}$ iff
+the pair of objects assigned (by $\mathcal{M}$) to `$a$' and `$b$'
+are in the set assigned to `$R$'.
+For negated sentences and conditionals,
+we can use the same clauses as in propositional logic.
+Quantified sentences require a little more thought.
+
 Let $A(x)$ be some formula in which $x$ is free.
-Under what conditions is $\forall x A(x)$ true in a model $M$?
-
+Under what conditions is $\forall x A(x)$ true in a model $\mathcal{M}$?
 As a first shot,
-we might suggest that
+one might suggest that
 $\forall x A(x)$ is true iff $A(c)$ is true for every individual constant $c$.
 (This is called a \textit{substitutional interpretation} of the quantifier.)
-But what if some objects in the intended domain don't have a name?
-Most real numbers,
-for example,
-are not denoted by any English expression
-(because there are strictly more real numbers than English expressions),
-and we generally want to allow for this kind of situation in $\L_{1}$
+But this assumes that
+every object in the domain is picked out by some individual constant.
+Definition~\ref{def:model1} doesn't guarantee this.
+We allow for models in which
+some objects don't have a name,
+just as most starts, and most real numbers, don't have a name in English.
 
-There are two common ways to proceed.
-The first is to declare that
-$\forall x A(x)$ is true in a model $M$ iff
-$A(x)$ is true \emph{for every way of assigning an individual to $x$.}
-This requires extending the definition of truth in a model so that
-open formulas are true or false in a model $M$
-relative to an \emph{assignment function} $g$ that assigns an object to each variable.
+To get around this problem,
+we'll say that
+$\forall x A(x)$ is true in a model $\mathcal{M}$ iff
+$A(c)$ is true in every model
+that differs from $\mathcal{M}$ at most in the object it assigns to $c$,
+where $c$ is some individual constant that doesn't already occur in $A(x)$.
+For example,
+`$\forall x Rax$' is true in $\mathcal{M}$
+iff `$Rab$' is true in every model that differs from $\mathcal{M}$ at most in the object it assigns to `$b$'.
+By varying the interpretation of `$b$',
+we can check whether $a$ stands in $R$ to every object in the domain.
 
-The second option is to declare that
-$\forall x A(x)$ is true in $M$ iff
-$A(c)$ is true in every variant of the model $M$
-that differs from $M$ at most in the object it assigns to $c$,
-where $c$ is some individual constant that doesn't occur in $A(x)$.
-
-The two options amount to the same thing.
-I'll use the second.
-Here, then, is the full definition of truth in a model.
+This approach to the semantics of quantifiers goes back to Benson Mates.
+An equally popular alternative,
+due to Alfred Tarski,
+states that
+$\forall x A(x)$ is true in a model $\mathcal{M}$ iff
+$A(x)$ is true for every way of assigning an individual to $x$.
+This requires defining a truth relation
+not just between sentences and models,
+but between sentences, models, and so-called ``assignment functions''
+that assign objects to variables.
+The two approaches deliver the same results.
+I use Mates' because it requires slightly less machinery.
 
 % Think of the open sentence $\phi(x)$ as possibly \textit{true of} some objects and false
 % of others. $\forall x \phi(x)$ is true iff $\phi(x)$ is true of all objects.
-%
-\begin{definition}{}{truth1}
-  An $\L_{1}$-sentence $A$ is true in a model $M$ (for short, $M \models A$)
-  if one of the following conditions holds.
+
+\begin{definition}{}{satisfaction1}
+  An $\L_{1}$-sentence $A$ is true in a model $\mathcal{M}$ (for short, $M \satisfies A$)
+  iff one of the following conditions holds.
   \begin{enumerate*}
     \item $A$ is an atomic sentence $Pc_{1}\ldots c_{n}$ and
-       $(\iota_{M}(c_{1}),\ldots,\iota_{M}(c_{n})) \in \iota_{M}(P)$.
-    \item $A$ is of the form $\neg B$ and $M \not\models B$.
-    \item $A$ is of the form $(B \to C)$ and $M \not\models B$ or $M \models C$.
-    \item $A$ is of the form $\forall x B$ and $M' \models B(x/c)$ for every
-      model $M'$ that differs from $M$ at most in the object assigned to $c$,
+      $\llbracket c_{1} \rrbracket^{\mathcal{M}}, \ldots, \llbracket c_{n} \rrbracket^{\mathcal{M}}$ is in $\llbracket P \rrbracket^{\mathcal{M}}$.
+    \item $A$ has the form $\neg B$ and $M \not\satisfies B$.
+    \item $A$ has the form $(B \to C)$ and $M \not\satisfies B$ or $M \satisfies C$.
+    \item $A$ has the form $\forall x B$ and $M' \satisfies B(x/c)$ for every
+      model $M'$ that differs from $\mathcal{M}$ at most in the object assigned to $c$,
       where $c$ is the alphabetically first individual constant that does not occur in $B$.
   \end{enumerate*}
 \end{definition}
@@ -568,11 +718,17 @@ We can now define entailment. Every model of Γ is a model of A.
 A and B are logically equivalent iff each entails the other.
 
 \begin{exercise}
-  Show that $\Gamma, A \models B$ iff $\Gamma \models A \to B$.
+  Show that $\Gamma, A \satisfies B$ iff $\Gamma \satisfies A \to B$.
+\end{exercise}
+
+\begin{exercise}\label{ex:a4valid}
+  Show that every instance of A4 is valid:
+  $\mathcal{M} \satisfies \forall x A \to A(x/c)$
+  for any model $\mathcal{M}$.
 \end{exercise}
 
 \begin{exercise}
-  Show that $\forall x (A \to B) \models \forall x A \to \forall x B$.
+  Show that $\forall x (A \to B) \satisfies \forall x A \to \forall x B$.
   Show that if $x$ is not free in $B$ then $\forall x(A \to B)$ is equivalent to $\exists x A \to B$.
 \end{exercise}
 
@@ -581,10 +737,10 @@ Show that substituting a subformula by an equivalent subformula results in an eq
 \end{exercise}
 
 \begin{exercise}\label{ex:coincidence-lemma}
-  Show by induction that if $M$ and $M'$ are two models that differ only in the
+  Show by induction that if $\mathcal{M}$ and $M'$ are two models that differ only in the
   object assigned to an individual constant $c$,
   and $A$ is an $\L_{1}$-sentence in which $c$ does not occur,
-  then $M \models A$ iff $M' \models A$.
+  then $M \satisfies A$ iff $M' \satisfies A$.
   % Beckermann 297ff.
 \end{exercise}
 
@@ -612,72 +768,81 @@ Maybe show semantically?
 Needed to generalize $\Sigma$ and $\Pi$: Call a formula of LPA essentially $\Sigma_n$ or $\Pi_n$ if it can be transformed into a $\Sigma_n$ or
 a $\Pi_n$ formula, respectively, by the usual prenexing rules.
 
-\section{Functions, identity, and mathematical structures}\label{sec:functions}
+\section{Functions and identity}\label{sec:functions}
 
-% ** Function symbols: motivation
-
-For mathematical purposes, it is useful to have a version of predicate logic
-with function symbols and identity. Consider the statement
-
-\[
-  1+2=3.
-\]
-
-How could we formalize this? In $\L_{1}$, we would have to use a three-place predicate symbol $S$ and write
+Consider the sentence `1+2=3'.
+How could we translate this into a first-order language?
+We could use a three-place predicate symbol $S$ and write
 
 \[
-  S(1,2,3).
+  S(1,2,3)
 \]
 
-But this obscures the real structure of the statement, which states an identity
-between $1+2$ and $3$.
+But this isn't ideal.
+It obscures the structure of the original sentence,
+which states an identity between $1+2$ and $3$.
 
-The first step to remedy this situation is introduce a predicate for identity.
-We'll use `=' for this predicate. (We also use `=' for identity in our
-metalanguage; you'll have to figure out from context which is in play.)
-Officially, all predicates are placed in front of their arguments, so we should
-write `$=ab$'. In practice, we'll ``abbreviate'' this as `$a=b$'. We'll also
-write `$a\not= b$' for `$\neg =ab$'.
+As a first step to remedy this situation,
+let's introduce a predicate for identity.
+We'll use `='.
+So `$=\!ab$' states that $a$ equals $b$,
+in the sense that $a$ and $b$ are the very same object.
+For legibility,
+we'll ``abbreviate'' this as `$a=b$'.
+We'll also write `$a\not= b$' for `$\neg =\!ab$'.
 
-\begin{exercise}
-  Construct a sentence with `=' as the only predicate symbol that is true in a model $M$ only if the domain of $M$ has (a) at least two members, (b) at most two members, (c) exactly two members.
-\end{exercise}
+Of course,
+nothing in our earlier definition of first-order languages
+(definition~\ref{def:syntax1})
+prevented us from having a predicate `='.
+The real novelty is that
+we now classify `=' as a logical expression.
+This means that its interpretation is held fixed.
+In every model,
+`=' is interpreted as the identity relation (on the model's domain).
+As a consequence,
+we'll also new special rules for reasoning with `='.
 
-Of course, nothing stopped us from having a predicate for identity before. The
-real novelty is that we'll classify `=' as a \emph{logical} expression, like
-`$\land$' and `$\forall$' and unlike `$a$' and `$F$'. This means that we'll have
-special rules for reasoning with `=', and that models are not allowed to
-interpret `=' as meaning anything other than identity.
+Before we get to these changes,
+I want to introduce another addition to definition~\ref{def:syntax1}
+that allows forming complex terms like `$1+2$'.
+Let's think about how such terms work.
 
-Before we get to this, I want to introduce the second addition to $\L_{1}$ that
-will allow us to form complex singular terms like `$1+2$'.
+The expression `$1+2$' denotes a number:
+the number 3.
+(That's why `1+2 = 3' is true.)
+In general,
+for any numerical terms `$a$' and `$b$',
+`$a+b$' denotes a number:
+the sum of $a$ and $b$.
+We can therefore understand the `$+$' sign as expressing
+a function that maps a pair of numbers to their sum.
+So understood,
+`$+$' is a \emph{function symbol}.
+Function symbols are ubiquitous in maths.
+It's useful to have them in our formal language as well.
 
-The expression `$1+2$' denotes a number: the number 3. (That's why `1+2 = 3' is
-true.) How does this come about? We can understand the `$+$' sign as expressing
-a function that maps a pair of numbers to a number: 1 and 2 to 3, 2 and 5 to 7,
-and so on. So understood, `$+$' is a \emph{function symbol}. Such symbols are
-ubiquitous in maths, and we'll add them to $\L_{1}$.
-
-First, however, a few general words on the concept of a function,
+Let me say a few general words on the concept of a function,
 which will play an important role throughout these notes.
 
 A function, in the mathematical and logical sense,
-takes one or more objects of a certain kind as input and (typically) returns an object of a certain kind as output.
+takes one or more objects as input and (typically) returns an object as output.
 An input to a function is also called an \textit{argument} to the function;
 the output is called the function's \textit{value} for that argument.
-
-The addition function takes two numbers as input and returns a number.
-The square function takes a single number and returns a number (the square of the input).
+The inputs and outputs are usually restricted to a certain class of objects,
+called the function's \emph{domain} and \emph{codomain}, respectively.
+For example,
+the addition function takes two numbers as input and returns a number.
+The square function takes a single number and returns a number: the square of the input.
 The inputs and outputs don't need to be numbers.
 There is an ``area'' function that takes a country as input and returns its size in (say) square kilometres.
 And there is a ``mother'' function that takes a person as input and returns their mother.
 
-The class of inputs to a function is called \emph{domain};
-the class of candidate outputs are its \emph{codomain}.
 If a function has domain $X$ and codomain $Y$,
 we say that it is a function \emph{from $X$ to $Y$}.
 If all inputs and outputs of a function belong to a set $X$,
 we say that it is a function \emph{on $X$}.
+So the addition function is a function on the set of numbers.
 
 Some functions are not defined for all objects in their domain.
 The division function, for example, takes two numbers as input and returns a number,
@@ -686,165 +851,262 @@ Such functions are called \emph{partial}.
 
 Functions are often associated with a recipe or algorithm
 for determining the output for a given input.
-(There are algorithms for computing sums or squares.)
-But we don't build this into the concept of a function.
+There are well-known algorithms for computing sums or squares.
+But this isn't part of the modern concept of a function.
 Any mapping from inputs to outputs is a function,
 even if there is no recipe for determining the output.
 
 Since functions are just mappings from inputs to outputs,
 they are fully determined by their values for each input.
-Consider, for example, the function $g$ from numbers to numbers that
+Consider, for example, the function $g$ on the natural numbers that
 takes a number $x$ and as input and returns
 $x^{2}$ if Goldbach's conjecture is true
 and $0$ if Goldbach's conjecture is false.
 Goldbach's conjecture says that
 every even number greater than 2 is the sum of two primes.
-It is not known whether the conjecture is true.
+It is not known whether this conjecture is true.
 So we don't know what $g$ returns for inputs other than 0.
 But we know that
 $g$ is either identical to the square function or
 to the constant function that returns 0 for every input.
+Both of these are trivial to compute.
+So we know that $g$ is trivial to compute,
+even though we don't know the values of $g$ for 1!
 
 \begin{exercise}
-Give another example of a function with 1, 2, 3 arguments.
+  Give another example of a function with 1, 2, 3 arguments.
 \end{exercise}
 
-% ** Formation rules for singular terms
-
-Now we'll add function symbols and an identity predicate to our first-order language $\L_{1}$.
-Let's call the resulting language $\L_{1}^{=}$.
+Now let's add function symbols and an identity predicate to the syntax of first-order
+logic.
+(I'll use $\L_{1}^{=}$ to denote a first-order language with identity and function symbols.)
 Function symbols combine with singular terms to form new singular terms.
 For example,
-if $f$ is a two-place function symbol and $a,b$ are individual constants,
-then $f(a,b)$ is a singular term;
+if `$f$' is a two-place function symbol and `$a$' and `$b$' are individual constants,
+then `$f(a,b)$' is a singular term;
 it denotes the value of the function $f$ for the arguments $a$ and $b$.
+Previously,
+all singular terms were just individual constants and variables.
+Now singular terms can be complex,
+so we need a recursive definition.
 
 \begin{definition}{}{terms}
-  A \emph{(singular) term} of $\L_{1}^{=}$ is a finite string constructed by the following rules.
+  A \emph{(singular) term} of a first-order language $\L_{1}^{=}$ is a finite string constructed by the following rules.
   \begin{itemize}
-    \item Every variable and individual constant is a singular term.
+    \item Every variable and every individual constant is a singular term.
     \item If $f$ is an $n$-ary function symbol ($n>0$) and $t_1,\ldots,t_n$ are singular terms then $f(t_1,\ldots,t_n)$ is a singular term.
   \end{itemize}
 \end{definition}
+%
+Formulas and sentences are defined exactly as before,
+in definitions~\ref{def:syntax} and \ref{def:sentence}.
 
-By `$f(t_1,\ldots,t_n)$' I mean the string that begins with $f$, followed by the
-opening parenthesis, followed by the terms $t_1,\ldots,t_n$ separated by commas,
-and ending with a closing parenthesis.
+% By `$f(t_1,\ldots,t_n)$' I mean the string that begins with $f$, followed by the
+% opening parenthesis, followed by the terms $t_1,\ldots,t_n$ separated by commas,
+% and ending with a closing parenthesis.
 
-We could allow for zero-place function symbols. A (total) zero-ary function
-takes nothing as input and returns a single value; a zero-place function symbol
-$f$ simply denotes this value; it behaves just like a name.
+% We could allow for zero-place function symbols. A (total) zero-ary function
+% takes nothing as input and returns a single value; a zero-place function symbol
+% $f$ simply denotes this value; it behaves just like a name.
 
-A 0-ary function symbol functions syntactically and semantically just like an
-individual constant.
-
-Officially, function symbols are placed in front of their arguments,
+Officially,
+function symbols are placed in front of their arguments,
 with parentheses and commas to separate the arguments.
+By this convention,
 $(x \times y) + z$ would be written $+(\times(x,y),z)$.
 For the sake of readability,
-we'll allow the more familiar infix notation as a metalinguistic ``abbreviations''.
+we'll often allow the more familiar infix notation as a metalinguistic ``abbreviations''.
+
+% \begin{definition}{}{formulas=}
+%   A \emph{formula} of $\L_{1}^{=}$ is a finite string built up according to the
+%   following formation rules:
+%   \begin{enumerate*}
+%     \item[(i)] If $P$ is an $n$-ary predicate symbol and $t_{1},\ldots,t_{n}$ are singular terms then $Pt_{1}\ldots t_{n}$ is a formula.
+%     \item[(ii)] If $A$ is a formula, then so is $\neg A$.
+%     \item[(iii)] If $A$ and $B$ are formulas, then so is $(A \to B)$.
+%     \item[(iv)] If $x$ is a variable and $A$ is a formula then $\forall x A$ is a formula.
+%   \end{enumerate*}
+% \end{definition}
 
 \begin{exercise}
-  Consider a language of arithmetic with constants 0,1,2,3..., and + and
-  $\times$ intended to mean addition and multiplication. Can you write the
-  statement of Lagrange's Theorem, which states that every natural number is the
-  sum of four squares?
+  Write down a first-order sentence expressing Lagrange's Theorem,
+  which states that every natural number is the sum of four squares.
+  Use a language with individual constants `0', `1', `2', `3', ...,
+  and function symbols `+' and `$\times$'.
 \end{exercise}
+
+% \begin{exercise}
+%   Suppose we used infix notation without parenthesis, writing, for example, x+y
+%   for the sum of x and y. This would cause a problem with more complex terms
+%   that contain functional terms. Can you explain the problem? [Think of
+%   subtraction: x-y-z has two readings. We want \textit{unique readability}.]
+% \end{exercise}
+
+In the axiomatic calculus for our new language,
+all the old axiom schemas and rules remain in place,
+except that we now allow for closed terms wherever we previously invoked individual constants.
+(A \emph{closed term} is a singular term with no free variables.)
+Concretely,
+A4 and Gen now read,
+%
+\begin{axioms}
+  A4 & $\forall x A \to A(x/t)$,\\
+  Gen & $\text{From }A(x/t)\text{ one may infer }\forall x A,$
+\end{axioms}
+%
+where `$t$' is a metalinguistic variable ranging over closed terms.
+
+We need two new axiom schemas for identity:
+
+\begin{axioms}
+A6 & $t_1=t_1$\\
+A7 & $t_1 = t_2 \to (A(x/t_1 )\to A(x/t_2))$
+\end{axioms}
+Here,
+$t_1$ and $t_2$ are closed terms and $A$ is a formula in which only $x$ is free,
+so that all instances of the schemas are closed.
+
+A7 is often called \emph{Leibniz' Law}.
+The idea is that if $t_1$ and $t_2$ are the very same object,
+then anything true of $t_1$ is also true of $t_2$.
 
 \begin{exercise}
-  Suppose we used infix notation without parenthesis, writing, for example, x+y
-  for the sum of x and y. This would cause a problem with more complex terms
-  that contain functional terms. Can you explain the problem? [Think of
-  subtraction: x-y-z has two readings. We want \textit{unique readability}.]
+  You may wonder why I don't write A7 as $t_1 = t_2 \to (A \to A(t_1/t_2))$.
+  In response,
+  explain why the following sentence is an instance of A7,
+  but would not be an instance of the alternative formulation:
+  $a=b \to (Raa \to Rab)$.
 \end{exercise}
 
-The definition of formulas is the same as above.
+\begin{exercise}\label{ex:identity}
+  Show that (a) if $\Gamma \vdash t=s$ then $\Gamma \vdash s=t$,\quad
+  (b) if $\Gamma \vdash t=s$ and $\Gamma \vdash s=r$ then $\Gamma \vdash t=r$.
+\end{exercise}
 
-\begin{definition}{}{formulas=}
-  A \emph{formula} of $\L_{1}^{=}$ is a finite string built up according to the
-  following formation rules:
-  \begin{enumerate*}
-    \item[(i)] If $P$ is an $n$-ary predicate symbol and $t_{1},\ldots,t_{n}$ are singular terms then $Pt_{1}\ldots t_{n}$ is a formula.
-    \item[(ii)] If $A$ is a formula, then so is $\neg A$.
-    \item[(iii)] If $A$ and $B$ are formulas, then so is $(A \to B)$.
-    \item[(iv)] If $x$ is a variable and $A$ is a formula then $\forall x A$ is a formula.
-  \end{enumerate*}
-\end{definition}
-
-The axiomatic calculus can stay the same, except that we now allow for closed terms wherever we previously appealed to individual constants. That is, we have
-
-\begin{principles}
-  \pri{A4}{\forall x A \to A(x/t)}\\
-  \pri{Gen}{\text{From }A(x/t)\text{ infer }\forall x A.}
-\end{principles}
-
-We'll add some new axiom schemas for identity: for any closed terms $t_{1}$ and $t_{2}$ and formulas $A$ in which only $x$ is free,
-
-\begin{principles}
-\pri{A6}{t_1=t_1}\\
-\pri{A7}{t_1 = t_2 \to (A(x/t_1 )\to A(x/t_2))}
-\end{principles}
-
-The somewhat strange formulation of LL is a trick that allows replacing only some occurrences of $t_{1}$ by $t_{2}$.
-
-Let's think about models.
-
-Singular terms don't make a claim; they merely serve to pick out some object.
-
-We define $[t]^{M}$ so that $[f(t_{1},\ldots,t_{n})]^{M} = [f]^{M}([t_{1}]^{M},\ldots,[t_{n}]^{M})$.
-
-In the model definition,
-we require function symbols to denote total functions on the domain of discourse $D$.
-Otherwise we'll have empty terms.
+Finally,
+we need to adjust our semantics.
+The definition of a model is the same as before,
+except that interpretation functions need to interpret the function symbols in the language.
+We assume that they all denote total functions on the model's domain.
 
 \begin{definition}{}{model=}
-  A \emph{model} $M$ of a first-order language $\L_{1}^{=}$ consists of
+  A \emph{model} $\mathcal{M}$ of a first-order language $\L_{1}^{=}$ consists of
   \begin{enumerate*}
-    \item[(i)] a non-empty set $D$, called the \emph{domain} or \emph{universe} of $M$, and
-    \item[(ii)] a function $\iota$ that assigns
+    \item[(i)] a non-empty set $D$ and
+    \item[(ii)] a function $I$ that assigns
     \begin{itemize*}
-      \item to each individual constant of $\L_{1}$ an object in $D$,
+      \item to each individual constant of $\L_{1}^{=}$ an object in $D$,
       \item to each $n$-ary function symbol of $\L_{1}^{=}$ an $n$-ary total function on $D$, and
       \item to each non-logical $n$-ary predicate of $\L_{1}$ a set of $n$-tuples of objects in $D$.
     \end{itemize*}
   \end{enumerate*}
 \end{definition}
 
-\begin{definition}{}{truth1=}
-  An $\L_{1}^{=}$-sentence $A$ is true in a model $M$ (for short, $M \models A$)
+As before,
+I write $\llbracket s \rrbracket^{\mathcal{M}}$ for the denotation of a non-logical symbol $s$ in a model $\mathcal{M}$.
+We extend this notation to all singular terms:
+
+\begin{definition}{}{denotation}
+    Let $\mathcal{M}$ be a model of a first-order language $\L_{1}^{=}$.
+    Let $I$ be the interpretation function of $\mathcal{M}$.
+    \begin{enumerate*}
+      \item[(i)] For any individual constant $c$, $\llbracket c \rrbracket^{\mathcal{M}} = I(t)$.
+      \item[(ii)] If $f$ is an $n$-ary function symbol and $t_1,\ldots,t_n$ are singular terms then
+        $\llbracket f(t_1,\ldots,t_n) \rrbracket^{\mathcal{M}} = I(f)(\llbracket t_1 \rrbracket^{\mathcal{M}},\ldots,\llbracket t_n \rrbracket^{\mathcal{M}})$.
+    \end{enumerate*}
+\end{definition}
+
+\begin{definition}{}{satisfaction=}
+  An $\L_{1}^{=}$-sentence $A$ is true in a model $\mathcal{M}$ (for short, $M \satisfies A$)
   if one of the following conditions holds.
   \begin{enumerate*}
-    \item $A$ is an identity sentence $t_{1} = t_{2}$ and $[t_{1}]^{M} = [t_{2}]^{M}$.
-    \item $A$ is any other atomic sentence $Pt_{1}\ldots t_{n}$ and
-       $([t_{1}]^{M},\ldots,) \in \iota_{M}(P)$.
-    \item $A$ is of the form $\neg B$ and $M \not\models B$.
-    \item $A$ is of the form $(B \to C)$ and $M \not\models B$ or $M \models C$.
-    \item $A$ is of the form $\forall x B$ and $M' \models B(x/c)$ for every
-      model $M'$ that differs from $M$ at most in the object assigned to $c$,
+    \item[(i)] $A$ has the form $t_{1} = t_{2}$ and $[t_{1}]^{\mathcal{M}} = [t_{2}]^{\mathcal{M}}$.
+    \item[(ii)] $A$ is any other atomic sentence $Pt_{1}\ldots t_{n}$ and
+       $(\llbracket t_{1}\rrbracket^{\mathcal{M}},\ldots,\llbracket t_{n}\rrbracket^{\mathcal{M}})$ is in $\llbracket P \rrbracket^{\mathcal{M}}$.
+    \item[(iii)] $A$ is of the form $\neg B$ and $\mathcal{M} \not\satisfies B$.
+    \item[(iv)] $A$ is of the form $(B \to C)$ and $\mathcal{M} \not\satisfies B$ or $\mathcal{M} \satisfies C$.
+    \item[(v)] $A$ is of the form $\forall x B$ and $\mathcal{M}' \satisfies B(x/c)$ for every
+      model $\mathcal{M}'$ that differs from $\mathcal{\mathcal{M}}$ at most in the object assigned to $c$,
       where $c$ is the alphabetically first individual constant that does not occur in $B$.
   \end{enumerate*}
 \end{definition}
 
 \begin{exercise}
-  Explain why $\models a=a$, if $a$ is an individual constant.
+  Explain why $\satisfies a=a$, if $a$ is an individual constant.
 \end{exercise}
 
 \begin{exercise}
-  Define a model in which 1+1=2 is true and one in which it is false.
+  Define a model in which `1+1=2' is true and one in which it is false.
 \end{exercise}
 
-Once we have function symbols, the assumption that singular terms of our formal language must not be empty becomes even more problematic than it was before.
-As I said, in ordinary maths, we have expressions like $1/0$ that don't denote anything.
-We could allow for empty terms in our models.
-This would have the advantage that
-we could then also allow for empty domains.
-But we'd have to change our calculus.
-For example,
-we shouldn't allow the inference from $\forall x Fx$ to $Fa$ to $\exists x Fx$.
-There are different ways of pursuing this approach.
-They are studied in a non-classical predicate logic called \emph{free logic}.
-For most applications we prefer to keep things simple.
+\begin{exercise}
+  Construct a sentence with `=' as the only predicate symbol that is true in a model $\mathcal{M}$ only if the domain of $\mathcal{M}$ has (a) at least two members, (b) at most two members, (c) exactly two members.
+\end{exercise}
 
+We could allow for partial functions,
+but then we'd have to deal with ``empty'' terms that don't pick out anything.
+If $t$ is empty,
+should, say, $t=t$ be true?
+What about its negation, $t\not=t$?
+These questions can be answered in different ways,
+leading to different versions of \emph{free logic}.
+A free logic is simply a logic in which terms can be empty.
+Free logics often also allow for models with empty domains.
+They require some changes to the proof system:
+if `$a$' is empty,
+we probably don't want to license the inference from
+$\forall x Fx$ via $Fa$ to $\exists x Fx$.
+For most applications,
+we can avoid these complications by making sure that all function symbols express total functions.
+
+We could also allow for empty domains
+if we're dealing with a language that has no individual constants and no function symbols.
+The awkward question of how to interpret empty terms then wouldn't arise.
+There are independent reasons to allow for such languages.
+When we formalize physical or mathematical theories,
+we generally want to use as few non-logical primitives as possible.
+In formalized set theory, for example,
+the only non-logical primitive is the membership relation `$\in$'.
+
+In section~\ref{sec:syntax1},
+however,
+I said that
+first-order languages must have individual constants,
+and infinitely many of them.
+There are two reasons why I did this.
+
+One is that our Mates-style semantics of quantifiers
+(definition \ref{def:satisfaction1}, clause (iv))
+interprets $\forall x A$ in terms of $A(x/c)$,
+where $c$ is a constant that doesn't occur in $A$.
+This requires an unending supply of constants
+because quantifiers can be nested without limit:
+The interpretation of $\forall x \forall y A$ requires two constants,
+that of $\forall x \forall y \forall z A$ three,
+etc.
+But the original meaning of these constants is irrelevant.
+The same is true for the other reason why we need a supply of constants.
+In our first-order calculus,
+deriving $\forall x B(x)$ from $\forall x A(x)$
+often requires instantiation $\forall x A(x)$ to $A(c)$,
+deriving $B(c)$,
+and then applying Gen.
+Here, too, we need an unending supply of constants
+because quantifiers can be nested.
+But here, too, it doesn't matter what they mean.
+They are used to denote ``arbitrary'' objects.
+
+So we need constants to play certain internal roles
+in our formal machinery,
+but the initial meaning of these constants is irrelevant.
+Such constants are sometimes called \emph{eigenvariables}.
+We might as well have introduced special symbols for eigenvariables.
+In later chapters,
+when I speak of the non-logical expressions of, say, formalized set theory,
+I mean the non-logical expressions other than the eigenvariables
+(which really are logical expressions, in a reasonable sense).
+
+\iffalse
 
 % ** Mathematical structures
 
@@ -874,7 +1136,7 @@ We need an unending supply of constants for two reasons.
 One, the interpretation of $\forall x A$ appeals to $A(x/c)$,
 where $c$ is a constant that doesn't occur in $A$.
 The interpretation of $\forall x \forall y A$ therefore involves two constants, and so on.
-But it doesn't matter what $M$ assigns to these further constants.
+But it doesn't matter what $\mathcal{M}$ assigns to these further constants.
 This is also true for the other reason why we need extra constants:
 in our calculus,
 we often need to reason from $\forall x A(x)$ to $A(c)$,
@@ -901,165 +1163,268 @@ Show that isomorphisms are equivalence relations
 
 % ** Exercises
 
+\fi
+
 \section{Soundness}
 \label{sec:soundness}
 
-% We show that if $\Gamma \vdash A$, then $\Gamma \models A$.
-% By def xxx and the DT and its converse,
-% $\Gamma \vdash A$ iff there are sentences $B_1,\ldots,B_n \in \Gamma$ such that
-% $\vdash (B_{1} \land \ldots \land B_n) \to A$.
-% [Make this a lemma?]
+We have defined two consequence relations:
+the proof-theoretic (syntactic) relation $\vdash$,
+and the model-theoretic (semantic) relation $\entails$.
+How are they related?
+Can we show that $\Gamma\vdash A$ iff $\Gamma \entails A$?
+We can.
+The \emph{completeness} direction,
+from $\Gamma \entails A$ to $\Gamma \vdash A$,
+is hard and will be treated in the next chapter.
+The \emph{soundness} direction,
+from $\Gamma \vdash A$ to $\Gamma \entails A$,
+is comparatively easy.
+As in the propositional case,
+we only have to verify that
+all axioms are valid
+and that the rules preserve validity.
+There is nothing terribly exciting about this,
+but let's briefly go through it.
 
-% Moreover,
-% if $\models (B_{1} \land \ldots \land B_n) \to A$ then $B_{1} \land \ldots \land B_n \models A$.
+We'll need the following lemma.
 
-% So it suffices to show that if $\vdash A$ then $\models A$.
-
-We want to show that if $\Gamma \vdash A$, then $\Gamma \models A$.
-We first show that if $\vdash A$, then $\\models A$.
-To this end,
-we need two simple lemmas.
-
-%-----------------------------------------------------------------
-%  Auxiliary lemmas
-%-----------------------------------------------------------------
-\begin{lemma}{}{lemma:identity}
-  If $M \models t_{1}=t_{2}$ and $M \models A(x/t_{1})$, then
-  $M \models A(x/t_{2})$.
+\begin{lemma}{}{coincidence}
+  If two models $\mathcal{M}$ and $\mathcal{M}'$
+  have the same domain and
+  agree on the interpretation of all non-logical symbols in an $\mathcal L_1^=$-sentence $A$, then
+  $\mathcal{M}\satisfies A$ iff $\mathcal{M}'\satisfies A$.
 \end{lemma}
 \begin{proof}
-  Induction on the complexity of $A$.  The base case is the semantic
-  clause~(1); the inductive steps are immediate for $\neg$, $\to$ and
-  $\forall$.
+  \emph{Proof}.
+  The proof is a simple induction on the complexity of $A$.
+  The base case is guaranteed by clauses (i) and (ii) in definition~\ref{def:satisfaction=},
+  the inductive step for $\neg$ and $\to$ is trivial,
+  Let's look at the case where $A$ has the form $\forall x B$.
+
+  Assume $\mathcal{M} \not\satisfies \forall x B$.
+  By clause (v) of definition~\ref{def:satisfaction=},
+  this means that
+  $\mathcal{M}'' \not\satisfies B(x/c)$ for some model $\mathcal{M}''$
+  that differs from $\mathcal{M}$ at most in the object assigned to a constant $c$
+  that does not occur in $B$.
+  Let $\mathcal{M}'''$ be like $\mathcal{M}'$ except that
+  $\llbracket c \rrbracket^{\mathcal{M}'''} = \llbracket c \rrbracket^{\mathcal{M}''}$.
+  Since $\mathcal{M}$ and $\mathcal{M}'$ agree on all symbols in $B$,
+  and $c$ is not in $B$,
+  $\mathcal{M}''$ and $\mathcal{M}'''$ agree on all symbols in $B(x/c)$.
+  So by induction hypothesis,
+  $\mathcal{M}''' not\satisfies B(x/c)$.
+  By clause (v) of definition~\ref{def:satisfaction=},
+  this means that $\mathcal{M}' \not\satisfies \forall x B$.
+  We've shown that if $\mathcal{M} \not\satisfies \forall x B$ then $\mathcal{M}' \not\satisfies \forall x B$.
+  The converse direction can be shown by an exactly parallel argument.
+  So $\mathcal{M} \satisfies \forall x B$ iff $\mathcal{M}' \satisfies \forall x B$.
+  \qed
 \end{proof}
 
-\begin{lemma}{}{lemma:coincidence}
-  Let $M$ and $M'$ be models that differ at most in the object assigned
-  to a constant~$c$, and let $A$ be an $\mathcal L_1$–sentence in which
-  $c$ does not occur.  Then $M\models A$ iff $M'\models A$.
+\begin{lemma}{}{extensionality}
+  If $\llbracket t_1 \rrbracket^{\mathcal{M}} = \llbracket t_2 \rrbracket^{\mathcal{M}}$
+  then $\mathcal{M} \satisfies A(x/t_1)$ iff $\mathcal{M} \satisfies A(x/t_2)$.
 \end{lemma}
+
 \begin{proof}
-  Straight induction on the complexity of $A$; clause (1) is used in the
-  base case.
+  \emph{Proof}.
+  The proof is by induction on complexity of $A$.
+  As before,
+  the base case is guaranteed by clauses (i) and (ii) in definition~\ref{def:satisfaction=},
+  and the inductive step for $\neg$ and $\to$ is trivial.
+  The case where $A$ has the form $\forall y B$ needs some work.
+
+  Assume
+  \begin{equation}\tag{1}
+    \mathcal{M} \not\satisfies \forall y B(x/t_1).
+  \end{equation}
+  We need to show that
+  $\mathcal{M}' \not\satisfies B(x/t_1)(y/c)$ for some model $\mathcal{M}'$
+  that differs from $\mathcal{M}$ at most in the object assigned to a constant $c$
+  that does not occur in $B(x/t_1)$ or $B(x/t_2)$.
+  We know from definition~\ref{def:satisfaction=},
+  that there is a model $\mathcal{M}''$ and a constant $d$
+  that does not occur in $B(x/t_1)$ such that
+  \begin{equation}\tag{2}
+    \mathcal{M}'' \not\satisfies B(x/t_1)(y/d).
+  \end{equation}
+  But $d$ might occur in $t_2$.
+  So let $c$ be a constant not in $B(x/t_1)$ or $B(x/t_2)$ and
+  let $\mathcal{M}'''$ be like $\mathcal{M}''$ except that
+  $\llbracket d \rrbracket^{\mathcal{M}'''} = \llbracket c \rrbracket^{\mathcal{M}''}$.
+  By lemma~\ref{lem:coincidence}
+  and the fact that $c$ does not occur in $B(x/t_1)(y/d)$,
+  \begin{equation}\tag{3}
+    \mathcal{M}'' \satisfies B(x/t_1)(y/d) \text{ iff }\mathcal{M}''' \satisfies B(x/t_1)(y/d)
+  \end{equation}
+  By induction hypothesis,
+  \begin{equation}\tag{4}
+    \text{(c)}\quad \mathcal{M}''' \satisfies B(x/t_1)(y/d) \text{ iff }\mathcal{M}''' \satisfies B(x/t_1)(y/c).
+  \end{equation}
+  Let $\mathcal{M}'$ be like $\mathcal{M}'''$ except that
+  $\llbracket d \rrbracket^{\mathcal{M}'} = \llbracket d \rrbracket^{\mathcal{M}'''}$.
+  By lemma~\ref{lem:coincidence}
+  and the fact that $d$ does not occur in $B(x/t_1)$,
+  \begin{equation}\tag{5}
+    \mathcal{M}''' \satisfies B(x/t_1)(y/c) \text{ iff }\mathcal{M}' \satisfies B(x/t_1)(y/c)
+  \end{equation}
+  From (2), (3), (4), and (5), we get
+  \begin{equation}\tag{6}
+    \mathcal{M}' \not\satisfies B(x/t_1)(y/c).
+  \end{equation}
+  Now, by induction hypothesis
+  and the fact that $\mathcal{M}$ an $\mathcal{M}'$ agree on the interpretation of $t_1$ and $t_2$,
+  \begin{equation}\tag{7}
+    \mathcal{M}' \satisfies B(x/t_1)(y/c) \text{ iff }\mathcal{M}' \satisfies B(x/t_2)(y/c).
+  \end{equation}
+  From (6) and (7) we get
+  \begin{equation}\tag{8}
+    \mathcal{M}' \not\satisfies B(x/t_2)(y/c).
+  \end{equation}
+  By clause (v) of definition~\ref{def:satisfaction=},
+  this means that
+  \begin{equation}\tag{9}
+    \mathcal{M} \not\satisfies \forall y B(x/t_2).
+  \end{equation}
+
+  From (1) to (9),
+  we've shown that
+  if $\mathcal{M} \not\satisfies \forall y B(x/t_1)$ then
+  $\mathcal{M} \not\satisfies \forall y B(x/t_2)$.
+  Swapping $t_1$ and $t_2$ throughout the argument,
+  we can also show that
+  if $\mathcal{M} \not\satisfies \forall y B(x/t_2)$ then
+  $\mathcal{M} \not\satisfies \forall y B(x/t_1)$.
+  So $\mathcal{M} \satisfies \forall y B(x/t_1)$ iff
+  $\mathcal{M} \satisfies \forall y B(x/t_2)$.
+  \qed
 \end{proof}
 
-%-----------------------------------------------------------------
-%  Soundness theorem
-%-----------------------------------------------------------------
-\begin{theorem}{Soundness of the first–order calculus}{soundness=}
-  If $\vdash A$ then $\models A$.
+\begin{theorem}{Soundness of the first-order calculus}{soundness}
+  If $\Gamma \vdash A$, then $\Gamma \entails A$.
 \end{theorem}
-
 \begin{proof}
-  Let $B_{1},\dots,B_{n}$ be a proof of $A$.
-  We show by induction on $i$ that
+  We first show a special case:
+  If $\vdash A$ then $\entails A$.
 
-  \smallskip
-  \centerline{(*)\quad$\models B_{i}$,\; $1 \le i \le n$.}
-  \smallskip
+  Assume $\vdash A$.
+  So there is a sequence $A_{1},\dots,A_{n}$ with $A_n = A$ such that
+  each $A_{k}$ in the sequence is
+  either an axiom or follows from previous sentences by MP or Gen.
+  We show by strong induction on $k$ that $\entails A_{k}$.
 
-  The result for $i=n$ yields $\models A$.
+  \textit{Case 1.} $A_{k}$ is an instance of A1--A3.
+  Then $\entails A_{k}$ by exercise \ref{ex:axioms-valid}
+  and the fact that
+  the interpretation of `$\neg$' and `$\to$' in definition~\ref{def:satisfaction=} is the same as in propositional logic.
 
-  We go through all possible cases of $B_{i}$.
-  \begin{enumerate}
-  \item[(i)] \textit{$B_{i}$ is an instance of A1–A3.}
-    These are propositional tautologies; the semantic clauses for
-    $\neg$ and $\to$ coincide with the classical truth tables, so they
-    are true in every model.
+  \textit{Case 2.} $A_{k}$ is an instance of A4: $\forall x\,B \to B(x/t)$.
+  Let $\mathcal{M}$ be any model that satisfies $\forall x B$.
+  By definition~\ref{def:satisfaction=},
+  this means that $\mathcal{M}' \satisfies B(x/c)$ for every model $\mathcal{M}'$ that differs from $\mathcal{M}$ at most in the object assigned to $c$,
+  where $c$ does not occur in $B$.
+  Let $\mathcal{M}'$ be a model of this kind with $\llbracket c \rrbracket^{\mathcal{M}'} = \llbracket t \rrbracket^{\mathcal{M'}}$.
+  Since $B(x/t)$ is obtained from $B(x/c)$ by substituting $t$ for $c$,
+  it follows by lemma~\ref{lem:extensionality} that
+  $\mathcal{M}' \satisfies B(x/t)$.
+  Finally,
+  since $c$ does not occur in $B(x/t)$,
+  $\mathcal{M}'$ and $\mathcal{M}$ agree on the interpretation of
+  all symbols in $B(x/t)$.
+  So $\mathcal{M} \satisfies B(x/t)$ by lemma~\ref{lem:coincidence}.
+  This shows that any model that satisfies $\forall x B$ also satisfies $B(x/t)$.
+  Hence every model satisfies $\forall x B \to B(x/t)$.
 
-  \item[(ii)] \textit{$B_{i}$ is A4: $\forall x\,B \to B(x/t)$.}
-    Let $M$ be any model for which $M\models\forall x\,B$.
-    Clause~(5) of the semantics supplies a constant $c$ not occurring in
-    $B$ such that for \emph{every} model $M'$ that differs from $M$ only
-    by the object interpreting $c$, we have $M'\models B(x/c)$.
-    Choose $a=[t]^{M}$ and form $M'$ by giving $c$ the value $a$ while
-    leaving everything else as in $M$.
-    Then $M'\models B(x/c)$; since $c$ and $t$ denote the same object in
-    $M'$, Lemma~\ref{lemma:identity} gives $M'\models B(x/t)$.
-    Because $c$ is absent from $B(x/t)$,
-    Lemma~\ref{lemma:coincidence} transfers truth back to $M$:
-    $M\models B(x/t)$.
-    Thus every model that satisfies the antecedent satisfies the
-    consequent; the instance is valid.
+  \textit{Case 3.} $A_{k}$ is an instance of A5: $\forall x (A\to B)\to(A\to\forall x\,B)$,
+  where $x$ is not free in $A$.
+  Let $\mathcal{M}$ be any model that doesn't satisfy $A \to \forall x B$.
+  By definition~\ref{def:satisfaction=},
+  this means that
+  $\mathcal{M} \satisfies A$ and
+  $\mathcal{M}' \not\satisfies B(x/c)$ for some model $\mathcal{M}'$
+  that differs from $\mathcal{M}$ at most in the object assigned to some constant $c$
+  that does not occur in $B$.
+  Let $d$ be the alphabetically first constant that does not occur in either $A$ or $B$,
+  and let $\mathcal{M}''$ be like $\mathcal{M}'$ except that
+  $\llbracket d \rrbracket^{\mathcal{M}''} = \llbracket c \rrbracket^{\mathcal{M}'}$.
+  By lemma~\ref{lem:extensionality},
+  $\mathcal{M}'' \not\satisfies B(x/d)$.
+  By lemma~\ref{lem:coincidence},
+  $\mathcal{M}'' \satisfies A$
+  So $\mathcal{M}'' \not\satisfies A\to B(x/d)$.
+  Since $x$ is not free in $A$,
+  $A \to B(x/d)$ is $(A \to B)(x/d)$.
+  So $\mathcal{M}'' \not\satisfies (A \to B)(x/d)$.
+  By definition~\ref{def:satisfaction=},
+  this means that
+  $\mathcal{M} \not\satisfies \forall x (A\to B)$.
+  Contraposing,
+  we've shown that
+  any model that satifies $\forall x (A\to B)$ satisfies $A \to \forall x B$.
+  So every model satisfies $\forall x (A\to B)\to(A\to\forall x B)$.
 
-  \item[(iii)] \textit{$B_{i}$ is A5:
-      $\forall x (A\to B)\to(A\to\forall x\,B)$, $x\notin\!\mathsf{FV}(A)$.}
-    Let $M\models\forall x(A\to B)$ and $M\models A$.
-    For an arbitrary constant $c$ and an arbitrary
-    $M'$ differing from $M$ only in the value of $c$,
-    clause (5) gives $M'\models (A\to B)(x/c)$, i.e.
-    $M'\models A\to B(x/c)$.
-    As $c\notin A$, Lemma~\ref{lemma:coincidence} yields $M'\models A$,
-    hence $M'\models B(x/c)$.
-    Because $c$ and $M'$ were arbitrary, $M\models\forall x\,B$.
-    Therefore the axiom instance is valid.
+  \textit{Case 4.} $A_{k}$ is an instance of A6: $t_1=t_1$.
+  Then $\entails A_{k}$ by clause (i) of definition~\ref{def:satisfaction=}.
 
-  \item[(iv)] \textit{$B_{i}$ is A6: $t_1=t_2$.}
-    Every closed term has a denotation, and any object equals itself, so
-    $M\models t_1=t_2$ for every model~$M$.
+  \textit{Case 5.} $A_{k}$ is an instance of A7: $t_1=t_2\to(A(x/t_1)\to A(x/t_2))$.
+  Let $\mathcal{M}$ be any model that satisfies $t_1=t_2$.
+  Then $\llbracket t_1 \rrbracket^{\mathcal{M}} = \llbracket t_2 \rrbracket^{\mathcal{M}}$.
+  By lemma~\ref{lem:extensionality},
+  $\mathcal{M} \satisfies A(x/t_1)$ iff $\mathcal{M} \satisfies A(x/t_2)$.
+  So any model that satisfies $t_1=t_2$ and $A(x/t_1)$ also satisfies $A(x/t_2)$.
+  So every model satisfies $t_1=t_2\to(A(x/t_1)\to A(x/t_2))$.
 
-  \item[(v)] \textit{$B_{i}$ is A7:
-      $t_1=t_2\to\bigl(B(x/t_1)\to B(x/t_2)\bigr)$.}
-    Suppose $M\models t_1=t_2$ and $M\models B(x/t_1)$.
-    Then $[t_1]^M=[t_2]^M$, and Lemma~\ref{lemma:identity} gives
-    $M\models B(x/t_2)$.  Hence the conditional is true in all models.
+  \textit{Case 6.} $A_{k}$ is obtained by MP from earlier lines $A_{i}$ and $A_{i}\to A_{k}$.
+  By induction hypothesis, $A_{i}$ and $A_{i}\to A_{k}$ are valid.
+  So $A_{k}$ is valid by clause (iii) of definition~\ref{def:satisfaction=}.
 
-  \item[(vi)] \textit{$B_{i}$ is obtained by MP from earlier lines
-      $C$ and $C\to B_{i}$.}
-    By the induction hypothesis $C$ and $C\to B_{i}$ are valid; in every
-    model clause~(4) for $\to$ forces $B_{i}$ to be true.
+  \textit{Case 7.} $A_{k}$ is obtained by Gen from an earlier line $A_i$.
+  So $A_k$ has the form $\forall x A_i(t/x)$.
+  Let $\mathcal{M}$ be any model.
+  By definition~\ref{def:satisfaction=},
+  we need to show that
+  $\mathcal{M}' \satisfies A_i(t/x)(x/c)$ for every model $\mathcal{M}'$ that differs from $\mathcal{M}$ at most in the object assigned to $c$,
+  where $c$ is the alphabetically first individual constant that does not occur in $A_i(c/t)$.
+  Take any such $\mathcal{M}'$ and $c$.
+  Let $\mathcal{M}''$ agree with $\mathcal{M}'$
+  except that $\llbracket t \rrbracket^{\mathcal{M}''} = \llbracket c \rrbracket^{\mathcal{M}'}$.
+  By induction hypothesis,
+  every model satisfies $A_i$,
+  so in particular $\mathcal{M}'' \satisfies A_i$.
+  Since $t$ does not occur in $A_i(t/x)(x/c)$,
+  $\mathcal{M}''$ and $\mathcal{M}'$ agree on the interpretation of
+  every symbol in $A_i(t/x)(x/c)$.
+  By lemma~\ref{lem:coincidence},
+  it follows that
+  $\mathcal{M}' \satisfies A_i(t/x)(x/c)$.
 
-  \item[(vii)] \textit{$B_{i}$ is obtained from an earlier line $B$ by Gen.}
-
-    Fix an arbitrary model $M$ and assume $M\models B$
-    (true by the induction hypothesis).
-    To prove $M\models\forall x\,B(t/x)$ we must show:
-    for \emph{every} constant $c$ not in $B$ and \emph{every} model $M'$
-    differing from $M$ only in the value of $c$, we have
-    $M'\models B(x/c)$.
-
-    Choose such $c$ and $M'$.
-    Build a model $M''$ that agrees with $M'$ except that it interprets
-    $t$ as the object that $M'$ assigns to $c$.
-    Because $t\notin B$ (by (G)), $M''$ and $M'$ interpret every symbol
-    of $B(x/c)$ alike; by Lemma~\ref{lemma:coincidence} it suffices to
-    verify $M''\models B(x/c)$.
-    But in $M''$ the two closed terms $c$ and $t$ denote the same
-    element, and $M''\models B(x/t)$ (truth is preserved when we changed
-    only the value of $t$), so Lemma~\ref{lemma:identity} gives
-    $M''\models B(x/c)$, completing the requirement.  Clause~(5) now
-    yields $M\models\forall x\,B$.
-  \end{enumerate}
-
-  This shows that every axiom is valid and that MP and Gen preserve validity.
-\end{proof}
-
-\begin{corollary}
-  If $\Gamma \vdash A$, then $\Gamma \models A$.
-\end{corollary}
-\begin{proof}
-  Assume there is a deduction of $B_{1},\ldots,B_{n}$ of $A$ from $\Gamma$.
-  This deduction can involve only finitely many sentences $A_{1},\ldots,A_{m}$ in $\Gamma$.
-  So we also have
-  \[
-    A_{1},\ldots,A_{m} \vdash A.
-  \]
+  This completes the induction.
+  We've shown that if $\vdash A$ then $\entails A$.
+  Now assume $\Gamma \vdash A$.
+  That is,
+  there is a deduction $A$ from $\Gamma$.
+  This deduction can involve only finitely many sentences $A_{1},\ldots,A_{n}$ from $\Gamma$.
+  So we also have $A_{1},\ldots,A_{n} \vdash A$,
   By the deduction theorem, it follows that
-  \[
-    \vdash A_{1} \to (A_{2} \to (\ldots (A_{m} \to A) \ldots)).
-  \]
-  By the soundness theorem, it implies that
-  \[
-    \models A_{1} \to (A_{2} \to (\ldots (A_{m} \to A) \ldots)).
-  \]
-  But if $\Gamma \models A \to B$ then $\Gamma,A \models B$ [exercise!].
-  So we have
-  \[
-    A_{1},\ldots,A_{m} \models A.
-  \]
-  Since $\{A_{1},\ldots,A_{m}\} \subseteq \Gamma$, it follows that $\Gamma \models A$.
+  $\vdash A_{1} \to (\ldots (A_{n} \to A) \ldots)$.
+  From what we've just shown,
+  we can infer that
+  $\entails A_{1} \to (\ldots (A_{n} \to A) \ldots)$.
+  By definitions~\ref{def:satisfaction=}.(iii) and \ref{def:entails},
+  it is easy to see that
+  $\Gamma \models A \to B$ iff $\Gamma,A \models B$.
+  So we have $A_{1},\ldots,A_{n} \models A$
+  and thereby $\Gamma \models A$.
+  \qed
 \end{proof}
 
-\begin{exercise}
-Can we still use soundness to prove consistency of the axiomatization? Yes.
-\end{exercise}
+% \begin{exercise}
+% Can we still use soundness to prove consistency of the axiomatization? Yes.
+% \end{exercise}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "logic3.tex"
+%%% End:

@@ -1,0 +1,9 @@
+\begin{tikzpicture}[node distance=5cm, thick]
+  \node[state]                 (q0) {$q_{0}$};
+  \node[state, right of=q0]    (q1) {$q_{1}$};
+
+  \path[->] (q0) edge[loop above] node {1:1R} (q0);  % march right over 1s
+  \path[->] (q0) edge[bend left=20]  node[above] {B:1L} (q1);  % write 1 at right end and turn around
+  \path[->] (q1) edge[loop above]  node {1:1L} (q1); % march left over 1s
+  \path[->] (q1) edge[bend left=20]  node[below] {B:1R} (q0); % write 1 at left end and turn around
+\end{tikzpicture}

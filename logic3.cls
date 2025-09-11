@@ -13,12 +13,30 @@
 % ============= math packages =============
 
 \usepackage{amsthm}
-\usepackage[fleqn, leqno]{amsmath}
+\usepackage{amsmath}
+\usepackage{stmaryrd} % for \llbracket and \rrbracket
 \usepackage{fitch}
-\setlength\mathindent{1.6cm}
-\everydisplay{\displayindent=1cm}
-% \usepackage{amsfonts}
-% \usepackage{amssymb}
+\def\worules{%
+\def\ii{\by{$\to$I}}%
+\def\ie{\by{$\to$E}}%
+\def\Ai{\by{$\forall$I}}%
+\def\Ae{\by{$\forall$E}}%
+\def\Ei{\by{$\exists$I}}%
+\def\Ee{\by{$\exists$E}}%
+\def\ai{\by{$\wedge$I}}%
+\def\ae{\by{$\wedge$E}}%
+\def\ai{\by{$\wedge$I}}%
+\def\ae{\by{$\wedge$E}}%
+\def\oi{\by{$\vee$I}}%
+\def\oe{\by{$\vee$E}}%
+\def\ni{\by{$\neg$I}}%
+\def\ne{\by{$\neg$E}}%
+\def\be{\by{$\bot$E}}%
+\def\nne{\by{$\neg\neg$E}}%
+\def\r{\by{R}}}
+
+\usepackage{amsfonts}
+\usepackage{amssymb}
 
 % ============= additional packages =============
 % 
@@ -167,7 +185,7 @@
 \let\polishL\L
 \renewcommand{\L}{\ensuremath{\mathfrak{L}}\xspace}
 \newcommand{\Cfr}{\ensuremath{\mathfrak{C}}\xspace}
-\newcommand{\Mfr}{\ensuremath{M}\xspace}
+\newcommand{\Mfr}{\ensuremath{\mathfrak{M}}\xspace}
 
 % make box and diamond larger, and vdash (too small in newtxmath):
 % \usepackage{scalerel}
@@ -203,10 +221,11 @@
 \AtBeginDocument{ % otherwise ignored by unicode-math
   \renewcommand{\models}{\vDash}
 }
-\newcommand{\notmodels}{\not\vDash}
+\newcommand{\satisfies}{\Vdash}
+\newcommand{\notsatisfies}{\not\Vdash}
 
-\newcommand{\entails}{\Vdash}
-\newcommand{\notentails}{\not\Vdash}
+\newcommand{\entails}{\vDash}
+\newcommand{\notentails}{\not\vDash}
 
 % inverted \entails:
 \makeatletter
@@ -220,6 +239,7 @@
 }
 \makeatother
 
+\newcommand{\dn}[1]{\llbracket #1 \rrrbracket}
 
 
 
@@ -231,65 +251,64 @@
   {\begin{enumerate}[itemsep=2pt,parsep=0pt,topsep=6pt,partopsep=2pt,#1]}
   {\end{enumerate}}
 
-%========= graphs for models ========
 
-% adapted from http://www.actual.world/resources/tex/doc/TikZ.pdf
-
-\usetikzlibrary{positioning,arrows,calc}
-\tikzset{
-modal/.style={>=stealth',shorten >=1pt,shorten <=1pt,auto,node distance=1.5cm,
-semithick},
-world/.style={circle,draw,minimum size=0.5cm,fill=gray!15,font=\small},
-point/.style={circle,draw,inner sep=0.5mm,fill=black},
-reflexive above/.style={->,loop,looseness=7,in=120,out=60},
-reflexive below/.style={->,loop,looseness=7,in=240,out=300},
-reflexive left/.style={->,loop,looseness=7,in=150,out=210},
-reflexive right/.style={->,loop,looseness=7,in=30,out=330}
-}
 \definecolor{rgreen}{RGB}{0,150,0}
 \definecolor{rblue}{RGB}{0,0,150}
 \definecolor{rred}{RGB}{180,0,0}
 
 
-% tm:
+% Turing machines
 
 
-\usetikzlibrary{automata, positioning, arrows}
+\usetikzlibrary{automata, arrows}
+\usetikzlibrary{matrix, positioning, shapes.geometric, calc}
+\usetikzlibrary{arrows.meta}
+
+\tikzset{
+  state/.style = {circle,draw,minimum size=25pt,inner sep=0pt},
+  every edge/.style = {draw,->,>=Stealth,auto,font=\footnotesize},
+}
+
+\usepackage{wrapfig}
+
+\newcommand{\num}[1]{\underline{#1}}
+\newcommand{\gn}[1]{\ulcorner #1 \urcorner}
+
+\newcommand{\pconcat}{\raisebox{0.3ex}{%
+    \ensuremath{\stackrel{\scriptscriptstyle p}{\frown}}}}
+
+\newcommand{\pconcatseventeen}{\raisebox{0.3ex}{%
+    \ensuremath{\stackrel{\scriptscriptstyle 17}{\frown}}}}
+\newcommand{\dotminus}{\mathrel{\dot-}}
+
+
+\newenvironment{axioms}{%
+    \smallskip
+    \begin{flushleft}
+    \begin{quote}
+    \begin{tabular}{@{}ll}
+}{%
+    \end{tabular}
+    \end{quote}
+    \end{flushleft}
+    \smallskip
+}
+
+\usepackage{adjustbox}
+
 \usepackage{mathtools} % coloneq
 
+\usepackage{xcolor,pifont}
 
-% ========== Tree proofs ===========
+% plain green tick and red cross, exactly like the picture
+\newcommand{\cmarkd}{\textcolor{green!50!black}{\ding{51}}} % ✓
+\newcommand{\xmarkd}{\textcolor{red!70!black}{\ding{55}}}   % ✗
 
-\usepackage{xyling}
-\usepackage{xfp}
-\usepackage{ifthen}
-\definecolor{annotcol}{rgb}{0.3, 0.4, 0.5}
-\definecolor{red}{rgb}{1,0,0}
-\def\checkmark{\color{annotcol}\tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;}
-\newcommand{\xmark}{\ding{55}}%
-\newcommand{\tree}[2][0]{\Treek[#1]{0.7}{#2}}
-%\newcommand{\dotline}{\GB{d}{.}}
-\newcommand{\wlabel}[2]{\Kk[#1]{0}{\ifthenelse { \equal {#2} {} } {} {\ensuremath{(#2)}}}}
-\newcommand{\ticklabel}[1]{\Kk[#1]{0}{\ensuremath{\checkmark}}}
-\newcommand{\annotlabel}[2]{\Kk[#1]{0}{{\color{annotcol}#2}}}
-\newcommand{\llabel}[2]{\Kk[-#1]{0}{{\color{annotcol}#2}}}
-\newcommand{\branchbelow}{\B{ddl}\B{ddr}}
-\newcommand{\tribranchbelow}{\B{ddl}\B{dd}\B{ddr}}
-\newcommand{\closed}{\Below{\sffamily x}}
-\newcommand{\treenode}[5]{\llabel{\fpeval{(#1)-1}}{#2} #3 \wlabel{#1}{#4} \annotlabel{\fpeval{(#1)+10}}{#5}}
-\newcommand{\treenodeticked}[5]{\llabel{\fpeval{(#1)-1}}{#2} #3 \wlabel{#1}{#4} \annotlabel{\fpeval{(#1)+10}}{#5}  \ticklabel{\fpeval{(#1)+18}}  }
-\newcommand{\nnode}[5]{\treenode{#1}{#2}{\K{#3}}{#4}{#5}}
-\newcommand{\nnodeticked}[5]{\treenodeticked{#1}{#2}{\K{#3}}{#4}{#5}}
-\newcommand{\nnodeclosed}[5]{\treenode{#1}{#2}{\K{#3}\closed}{#4}{#5}}
-\newcommand{\dotbelowbnode}[5]{\treenode{#1}{#2}{\K{#3}\GB{dd}{.}\B[-8]{dddl}\B[-8]{dddr}}{#4}{#5}}
-\newcommand{\dotbelownode}[5]{\treenode{#1}{#2}{\K{#3}\GB{dd}{.}}{#4}{#5}}
-\newcommand{\bnode}[5]{\treenode{#1}{#2}{\K{#3}\branchbelow}{#4}{#5}}
-\newcommand{\bnodeticked}[5]{\treenodeticked{#1}{#2}{\K{#3}\branchbelow}{#4}{#5}}
-\newcommand{\tribnode}[5]{\treenode{#1}{#2}{\K{#3}\tribranchbelow}{#4}{#5}}
-\newcommand{\barenode}[1]{\K{#1}}
-\newcommand{\dotbelowbarenode}[1]{\K{#1}\GB{dd}{.}}
-\newcommand{\dotbelowbarebnode}[1]{\K{#1}\GB{dd}{.}\B[-8]{dddl}\B[-8]{dddr}}
-\newcommand{\dotbelowbaretribnode}[1]{\K{#1}\GB{dd}{.}\B[-8]{dddl}\B[-8]{ddd}\B[-8]{dddr}}
+\newcommand{\cmark}{\ding{51}}
+\newcommand{\xmark}{\ding{55}}
+
+\usepackage{rotating}
+\usepackage{multirow}
 
 % Syntax:
 %

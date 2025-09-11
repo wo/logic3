@@ -1,186 +1,520 @@
 \chapter{Theories}
 
-\section{Formalized theories}
-
 So far, we've talked about pure logic.
 We often want to consider formalized theories.
+These are bodies of sentences in a logical language,
+assumed to describe some particular domain of objects.
+They could describe the behaviour of physical systems,
+but we'll focus on mathematical theories.
 
-For most of history, people did math in an informal manner, relying on a
-collection of techniques for solving particular problems, and appealing to
-intuition where something seemed obvious (e.g. that if x > y and y > z then x >
-z).
+\section{Formalized theories}
 
-In the 19th century, math went through a phase of replacing this with a more
-rigorous approach. Especially in real analysis. Weierstrass, Dedekind, and
-others provided precise definitions of limits, of differentiation, of the real
-numbers themselves, and so on. They formalized the precise assumptions that were
-needed in an axiomatized system, so that one can prove that such-and-such
-methods are sound. This was seen as a great step forward.
+For most of history,
+people did maths in an informal manner,
+relying on a collection of techniques for solving particular problems,
+and appealing to intuition or obviousness to justify
+assumptions that seemed, well, obvious
+-- say, that $0 \ne 1$.
 
-At the same time, more powerful mathematical theories were developed, such as
-Cantor's theory of sets, formalized by Zermelo and Fraenkel, or Frege's logic,
-Russell and Whitehead's Principia, etc. It seemed that all of maths could be
-unified in such a theory. This would again be great progress.
+In the 19th century,
+mathematics went through a phase of formalization,
+in which this informal approach was replaced by a more rigorous one.
+In the field of real analysis,
+in particular,
+Weierstrass, Dedekind, and others provided the first precise definitions of
+limits, of differentiation, and of the real numbers themselves.
+They formalized the precise assumptions that were needed in an axiomatized theory.
+All needed assumptions were stated explicitly.
+One could now prove that such-and-such old-fashioned methods were sound.
+This was seen as a great step forward.
 
-Formally, a \emph{theory} is a set of sentences that is closed under entailment,
-so that it contains everything that is entailed by it. We write $\vdash_{T} A$
-or $T \vdash A$ for $A \in T$. A theory is usually given by specifying some
-sentences, which are called the axioms of the theory. It is understood that such
-a theory contains every sentence entailed by the axioms.
+At the same time,
+more powerful mathematical theories were developed,
+such as the set theory of Cantor,
+formalized by Zermelo, Fraenkel, and others,
+or the type theory of Russell and Whitehead.
+It seemed that all of maths could be unified in such a theory.
+This would again be great progress.
+
+Formally,
+a \emph{theory} is a set of sentences that is closed under entailment,
+so that it contains everything that is entailed by it.
+We write $\vdash_{T} A$ or $T \vdash A$ for $A \in T$.
+Note that this fits our earlier use of the turnstile:
+$A$ is part of a theory $T$ iff $A$ is provable from the theory.
+
+Why do we write $T \vdash A$ and not $T \entails A$?
+By the completeness theorem,
+the two are equivalent,
+if the theory is couched in a first-order language.
+Philosophically, however,
+theories and their content belong to the ``syntax'' side.
+A theory is simply a set of sentences,
+given by a set of axioms and rules
+for how to derive other sentences from them.
+This makes the concept of a theory simple and unproblematic.
+We don't have to think about models,
+which can be much more complex mathematical structures.
+
+All theories, in our sense, are infinite.
+Often,
+theories are given by specifying some sentences,
+which are called the \emph{axioms} of the theory.
+It is understood that such a theory contains
+every sentence entailed by the axioms.
+We say that T is axiomatized by Gamma iff
+it contains exactly the sentences that are entailed by Gamma.
+
+We'll now look at two important examples of formalized theories:
+arithmetic and set theory.
 
 \section{Formal arithmetic}
 
-% ** Number terms construed from 0 and s
+Arithmetic is the theory of natural numbers:
+the numbers 0, 1, 2, 3, and so on.
+We know many things about these numbers.
+We know that 1+2=3,
+that there are infinitely many primes,
+or that the factorial function $x!$ grows faster than any polynomial $x^n$.
+Can we compress the miscellany of such truths
+into a simple axiomatized theory?
 
-Let's think about how to axiomatize the natural numbers.
+The first task is to prune the language.
+Instead of having a large set of primitive expressions,
+it is useful to have a small set of primitives,
+from which other concepts are defined.
+For example,
+instead of having infinitely many individual constants for all the numbers,
+we'll have just one basic constant, 0.
+To denote other numbers,
+we introduce a function symbol $s$ for the \emph{successor} function
+that maps each number to the next one.
+We can then denote 1 by $s(0)$, 2 by $s(s(0))$, and so on.
+We'll also have function symbols $+$ and $\times$ for addition and multiplication.
+The statement that 1+2=3 can now be written as
+\[
+  s(0) + s(s(0)) = s(s(s(0))).
+\]
 
-We don't want infinitely many primitive terms. We can use 0 and s as primitive.
+Other arithmetical concepts can be defined in terms of these primitives.
+For example, we can define the less-than relation `<' as follows:
 
-% ** Simple number structure axioms
+\[
+  t_{1} < t_{2} \text{ iff } \exists x ( t_{1} + s(x) = t_{2} ).
+\]
 
-We need to say something about the structure of the natural numbers.
-Here's an idea:
+Here is how we can define the concept of being prime:
 
-\begin{align}
-\text{\textbf{Q1.}} \quad &\forall x\forall y\, (x'\!=\!y' \,\to\, x\!=\!y) \\
-\text{\textbf{Q2.}} \quad &\forall x \, 0\! \not= \!x' \\
-\text{\textbf{Q3.}} \quad &\forall x \,(x\!\not= 0 \,\to\, \exists y\, x\!=\!y')
-\end{align}
+\[
+  \text{Prime}(x) \text{ iff } ...
+\]
 
-What do models of Q look like? We can't have o → o, because every function expression denotes a total function. So every individual must have a successor. We can't have loops, or branching in any direction. [Exercise!]
+We'll see in chapter \ref{ch:representability} that,
+somewhat surprisingly,
+all familiar arithmetical concepts can be defined from 0, $s$, $+$, and $\times$.
 
-But is anything missing? Yes. Can you find non-standard models?
+\begin{definition}{}{LA}
+  The \emph{language of arithmetic} is a first-order language whose only
+  non-logical symbols (apart from eigenvariables) are 0, $s$, $+$, $\times$, and $=$.
+\end{definition}
 
-% ** Induction
+xxxx maybe eigenvariables should be classified as logical?!
 
-We'd like to say that every number is eventually generated from 0 by application of the successor operation. In second-order logic, we can use the induction axiom:
+Let's turn from definitions to axioms.
+I said that `$s$' denotes the successor function,
+and `$+$' addition,
+but this is not built into the language.
+There are ``non-standard interpretations'' or ``non-standard models'' in which
+these symbols denote something else,
+making $s(0) + s(s(0)) = s(s(s(0)))$ false.
+(Remember section 2.xxx.)
+For example,
+$s$ might be the identity function that maps every object to itself.
 
-3. $\forall P\; (P(0) \land \forall x\; (P(x) \rightarrow P(s(x))) \rightarrow \forall x\; P(x))$.
+We can rule out such interpretations with the help of axioms.
+The following two axioms specify key properties of the successor function:
 
-In first-order logic, we can use the induction schema:
+\begin{axioms}
+  Q1 & $\forall x\forall y\, (s(x)\!=\!s(y) \,\to\, x\!=\!y)$ \\
+  Q2 & $\forall x \, 0\! \not= \!s(x)$
+\end{axioms}
 
-3'. $\forall x\; (\phi(0) \land \forall y\; (\phi(y) \rightarrow \phi(s(y))) \rightarrow \phi(x))$,
+Let's think about what a model of these axioms must look like.
+There must be at least one object, denoted by 0.
+Since function expressions denote total functions,
+there must also be an object $s(0)$.
+Can this be the same as 0?
+No, by P2.
+So $s(0)$ is another object.
+There must also be $s(s(0))$.
+Could this be the same as 0?
+No, by P2.
+Could it be the same as $s(0)$?
+No, by P1.
+So $s(s(0))$ is a third object.
+By repeating this reasoning,
+we see that any model of P1 and P2 must have infinitely many objects
+$0, s(0), s(s(0)), \ldots$,
+related by the successor function.
 
-where $\phi$ is any formula with one free variable. For note that all numbers
-are generated from 0 by the successor operation. So if a property holds for 0
-and it holds for any other number \emph{provided that} it holds for its
-ancestor, then -- by induction -- it holds for all numbers. That's just what Ind
-says.
+Is anything missing?
+Can you find a (non-standard) model in which P1 and P2 are true,
+but that isn't isomorphic to the natural numbers
+(ignoring addition and multiplication, for the moment)?
 
-This was, in essence, Dedekind's 1888 proposal.
-Hamlin sec.1.8
+P1 and P2 don't rule out that
+there are other objects in the domain,
+besides those generated from 0 by repeated application of $s$.
+For example,
+there could be a second number line,
+with an object $a$ that is not a successor of anything,
+and with its own successors $s(a), s(s(a)), \ldots$.
 
-You may note that Ind is a schema. We can't actually list all instances of it.
-That's OK. At least we can mechanically recognize whether something is an
-instance of an axiom or not. The point about ``mechanical'' is this: Suppose I
-declared that the axioms of my theory are all and only the true sentences of
-arithmetic. That wouldn't count as a genuine axiomatization. I may have
-introduced a theory alright, but I haven't presented an axiomatized theory.
+We might introduce the following axiom to rule this out:
 
-% ** Defining addition
+\begin{axioms}
+  Q3 & $\forall x \,(x\!\not= 0 \,\to\, \exists y\, x\!=\!s(y))$
+\end{axioms}
 
-The language we have at the moment has just 0 and s. Can we define other expressions, like addition?
+This says that there is no object other than 0 that is not a successor.
+But it's easy to construct non-standard models that satisfy Q1--Q3.
+For example,
+there could be a single object $a$ besides the number sequence
+that is its own successor,
+so that $s(a) = a$.
+You can verify that Q1--Q3 are all true in this model.
 
-You can't define them explicitly, in the way we defined ∃ in terms of ∀.
+Intuitively,
+we'd like an axiom saying that
+every number can eventually be reached from 0 by repeated application of $s$.
+But there's no way to express this in first-order logic.
+We can get close,
+however,
+by adding the following axiom schema,
+called the \emph{induction schema}:
 
-Here's an idea.
+\begin{axioms}
+  IN & $(A(0) \land \forall x\; (A(x) \rightarrow A(s(x))) \to \forall x\; A(x))$
+\end{axioms}
 
-Define x+0 = x, and x+s(y) = s(x+y).
+Here, $A$ is any formula with one free variable.
+We can think of every such formula as expressing a property.
+So understood,
+IN says that
+if some (expressible) property holds for 0,
+and if it is inherited from any number to its successor,
+then it holds for all numbers.
+(You can see how this
+is closely related to the principle of mathematical induction.)
 
-The idea is to define an operation by describing how it applies to 0 and then
-how it proceeds by describing how its value for s(y) is related to its value for
-y. This is known as a \textit{recursive definition}.
+\begin{proposition}{}{PAentailsQ}
+  IN entails Q3.
+\end{proposition}
+\begin{proof}
+   \emph{Proof sketch.}
+    let $A(x)$ be the formula $x\!\not= 0 \,\to\, \exists y\, x\!=\!s(y)$.
+    Q3 is $\forall x A(x)$.
+    To derive this via IN,
+    we need to show
 
-Dedekind proved that it fixes the operation on the natural numbers uniquely: if
-two operations satisfy the definition, they must yield the same output for all
-natural numbers as inputs. Otherwise there would have to be a least point of
-disagreement.
+    \begin{enumerate}[(i)]
+    \item $A(0)$, and
+    \item $\forall x (A(x) \to A(s(x)))$.
+    \end{enumerate}
+
+    Both of these are logical truths.
+    (i) holds because $0 = 0$;
+    so the antecedent $A(0)$ is false.
+    For (ii),
+    note that $A(s(x))$ is trivial:
+    its consequent says that $\exists y (s(x) = s(y))$.
+    So $A(x) \to A(s(x))$ holds for all $x$.
+\end{proof}
 
 \begin{exercise}
-Define multiplication recursively
+  Explain why the model with the extra object $a$ that is its own successor
+  is not a model of the theory axiomatized by Q1, Q2 and IN.
 \end{exercise}
 
-% ** Axioms for addition
+Let's turn to addition and multiplication.
+A common way to define functions on $\mathbb{N}$ is to
+describe how they apply to 0
+and then define their value for any successor number
+in terms of their value for the previous number.
+For example,
+the factorial function $n!$ that maps every number $n$ to
+the product $1 \cdot 2 \cdot \ldots \cdot n$ can be defined by
+the following two clauses:
 
-A problem with recursive definitions is that they are not explicit definitions. The two principles implicitly define addition uniquely, but they don't give us an object-language formula φ(x,y,z) that says that x+y=z.
+\begin{gather*}
+  0! = 1\\
+  s(n)! = n! \cdot s(n)
+\end{gather*}
 
-In second-order logic, we can offer such a formula: x+y=z can be defined as $\forall f[(f(0)=x \land \forall v(f(s(v)) = s(f(v)))) \rightarrow f(y)=z]$.
+This is called a definition by \emph{(primitive) recursion}.
+It may at first look circular,
+but it isn't.
+Take,
+for example, the input $2$.
+By the second clause of the definition,
+\[
+  2! = 1! \cdot 2.
+\]
+To evaluate this,
+we need to know $21!$.
+By the second clause again,
+\[
+  1! = 0! \cdot 1.
+\]
+By the first clause,
+\[
+  0! = 1.
+\]
+Combining these equations,
+we get
+\[
+  2! = (1 \cdot 1) \cdot 2 = 2.
+\]
 
-It turns out that there's no way to do this in first-order logic. So we add the two principles as axioms.
+We can similarly define the addition function by primitive recursion on its second argument:
 
-https://math.stackexchange.com/questions/449146/why-are-addition-and-multiplication-included-in-the-signature-of-first-order-pea
-
-% ** Axioms for multiplication
-
-We do the same with the multiplication axioms.
-
-It turns out that this is enough. E.g., exponentiation \textit{can} be defined explicitly.
+\begin{gather*}
+  x + 0 = x\\
+  x + s(y) = s(x + y)
+\end{gather*}
 
 \begin{exercise}
-Prove $\forall x (s(x) * s(0) = x)$ from the axioms.
+  Explain how this definition determines the value of $3 + 2$.
+\end{exercise}
+
+We can directly translate the two clauses of our definition into $\L_{A}$:
+
+\begin{axioms}
+  Q4 & $\forall x (x + 0 = x)$ \\
+  Q5 & $\forall x \forall y (x + s(y) = s(x + y))$
+\end{axioms}
+
+The same trick works for multiplication,
+which we can define as repeated addition:
+
+\begin{axioms}
+  Q6 & $\forall x (x \times 0 = 0)$ \\
+  Q7 & $\forall x \forall y (x \times s(y) = (x \times y) + x)$
+\end{axioms}
+
+% Dedekind proved that it fixes the operation on the natural numbers uniquely: if
+% two operations satisfy the definition, they must yield the same output for all
+% natural numbers as inputs. Otherwise there would have to be a least point of
+% disagreement.
+
+The theory axiomatized by Q1--Q7 is called \emph{Robinson arithmetic}, or Q.
+It will play an important role in chapter \ref{ch:incompleteness}.
+The standard first-order theory of arithmetic replaces Q3 by IN.
+It is called \emph{Peano arithmetic},
+after Giuseppe Peano,
+although essentially the same theory was proposed earlier by Dedekind (in 1888).
+
+\begin{exercise}
+  Prove $\forall x (s(x) * s(0) = x)$ from the axioms of PA.
 \end{exercise}
 
 \begin{exercise}
-Prove the baby axiom $\neg x = 0 \to \exists y(x = s(y))$.
+  Prove the baby axiom $\neg x = 0 \to \exists y(x = s(y))$.
 \end{exercise}
 
 \begin{exercise}
-Prove Herbrand's axiom schema: ¬s...sx = x.
+  Prove Herbrand's axiom schema: ¬s...sx = x.
 \end{exercise}
 
-\begin{exercise}
-Prove x + y = y + x
-\end{exercise}
+% \begin{exercise}
+%   Prove x + y = y + x
+% \end{exercise}
 
-Intro metalinguistic abbreviations for sssss0. So we can say that PA $\vdash$ 1+2=3.
+% You may note that Ind is a schema. We can't actually list all instances of it.
+% That's OK. At least we can mechanically recognize whether something is an
+% instance of an axiom or not. The point about ``mechanical'' is this: Suppose I
+% declared that the axioms of my theory are all and only the true sentences of
+% arithmetic. That wouldn't count as a genuine axiomatization. I may have
+% introduced a theory alright, but I haven't presented an axiomatized theory.
 
-Easy to show that PA can prove all particular truths about + and times.
 
 % ** Nonstandard models
 
-The intended interpretation of PA. This seems to be a particular model. PA
-clearly true in it.
+It was fairly easy to find non-standard models of Q.
+It's much harder to describe non-standard models of PA.
+But we know that there must be such models,
+by the compactness theorem.
 
-We've described models with extra numbers for the theory with just axioms 1-3. Does first-order PA still have such models?
+\begin{theorem}{}{nonstandardPA}
+  There are non-standard models of Peano Arithmetic.
+\end{theorem}
+\begin{proof}
+  \emph{Proof.}
+  Let $c$ be an individual constant other than 0.
+  Let $\Gamma$ be the set of sentences consisting of
+  the axioms of PA together with
+  all the sentences
+  \[
+    c \ne 0, c \ne s(0), c \ne s(s(0)), \ldots.
+  \]
+  Every finite subset of $\Gamma$ has a model.
+  Indeed,
+  every finite subset of $\Gamma$ is true in the standard model of arithmetic:
+  just interpret $c$ as a sufficiently large natural number.
+  By the compactness theorem,
+  the whole set has a model.
+  All axioms of PA are true in this model.
+  But the object denoted by $c$ (in this model) can't be a natural number.
+  It lies outside the number sequence 0,1,2,\ldots.
+\end{proof}
 
-Yes, by compactness!
+(The model $M$ constructed in this proof
+has an interpretation function that interprets the extra constant $c$.
+If you insist that a model of PA should only interpret the non-logical symbols of $\L_{A}$,
+take the model $M'$ obtained from $M$ by
+removing $c$ from the domain of the interpretation function.
+This is called the \emph{reduct} of $M$ to $\L_{A}$.
+It is still a non-standard model because it still contains the object previously denoted by $c$.)
 
-There's no way to avoid this. Even if we added all truths of arithmetic, we'd have such non-standard models.
+Can we add further axioms to Peano Arithmetic
+to rule out all non-standard models?
+No.
+Consider the theory $\mathrm{Th}(\mathcal{N})$
+that contains all true sentences of $\L_{A}$
+-- where by `true' I mean true in the standard model of arithmetic $\mathcal{N}$
+whose domain is the set of natural numbers 0, 1, 2, \ldots,
+and in which `0' denotes 0, `s' the successor function, `+' addition, and `$\times$' multiplication.
+The proof of Theorem \ref{thm:nonstandardPA} works just as well for $\mathrm{Th}(\mathcal{N})$.
+There is no way to pin down the intended model of arithmetic
+in a first-order language.
 
-In practice, the unintended models may not be a problem. We may hope, e.g., that PA contains all arithmetical truths, and isn't that all that matters?
-
-Let $\Omega$ be the set of all sentences true in the model. This is a theory,
-although not given by axioms. We may hope that $\Omega = PA$.
-
+\begin{exercise}
+  The upward Löwenheim-Skolem theorem also implies that there are nonstandard models of $\mathrm{Th}(\mathcal{N})$.
+  Explain.
+\end{exercise}
 
 \section{Set theory}
 
-% ** Russell's paradox
+In the 19th century,
+mathematicians increasingly made use of the concept of sets
+in order to render their theories and definitions more precise.
+For example,
+Dedekind defined the real numbers in terms of sets of rational numbers,
+which allowed for new, more rigorous proofs of
+results in real analysis
+(such as the intermediate value theorem).
 
-Informally, a \textit{set} is simply a collection of things, which are called the \textit{elements} or \textit{members} of the set. For example, the number 7 is an element of the set $\mathbb{N}$ of natural numbers: $7 \in \mathbb{N}$.
+The concept of set was initially regarded no as belonging to a separate mathematical theory,
+which we now know as set theory.
+Rather, it was treated as a logical concept.
+To speak of the set of such-and-suchs,
+it was assumed,
+is just to speak of the such-and-suchs taken together.
+`The set of primes is infinite' is another way of saying that
+there are infinitely many primes.
+As Georg Cantor put it in 1895:
+a set is `a collection of definite, well-differentiated objects [\ldots] into a whole'.
 
-Early set theorists reasoned informally about sets. They took for granted that for any predicate $P$, there is a set $\{ x : Px \}$ of all things that satisfy that predicate. But this leads to paradox, as Cantor first noticed in 1895. The simplest instance is Russell's paradox, discovered at around 1900 by Russell and Zermelo (independently).
+As time went by,
+it became increasingly clear that
+many important mathematical concepts can be defined entirely in terms of sets,
+and mathematical assumptions can be derived from these definitions.
+Set theory thereby emerged as a unifying foundation in which previously
+separate mathematical domains could be linked.
+Theorems from topology could be used to prove results in algebra.
+More ambitiously,
+there was the logicist dream that
+all of maths could perhaps be reduced to logic and definitions.
 
-Consider the predicate $x \not\in x$. If we assume that there is a set of all things that satisfy this predicate, we can call it R. Then, we can ask whether R is a member of itself. If it is, then by the definition of R, it must not be a member of itself. If it isn't, then by the definition of R, it must be a member of itself.
+This was the life project of Frege.
+He gave an axiomatic account of logic,
+with a single principle for sets,
+his ``axiom V''.
+We can express this axiom as a schema,
+where $A$ and $B$ are arbitrary formulas with one free variable:
 
-% ** The cumulative hierarchy
+\begin{axioms}
+  V & $\{ x \mid A(x) \} = \{ x \mid B(x) \} \leftrightarrow \forall x (A(x) \leftrightarrow B(x)).$
+\end{axioms}
 
-There's something odd about the idea that a set could contain itself. One
-imagines sets as abstract "containers", and a container can't contain itself.
-From this perspective, there is no set of all sets, because that would be a
-set that contains itself. So we really can't rely on the comprehension schema.
+Axiom V says that sets are individuated by their members:
+you can't have two different sets with the very same members.
+This makes sense if a set of things is just those things ``considered as a unit''.
+Axiom V also implies that
+for any formula $A(x)$ there is a corresponding set $\{ x : A(x) \}$.
+This is known as the \emph{naive comprehension principle}.
+A quick way to realize that Axiom V implies naive comprehension is to note that
+singular terms in predicate logic can never be empty,
+and Axiom V allows us to form a term $\{ x \mid A(x) \}$ for any formula $A(x)$.
+We can also derive the object-language existence statement:
+using $A(x)$ for both $A(x)$ and $B(x)$ in the schema,
+we get
 
-Zermelo suggested an attractive alternative. We should think of the sets as
-built in stages or layers. We start with things that are not sets, called
-\textit{individuals} or \textit{urelemente}. At the next level, we have all sets of those
-things. Then we have all sets whose elements occur in stages 0 and 1, and so on.
-("And so on" means more than you might have thought here.)
+\[
+  \{ x \mid A(x) \} = \{ x \mid A(x) \} \leftrightarrow \forall x (A(x) \leftrightarrow A(x)).
+\]
 
-The resulting structure is known as the cumulative hierarchy.
+The right-hand side is a logical truth.
+So we can infer the left-hand side:
+$\{ x \mid A(x) \} = \{ x \mid A(x) \}$.
+From this, we can infer by existential generalization that
+the set $\{ x \mid A(x) \}$ exists:
+$\exists y ( y = \{ x \mid A(x) \} )$.
+
+Unfortunately, the naive comprehension principle is inconsistent.
+The simplest demonstration is \emph{Russell's paradox}.
+Consider the formula $x \not\in x$.
+Assume that there is a set of all things to which this formula applies.
+Call it $R$.
+Then, we can ask whether $R$ is a member of itself.
+If it is, then by the definition of $R$,
+it must not be a member of itself.
+If it isn't, then by the definition of $R$,
+it must be a member of itself.
+
+There's something odd about the idea that a set could contain itself.
+One imagines sets as abstract "containers",
+and a container can't contain itself.
+From this perspective,
+there is no set of all sets,
+because this would be a set that contains itself.
+So we really can't rely on the comprehension schema.
+
+Zermelo suggested an attractive alternative.
+We should think of the sets as built in stages or layers.
+We start with things that are not sets,
+called \textit{individuals} or \textit{urelemente}.
+At the next level, we form all sets of individuals.
+Then we form all sets whose elements are on these first two levels.
+Here we have sets whose elements are sets of individuals,
+but also, again, sets whose elements are individuals,
+and mixed sets that contain both individuals and sets of individuals.
+At the next level, we form all sets whose elements are on the first three levels,
+and so on.
+Crucially,
+a set only appears at a stage after all its elements have appeared.
+So we never have a set that contains itself.
+Nor do we have a set of all sets that don't contain themselves,
+which would just be the set of all sets.
+
+Curiously,
+this hierarchical construction yields a non-trivial result
+even if there are no individuals on the base level.
+There is then only one set of individuals:
+the empty set $\emptyset$.
+From this, we can form another set: $\{ \emptyset \}$.
+At the next level, we therefore have two sets: $\emptyset$ and $\{ \emptyset \}$.
+From these,
+we can form $\emptyset$, $\{ \emptyset \}$, $\{ \emptyset, \{ \emptyset \} \}$, and $\{ \{ \emptyset \} \}$.
+And off we go.
+For purely mathematical applications,
+it turns out that this \emph{pure} hierarchy is generally enough.
+We don't need individuals
+because every set-theoretic structure with individuals is isomorphic to a structure of pure sets.
 
 % ** The pure hierarchy
 
-For purely mathematical applications of set theory, it turns out that we can dispense with individuals. There's then nothing at stage 0. At stage 1, there is the empty set. The construction goes like this:
+Let's make the structure of the pure hierarchy more precise.
 
 \begin{itemize}
 \item stage 0: $V_{0} = \emptyset$
@@ -193,190 +527,541 @@ This goes on forever. But we don't stop there. "After" all the finite stages (of
 \item stage ω: $V_{\omega} = \bigcup_{k < \omega} V_{k}$
 \end{itemize}
 
-From there, we can continue to build the sets at stage ω+1, ω+2, and so on. And then we can take the union of all those sets to get the set at a stage we might label ω+ω, or $2\omega$. After infinitely many more stages, we reach stage $3\omega$, then $4\omega$, etc. There are infinitely many of such stages, reach representing an infinite step past the previous one. And we're not done there. After all these stages, there is another stage $\omega\cdot \omega$, or $\omega^{2}$, where we take the union of all previous stages. And we keep going. Repeating the whole procedure, we reach $\omega^{3}$, then $\omega^{4}$, and so on. You might have guessed how this continues. After all these stages comes a stage $\omega^{\omega}$. And we keep going. Much later, we come across stages $\omega^{\omega^\omega}$ and stages with arbitrarily high towers of $\omega$. And we're still only near the bottom of the hierarchy. The set-theoretic hierarchy is \textit{vast}.
+From there, we continue to build the sets at stage ω+1, ω+2, and so on.
+And then we can take the union of all those sets to get the set at a stage we might label ω+ω, or $2\omega$.
+After infinitely many more stages,
+we reach stage $3\omega$, then $4\omega$, etc.
+There are infinitely many of such stages,
+each representing an infinite step past the previous one.
+After all these stages,
+there is another stage $\omega\cdot \omega$, or $\omega^{2}$,
+where we take the union of all previous stages.
+And we keep going.
+Repeating the whole procedure, we reach $\omega^{3}$, then $\omega^{4}$, and so on.
+You might have guessed how this continues.
+After all these stages comes a stage $\omega^{\omega}$.
+And we keep going.
+Much later,
+we come across stages $\omega^{\omega^\omega}$,
+and stages with arbitrarily high towers of $\omega$.
+And we're still only near the bottom of the hierarchy.
+The set-theoretic hierarchy is \textit{vast}.
+
+Now it does look like set theory is describing its own mathematical structure,
+like arithmetic etc.
+The resulting structure is known as the cumulative hierarchy.
+(``Cumulative'', as opposed to ``stratified'',
+indicates that at each level,
+one can form sets from all earlier levels,
+rather than just the previous level.)
 
 % ** Language of set theory
 
-There are many ways of formalizing the cumulative hierarchy. The most popular is Zermelo-Fraenkel set theory with Choice (ZFC).
+There are many ways of formalizing the cumulative hierarchy.
+The most popular is Zermelo-Fraenkel set theory with Choice (ZFC).
+
 
 The signature is $\{ \in \}$.
+This is the only primitive. 
+Other concepts can be defined.
+For example,
+we can define the subset relation $\subseteq$ as follows:
 
-Here are some useful abbreviations:
+\begin{quote}
+   For any variables $x$ and $y$,
+   $x \subseteq y$ abbreviates $\forall z (z \in x \rightarrow z \in y)$.
+\end{quote}
 
-\begin{itemize}
-\item $x \subseteq y$ means $\forall z (z \in x \rightarrow z \in y)$
-\item $x \cup y$ means $\{ z : z \in x \lor z \in y \}$
-\item $x \cap y$ means $\{ z : z \in x \land z \in y \}$
-\item $\bigcup x$ means $\{ z : \exists y (y \in x \land z \in y) \}$, the union of all sets in $x$.
-\item $P(x)$ means the power set of $x$, i.e. $\{ y : y \subseteq x \}$.
-\end{itemize}
+% \begin{itemize}
+% \item $x \subseteq y$ means $\forall z (z \in x \rightarrow z \in y)$
+% \item $x \cup y$ means $\{ z : z \in x \lor z \in y \}$
+% \item $x \cap y$ means $\{ z : z \in x \land z \in y \}$
+% \item $\bigcup x$ means $\{ z : \exists y (y \in x \land z \in y) \}$, the union of all sets in $x$.
+% \item $P(x)$ means the power set of $x$, i.e. $\{ y : y \subseteq x \}$.
+% \end{itemize}
 
-Here are the axioms:
+I'll now go though the axioms of ZFC.
+The intended domain are the pure sets.
+So all quantifiers range over pure sets.
 
-\begin{enumerate}
-\item \textbf{Extensionality}
-   $\forall x\forall y[ (\forall z(z\in x\leftrightarrow z\in y)) \to x=y ]$
-   This says that a set is completely determined by its elements. There aren't two sets with the same elements.
+\begin{axioms}
+  Z1 & $\forall x\forall y( (\forall z(z\in x\leftrightarrow z\in y)) \to x=y ).$
+\end{axioms}
 
-\item \textbf{Empty Set}
-   $\exists x\forall y(y\notin x)$
-   There is an empty set (the starting point of the hierarchy).
+This is the axiom of \emph{extensionality}.
+It says that a set is completely determined by its elements.
+There aren't two sets with the same elements.
+Unlike Frege's Axiom V,
+Z1 doesn't also imply that
+for any formula $A(x)$ there is a corresponding set $\{ x : A(x) \}$.
+Instead of this unrestricted comprehension principle,
+we have a more restricted principle,
+called the \emph{separation axiom}.
+It's actually a schema:
 
-\item \textbf{Pairing}
-   $\forall a\forall b \exists x\forall y[ y\in x \leftrightarrow (y=a \lor y=b) ]$
-   For any things a,b in the hierarchy, there is a set (higher-up in the hierarchy) $\{a,b\}$ that contains exactly those things. (Note that $a,b$ can be the same thing. In this case, the axiom tells us that there is a set $\{a,a\}$ = $\{ a \}$ that contains exactly a.)
+\begin{axioms}
+  Z2 & $\forall y \exists z \forall x( x\in z \leftrightarrow ( x\in y \land A(x)))$
+\end{axioms}
+This says that for any set $y$ and any formula $A(y)$,
+there is a set $x$ that contains just those elements of $y$ that satisfy $A(x)$.
+That is,
+provided that we already have a set $y$,
+we can use any formula to carve out a subset of $y$
+from the elements of $y$ that satisfy the formula.
 
-\item \textbf{Union}
-   $\forall x \exists u \forall y( y\in u \leftrightarrow \exists z(z\in x\land y\in z) )$
-   If we have a set x of sets, we may form a set from all the elements of those sets, i.e. the union $\bigcup x$.
+The next axiom postulates the existence of the empty set,
+the base level of the hierarchy.
 
-   [Query: Can you figure out why this is called the axiom of union? Write up an example, where a is a set of three sets and each of those three sets has two elements. What does the set whose existence is guaranteed by this axiom look like?]
+\begin{axioms}
+   Z3 & $\exists x\forall y(y\notin x).$
+\end{axioms}
 
-\item \textbf{Power Set}
-   $\forall x \exists p \forall y( y\in p \leftrightarrow y\subseteq x )$
-   If we have a set x, we may form the set of all its subsets, i.e. the power set P(x).
+This says that there is something (a set) that has no elements.
+By the extensionality axiom,
+there is only one such thing.
+It's convenient to have a name for it: `$\emptyset$'.
+But this name isn't officially part of the language.
+The only singular terms in the language of set theory are variables.
+So we can't say that `$\emptyset$' is shorthand for some more complex term in the language,
+in the way we could treat `3' as shorthand for `s(s(s(0)))'.
 
-\item \textbf{Infinity}
-   $\exists x[ \emptyset\in x \land \forall y(y\in x\to y\cup\{y\}\in x) ]$
-   This is needed to show that there are infinite sets.
+What we can do instead is give a \emph{contextual} or \emph{syncategorematic} definition of `$\emptyset$',
+as follows:
 
-\item \textbf{Separation (Subset Comprehension) – axiom \textit{scheme}}
-   For every formula φ(u,…,p) with parameters p
-        $\forall a \exists b \forall y( y\in b \leftrightarrow [ y\in a \land \phi(y,\ldots,p) ] )$
-   Each stage may carve out \textit{definable} subcollections of earlier sets; no genuinely new elements appear.
+\begin{quote}
+  Any sentence $A(\emptyset)$ that contains `$\emptyset$'
+  abbreviates $\exists x(\forall y(y\notin x) \land A(x))$,
+  where $x$ and $y$ are the first variables that don't occur in $A$.
+\end{quote}
 
-\item \textbf{Replacement – axiom \textit{scheme}}
-   For every formula φ(x,y,p) that is functional in y
-        $\forall a[(\forall x\in a \exists!y \phi(x,y,p)) \to \exists b\forall x\in a \exists y\in b \phi(x,y,p)]$
-   If each member of a set a is sent by a definable rule to some object, that whole image already sits at a later stage.
-   More informally, if f is a function then the image of a set under f is also a set.
-   This is what allows limit stages: take unions of earlier outputs without leaving V.
+For example, we might write $\forall x(\emptyset \subseteq x)$'
+to say that the empty set is a subset of every set,
+and this is shorthand for
+\[
+  \exists z(\forall y(y\notin z) \land \forall x(z \subseteq x)),
+\]
+which in turn is (by the definition of `$\subseteq$') shorthand for
+\[
+  \exists z(\forall y(y\notin z) \land \forall x\forall v(v \in z \to v \in x)),
+\]
 
-\item \textbf{Foundation (Regularity)}
-   $\forall x[ x\neq\emptyset \to \exists y\in x( x\cap y = \emptyset ) ]$
-   No infinite ε-descending chains; every membership walk eventually hits ground.
-   Mirrors the stage construction: nothing can occur before its elements.
+The same trick is needed to talk about operations on sets.
+To define the union $\cup$ operation,
+for example,
+we need to find a formula that is true of sets $x,y$, and $z$
+iff $z$ is the union of sets $x$ and $y$.
+Such a formula is not hard to find:
+\[
+  \forall v(v\in x \lor v \in y \leftrightarrow v \in z).
+\]
+With this, we can give a contextual definition of `$\cup$':
 
-\item \textbf{Choice (AC)}
-    $\forall F[ (\forall u\in F)(u\neq\emptyset) \to \exists c \subseteq \bigcup F  (\forall u\in F)(|u\cap c|=1) ]$
-    Once an entire family of non-empty older sets is present, a later stage may pick a representative from each.
-\end{enumerate}
+\begin{quote}
+  $A(t_{1} \cup t_{2})$ abbreviates
+  $\exists z(\forall v(v\in x \lor v \in y \leftrightarrow v \in z) \land A(z))$,
+  where $x$, $y$, and $v$ are the first variables that don't occur in $A$.
+\end{quote}
 
-Axioms 2, 3, 4, 5, 6, 7, 8 are instances of Comprehension: they say that certain ways of identifying sets really succeed in identifying a set.
+More generally,
+we can define the union $\bigcup x$ of a set $x$ as the set of all elements of the sets in $x$.
+Maybe do this first?
 
-[Need to explain that functions are sets of ordered pairs?]
+Similarly for powerset.
 
-One can replace the schemas by second-order axioms to get second-order ZFC.
+We don't yet know if there is always a union or a powerset of a given set.
+The next two axioms guarantee their existence.
 
-Technically AC is independent of the cumulative picture, and it has created a great controversy. But it is often convenient in mathematical practice.
+\begin{axioms}
+  Z4 & $\forall x\exists u\forall y(y\in u \leftrightarrow \exists z(z\in x \land y\in z)).$\\
+  Z5 & $\forall x\exists p\forall y(y\in p \leftrightarrow y\subseteq x).$
+\end{axioms}
 
-Exercises:
+Z4 is the \emph{union axiom}
+Z5 the \emph{powerset axiom}.
+Z4 says that
+whenever we have a set x of sets,
+we may form a set from all the elements of those sets, i.e. the union $\bigcup x$.
+Z5 says that
+whenever we have a set x, we may form the set of all its subsets, i.e. the power set P(x).
+
+Can we form any new sets from the empty set,
+by applying the union and powerset operations?
+No.
+Both the union and the powerset of the empty set are the empty set.
+To get the hierarchy off the ground,
+we need the next axiom,
+the \emph{pairing axiom}:
+
+\begin{axioms}
+   Z6 & $\forall v\forall w \exists x\forall y(y\in x \leftrightarrow (y=v \lor y=z)).$
+\end{axioms}
+
+This says that
+for any things $v,w$ in the hierarchy,
+there is a set (higher up in the hierarchy) $\{v,w\}$ that contains exactly those things.
+Note that $v$ an $w$ can be the same thing.
+In this case,
+the axiom tells us that there is a set $\{v,v\}$ = $\{ v \}$ that contains exactly $v$.
+(This is called the \emph{singleton} set of $v$.)
+
+We'll help ourselves to $\{v\}$ as a contextually defined term.
+
+The pairing axiom tells us that there is a set $\{ \emptyset \}$,
+from which we can form further sets like $\{ \emptyset, \{ \emptyset \} \}$
+by applying the union and powerset operations.
+But we can't show that
+all the sets we can form in this manner,
+of which there are (countably) infinitely many,
+belong to some set.
+The next axiom,
+the \emph{axiom of infinity},
+says that they do.
+[No! It says that there's a set of finite ordinals!]
+
+\begin{axioms}
+  Z7 & $\exists x( \emptyset\in x \land \forall y(y\in x\to y\cup\{y\}\in x)).$
+\end{axioms}
+
+Next,
+we have the axiom of \emph{foundation} or \emph{regularity}.
+It reflects the idea that all sets are built in stages.
+Consider any nonempty set of sets $x$.
+This set must have one or more elements $y$ that appear before all the others,
+in the construction of the hierarchy.
+Since all elements of $y$ sets appear strictly before $y$,
+it follows that 
+none of the elements of $y$ can be in $x$.
+That is,
+every nonempty set $x$ of sets must have an element $y$ that is disjoint from $x$:
+
+\begin{axioms}
+  Z8 & $\forall x[ x\neq\emptyset \to \exists y\in x( x\cap y = \emptyset ) ]$
+\end{axioms}
+
+There are two more axioms.
+They are a little more technical.
+The next is the \emph{axiom of replacement},
+due to Fraenkel.
+To see what it does,
+remember that
+the axiom of infinity guarantees the existence of an infinite set.
+Let's think of this set as the set $\omega$ of natural numbers $0, 1, 2, \ldots$.
+Now suppose that we have a construction
+that defines a set $s_{n}$ for each number $n \in \omega$.
+We would like to say that these sets $s_{0}, s_{1}, s_{2}, \ldots$ themselves form a set.
+(After all,
+there aren't any more of the $s_{n}$ than there are members of $\omega$.)
+Zermelo's original axioms, from 1908, didn't guarantee this.
+The axiom of replacement does.
+It is called `replacement' because
+it allows replacing all members $i$ of a known set by other things $f(i)$.
+
+To state the replacement axiom,
+we need to say what it means for a formula $A(x,y,p)$ to be \emph{functional in $y$}.
+This means that
+for any $x$ and $p$,
+there is at most one $y$ such that $A(x,y,p)$.
+Now replacement is the following schema,
+where $A(x,y,p)$ is any formula that is functional in $y$:
+
+xxx have we defined $\exists!$?
+
+\begin{axioms}
+    Z9 & $\forall a[(\forall x\in a \exists!y A(x,y,p)) \to \exists b\forall x\in a \exists y\in b A(x,y,p)]$
+\end{axioms}
+
+Finally,
+we have Zermelo's Axiom of Choice.
+This says that if we have a set $x$ of non-empty sets,
+then there is a set $c$ that contains exactly one element from each set in $x$.
+
+\begin{axioms}
+    Z10 & $\forall a[(\forall u\in a)(u\neq\emptyset) \to \exists c \forall u\in a (|u\cap c|=1)]$
+\end{axioms}
+
+Unlike the other axioms,
+this axiom states that a certain set exists
+without describing how it can be constructed:
+we are not told \emph{which} element of each set in $x$ is in $c$.
+For this reason (as well as others),
+the axiom has long been controversial.
+Nowadays,
+it is generally accepted,
+as many important mathematical results depend on it.
 
 \begin{exercise}
 Infinity says that there is a set $x$ of a certain kind. List 3 members of this set.
 \end{exercise}
 
 \begin{exercise}
-Show that if for any three things a,b,c, there is a set \{a,b,c\}.
+Show that for any three things a,b,c, there is a set \{a,b,c\}.
 \end{exercise}
+
+\begin{exercise}
+  Explain why the separation axiom implies that there is no set of all sets.
+\end{exercise}
+
+An example of something that can be formalized in ZFC is the completeness theorem of the previous chapter.
+This requires interpreting the language, proofs, models, etc. in set theory.
+Models are set theoretic structures.
+So validity and entailment are really set-theoretic concepts.
+You may now appreciate how odd it is that they align so neatly with a finitary concept of derivability.
 
 \section{Sets and numbers}
 
-% ** A number structure in the cumulative hierarchy
+The Axiom of Infinity draws attention to an infinite sequence of sets,
+called the \emph{finite von Neumann ordinals},
+or simply the \emph{finite ordinals}:
 
-Remember the axiom of Infinity. It draws our attention to an infinite sequence: $\emptyset, \{ \emptyset \}, \{ \emptyset, \{ \emptyset \} \}, \ldots$.
+\begin{gather*}
+  \emptyset \\
+  \{ \emptyset \} \\
+  \{ \emptyset, \{ \emptyset \} \} \\
+  \{ \emptyset, \{ \emptyset \}, \{ \emptyset, \{ \emptyset \} \} \} \\
+  \vdots
+\end{gather*}
 
-This sequence has the structure of the natural numbers. We can think of the empty set as 0, and the next set as 1, and so on.
+This sequence has the structure of the natural numbers.
+We can think of $\emptyset$ as 0,
+$\{ \emptyset \}$ as 1,
+$\{ \emptyset, \{ \emptyset \} \}$ as 2,
+and so on.
+(Note that,
+in this construction,
+each number $n$ has exactly $n$ elements.)
 
-% ** ZF can derive PA
+More formally,
+we can use the finite ordinals to
+define a model of arithmetic (of $\mathrm{Th}(\mathcal{N})$ and PA and Q)
+in the cumulative hierarchy.
+As domain of the model,
+we use the set $\omega$ of finite ordinals.
+(Yes,
+this set has the same name as
+a certain stage in the construction of the cumulative hierarchy.
+Indeed, the set $\omega$ is formed at stage $\omega$.)
+The `0' symbol is interpreted as denoting $\emptyset$.
+The successor symbol `$s$' denotes
+the function that maps each set $x$ in the sequence to $x \cup \{ x \}$,
+which is the next item in the sequence.
+The standard recursive definitions of addition and multiplication
+then determine the interpretation of `+' and `$\times$'.
+(If $n$ and $m$ are in $\omega$,
+$n + m$ will be the unique set in $\omega$ that
+has exactly $n+m$ elements,
+and $n \times m$ the unique set with $n \times m$ elements.)
 
-It's not hard to define addition and multiplication on the finite ordinals, so
-that e.g. $\{ \emptyset \} + \{ \emptyset, \{ \emptyset \}\} = \{ \emptyset, \{ \emptyset \}, \{ \emptyset, \{ \emptyset \} \}$. One can
-then derive the first-order Peano axioms (PA) in ZF.
+This shows that the natural number structure can be embedded in the structure of sets.
+The same is true for almost every other mathematical structure.
+And we can do more.
+Suppose we read
+\begin{itemize}
+  \item `$0$' as an abbreviation of `$\emptyset$',
+  \item `$s(t)$' as an abbreviation of `$t \cup \{ t \}$',
+  \item `$t_{1} + t_{2}$' and `$t_{1} \times t_{2}$' as abbreviations of the corresponding operations on sets,
+\end{itemize}
+and we restrict all quantifiers in PA to range over $\omega$.
+Then all axioms of PA are provable in ZFC.
 
-The details are a little fiddly. We'll skip them.
+I'm not going to prove this.
+It isn't terribly hard,
+but quite fiddly.
+To get a sense of what would need to be proved,
+consider the second axiom of PA:
 
-This means that we can \textit{interpret} PA in ZF. In other words, we can define a
-structure in ZF that demonstrably satisfies the axioms of PA. In that sense
-also, ZFC is \textit{stronger} than PA.
+\begin{axioms}
+  Q2 & $\forall x \, 0\! \not= \!s(x)$
+\end{axioms}
 
-(Indeed, it turns out that ZFC can prove purely arithmetical statements that PA
-cannot prove; e.g. Con(PA).)
+Under the present translation scheme,
+this is shorthand for
 
-% ** Transfinite ordinals
+\[
+  \forall x \in \omega (\emptyset \ne x \cup \{ x \}),
+\]
 
-The cumulative hierarchy contains a set of all our numbers. This set is called $\omega$. (Yes, like the stage at which it is formed. This is also true for the other numbers: $\emptyset$ is formed at stage $\emptyset$, $\{ \emptyset \}$ at stage 1, and so on. [check for fence-post error])
+which is easily provable in ZFC.
 
-$\omega$ isn't the successor of any number. But it has something in common with the
-numbers: it is "transitive and $\in$-well-ordered". A set is \textit{transitive} if every
-member of the set is a subset of the set. A set is \textit{$\in$-well-ordered} if every
-non-empty subset has an $\in$-least element, i.e. an element $x$ for which there is no element $y$ such that $y \in x$.
+The technical term for this is result is that
+PA is \textit{interpretable} in ZFC.
+In general,
+a theory $T$ is interpretable in ZFC
+is there is a translation scheme of the kind I've sketched
+under which all theorems of $T$ are provable in ZFC.
+A wide range of mathematical theories are interpretable in ZFC.
+In that sense,
+ZFC is \emph{at least as strong} as these other theories:
+whatever they can prove,
+ZFC can prove as well
+(if only under the appropriate translation scheme).
 
-\begin{definition}{Ordinal}{ordinal}
-An \emph{ordinal} is defined as a transitive well-ordered set.
-\end{definition}
+% (Indeed, it turns out that ZFC can prove purely arithmetical statements that PA
+% cannot prove; e.g. Con(PA).)
 
-The ordinals start with 1,2,3,... but keep going. A \textit{limit ordinal} is an ordinal that is not the successor of any ordinal. The first limit ordinal is $\omega$, the next is $2\omega$.
+\begin{exercise}
+  Can you sketch a proof of the translated Q2 axiom from the axioms of ZFC?
+\end{exercise}
 
-% ** Cardinality
+One of the earliest and most important applications of set theory is
+that it allows counting beyond infinity.
+I'll briefly describe how this works.
 
-We can use ordinals to measure the size of sets. Intuitively, the size -- formally, the \textit{cardinality} -- of a set is the number of its elements. But what does this mean for infinite sets?
+If you look at the sequence of finite ordinals,
+you may notice that
+they have some special properties.
+One is that
+every member of such an ordinal is also a subset of it.
+Sets of this kind are called \textit{transitive}.
+That's because the transitivity of $z$ means that
+whenever $x \in y$ and $y \in z$ then $x \in z$.
 
-We say that two sets have the same cardinality if there is a bijection between them, i.e. a one-to-one correspondence between their elements.
+Another special property of the sets in $\omega$ is that
+they are \emph{$\in$-well-ordered}.
+A set $x$ is \textit{$\in$-well-ordered} if
+any two members of $x$ are related one way or the other by $\in$.
 
-% ** Enumerable sets examples
+Let's define an \emph{ordinal} as a transitive, $\in$-well-ordered set.
+The finite ordinals are ordinals,
+but they are not the only ones.
+For example,
+$\omega$, the set of finite ordinals, is itself an ordinal.
+(You can easily confirm that it is transitive and $\in$-well-ordered.)
+It is the first infinite ordinal.
+The next ordinal after $\omega$ is $\omega \cup \{ \omega \}$.
+We simply keep applying the successor operation
+that maps a set $x$ to $x \cup \{ x \}$.
+After $\omega \cup \{ \omega \}$ comes $\omega \cup \{ \omega, \omega \cup \{ \omega \} \}$,
+and so on.
+In this context,
+it is conventional to identify the finite ordinals with the natural numbers,
+and to write $\omega + 1$, $\omega + 2$, etc. for the successors of $\omega$.
 
-\begin{definition}{Enumerable Sets}{enumerable-sets}
-A set is called \emph{enumerable} if it has the same cardinality as the natural numbers $\mathbb{N}$.
-\end{definition}
+Like 0, $\omega$ is not the successor of any ordinal.
+Infinite ordinals of this kind are called \textit{limit ordinals}.
+The next limit ordinal after $\omega$ is called $\omega \cdot 2$,
+the next is $\omega \cdot 3$, and so on.
+After all these comes $\omega \cdot \omega$,
+or $\omega^{2}$.
+Much later we reach $\omega^{\omega}$, $\omega^{\omega^{\omega}}$, and so on.
+Above,
+I've used the ordinals to label stages in the cumulative hierarchy.
+If there were only finitely many stages,
+I could have labelled them 0, 1, 2, \ldots.
+Whenever a construction extends beyond all finite stages,
+we need transfinite labels for the stages.
 
-Example: the set of pairs of numbers is enumerable.
-Example: the set of formulas of $L_A$ is enumerable.
+% \begin{exercise}
+%   Is the set $\{ 1, 2 \}$ transitive,
+%   if 1 and 2 are construed as von Neumann ordinals?
+% \end{exercise}
 
-% ** Cantor's theorem
+\begin{exercise}
+  Show that $\omega$ is transitive and $\in$-well-ordered.
+\end{exercise}
 
-But not all sets are enumerable.
+\begin{exercise}
+  Is the set of all ordinals an ordinal?
+\end{exercise}
 
-\begin{theorem}{Cantor's Theorem}{cantors-theorem}
-The set of all sets of natural numbers is not enumerable.
-\end{theorem}
+We can use the theory of ordinals to complete a task
+that we started in the previous chapter,
+when we talked about cardinality.
+Remember that two sets have the same cardinality
+iff they are equinumerous,
+meaning that there is a bijection between them.
+For finite sets,
+cardinalities can be identified with natural numbers.
+The sets $\{ Paris, London, Berlin \}$ and $\{ \emptyset, \{ \emptyset \}, \{ \emptyset, \{ \emptyset \} \} \}$ both have cardinality 3.
+But what kind of thing is the cardinality of an infinite set?
+In section xxx,
+we gave them names:
+we called them $\aleph_0$, $\aleph_1$, etc.
+But we didn't say more about what these things might be.
 
-\begin{proof}
-Assume that the set of all sets of natural numbers is enumerable. Then we can list them as $S_1, S_2, S_3, \ldots$. Now consider the set $T = \{ n \in \mathbb{N} : n \notin S_n \}$. This set $T$ cannot be in the list, because if it were, then there would be some $S_k$ such that $T = S_k$. But then we have two cases: either $k \in T$ or $k \notin T$. If $k \in T$, then by the definition of $T$, we have $k \notin S_k$, which contradicts the assumption that $T = S_k$. If $k \notin T$, then by the definition of $T$, we have $k \in S_k$, which again contradicts the assumption that $T = S_k$. Thus, no such enumeration can exist, and the set of all sets of natural numbers is not enumerable.
-\end{proof}
+The standard answer in set theory is that they are ordinals.
+The cardinality of any set $x$ is defined as
+the least ordinal that is equinumerous with $x$.
 
-This line of argument is an instance of \textit{diagonalization}, which we'll encounter again and again. Think of the sets of numbers as rows in a table. Cantor's set T is constructed from the diagonal of this infinite table. It is the \textit{antidiagonal} of the enumeration, as it is defined to differ at each point from the diagonal. [This needs tidying.]
+For finite sets,
+this yields the expected results.
+$\{ Paris, London, Berlin \}$ is equinumerous with $\{ \emptyset, \{ \emptyset \}, \{ \emptyset, \{ \emptyset \} \} \}$,
+which is the ordinal 3.
+So the cardinality of $\{ Paris, London, Berlin \}$ is 3.
+The cardinality of $\omega$ is \ldots $\omega$.
+That's because $\omega$ is the least ordinal that is equinumerous with $\omega$.
+Since $\omega$ is countably infinite,
+and $\aleph_{0}$ is the cardinality of any countably infinite set,
+this means that $\omega = \aleph_0$.
 
-% ** Cantor's theorem generalized
+Beyond $\aleph_{0}$,
+things get interesting.
+The cardinality of $\omega + 1$ is still $\aleph_{0}$.
+Remember that $\omega + 1$ is $\omega \cup \{ \omega \}$.
+So $\omega + 1$ is just like $\omega$,
+except that it has one extra element.
+But if you add a single element to a countably infinite set,
+you always get another countably infinite set.
+After $\omega$,
+the \emph{ordinal numbers} and the \emph{cardinal numbers} diverge.
+$\omega$ is both an ordinal and a cardinal.
+But $\omega + 1$ is not.
+The next cardinal after $\aleph_0$ is $\aleph_1$.
+This is, by definition, an ordinal:
+it is the least ordinal that is not equinumerous with $\omega$.
+But $\aleph_1$ is not $\omega + 1$,
+or $\omega \cdot 2$, or $\omega^{2}$, or $\omega^{\omega}$.
+These ordinals all have cardinality $\aleph_0$,
+$\aleph_{1}$ comes much later.
+And yet we know that
+there are many cardinals,
+and therefore many ordinals,
+beyond $\aleph_{1}$.
+Indeed,
+for every ordinal $\kappa$,
+there is a cardinal $\aleph_{\kappa}$,
+which is itself an ordinal!
 
-Cantor's theorem states that the cardinality of the powerset of a set is strictly greater than the cardinality of the set itself. In other words, for any set $A$, there is no bijection between $A$ and its powerset $\mathcal{P}(A)$.
 
-% ** Cardinal numbers
 
-We can now identify the cardinality of a set with the least ordinal that is equipollent to the set.
-
-The finite cardinals are just the finite ordinals.
-
-There are many different infinite cardinals.
-
-The infinite cardinals are known as alephs. $\omega$ is $\aleph_0$, the first infinite cardinal. The next one is $\aleph_1$. The next one is $\aleph_2$, and so on. There's also $\aleph_\omega$. There's an aleph for each omega.
-
-% ** The continuum hypothesis
-
-Cantor conjectured, but was unable to prove, that there is no cardinality between $\aleph_0$ and $|P(\aleph_0)|$, i.e. that every set of real numbers is either countable or has the same cardinality as the continuum.
+Cantor conjectured, but was unable to prove, that
+there is no cardinality between $\aleph_0$ and $|P(\aleph_0)|$, i.e. that every set of real numbers is either countable or has the same cardinality as the continuum.
+(The problem seems to have driven him mad, literally.)
+This is known as the \textit{continuum hypothesis}.
 
 In 1938, Gödel showed that the continuum hypothesis is consistent with ZFC (assuming ZFC itself is consistent). In 1963, Paul Cohen showed that the same is true for the negation of the continuum hypothesis.
 
-Oddly, this straightforward hypothesis about sets of real numbers cannot be answered!
+Oddly, this straightforward hypothesis about sets of real numbers cannot be answered,
+at least not within the standard axioms of set theory.
+We can, of course, add the continuum hypothesis as a further extra axiom.
+But we could equally add its negation.
+Neither will lead to a contradiction.
 
-Can we settle the continuum hypothesis in second-order ZFC? It isn't derivable.
-But if we use a particular set theory to study models of second-order ZFC, then
-all of them will decide the CH within ZFC2, but how they decide them depends on
-the ambient set theory!
-
-For set theory, categoricity is a delicate matter anyway. Categoricity means that all models are isomorphic, but models are set-theoretic objects, with sets as their domains. In a sense, every model of set theory (first or second order) is a non-standard model!
+Early set theorists assumed that
+all questions about pure sets have definite answers that
+can be established by mathematical reasoning.
+The status of the continuum hypothesis casts doubt on this picture.
+By now,
+hundreds of other statements are known that
+can neither be proved nor disproved in ZFC.
+We can investigate structures in which they hold
+and structures in which they fail.
+Perhaps there is no ``true'' structure of sets after all.
+When we describe the cumulative hierarchy,
+we seem to describe a unique structure.
+We say that $V_{\omega+2}$ contains \textit{all subsets} of $V_{\omega+1}$.
+But we can't tell whether
+these subsets include sets with a cardinality between $\aleph_0$ and the continuum.
+If the concept of `all subsets' has a definite meaning,
+this meaning seems impossible to pin down.
 
 \section{Limitations}
+
+In practice, the unintended models may not be a problem. We may hope, e.g., that PA contains all arithmetical truths, and isn't that all that matters?
+
+Let $\Omega$ be the set of all sentences true in the model. This is a theory,
+although not given by axioms. We may hope that $\Omega = PA$.
+
+
 
 % ** Reducing all of maths to set theory?
 
@@ -483,3 +1168,72 @@ I.e., we'd specify a model and show that
 (2) the rules preserve truth in the model.
 
 Godel shattered this program.
+
+\section{Preview Gödel}
+
+% ** Hilbert's programme
+
+Imagine it is 1930. First-order logic has been rigorously developed. We have
+axiomatized theories. On a structuralist or formalist view, the axioms define
+the subject matter. From now on, no mysterious intuitions or questionable steps
+are involved any more when proving mathematical claims. Moreover, we can
+formally prove consistency of infinitary theories. Or so it seems.
+
+What is needed to show that this programme works?
+
+\begin{enumerate}
+\item Prove completeness of axiomatized theories.
+\item Prove consistency of axiomatized theories.
+\end{enumerate}
+
+We'd like PA = $\Omega$. Generally, we'd like completeness.
+
+Godel shattered this program.
+
+He showed that no mathematical theory of a certain strength, that includes PA and ZFC, can be complete (unless it is inconsistent). More precisely:
+
+   Every consistent and (recursively) axiomatized theory in which all computable functions are representable is incomplete.
+
+He also showed that there are serious problems for proving the consistency of any such theory. In particular, one can't prove the consistency of ZFC (or PA) in any theory that's strictly weaker.
+
+% Since 2nd-order PA is complete, it immediately follows that 2nd-order logic is
+% unformalizable. (This was part of what caused a move towards concentrating on
+% first-order logic and first-order theories.)
+
+The crucial feature of proofs is that they are finite and verifiable, in the
+sense that one can mechanically check whether something is a proof or not.
+
+The trick will be to code proofs as numbers, and find an arithmetical predicate
+that captures that a code number represents a proof of a given formula.
+
+From: https://math.stackexchange.com/questions/2205943/godels-incompleteness-theorem
+
+Then, show the basic idea of arithmetization, i.e. a way of assigning numbers to
+logical symbols, expressions, and derivations, so that statements about
+arithmetic can be treated as statements about logical statements and proofs.
+Just show some very basic examples of how such a coding scheme could work, and
+then just wave your hands and say that we can create a formula that effectively
+says 'the statement with Godel number x is not provable from A', where the fact
+that we can have such a formula depends on A being 'at least as strong as PA'
+and being finite.
+
+Next (and again without any further proof) mention the Diagonal Lemma through
+which Godel established that for every formula there is a sentence that is true
+if and only if that formula is true for the godel number of that sentence. Thus,
+in particular, there will be a Sentence G (the Godel sentence) that ends up
+saying "I am not provable from A"
+
+And now do the grand finale! If G is false, then G is provable from A, but given
+that A is sound, that means G is true. Ok, so G cannot be false, so it is true.
+And so G is indeed not provable from A. So, there is something that is true, but
+not provable from A, and thus A is not complete.
+
+This trick is very general. It works for all computable relations and functions.
+Before we get to it, let's talk about what computable relations and functions
+look like. This is independently important for maths and computer science in
+logic. Remember for example the Entscheidungsproblem.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "logic3.tex"
+%%% End:

@@ -4,7 +4,8 @@
 
 %\definecolor{teal}{HTML}{ba5536}
 %\definecolor{terra}{HTML}{363237}
-\definecolor{teal}{HTML}{34675c}
+% \definecolor{teal}{HTML}{34675c}
+\definecolor{teal}{HTML}{675c33}
 \definecolor{terra}{HTML}{324851}
 
 % plain box:
@@ -35,7 +36,25 @@
   fontupper=\normalfont,
   }{def}
 
-% Proposition environment without title bar:
+% Proposition environment:
+\newtcbtheorem[number within=chapter]{proposition}{Proposition}{%
+  enhanced,
+  breakable,
+  enhanced jigsaw,
+  colback=terra!2!white,
+  colframe=terra!80!white,
+  colbacktitle=terra!2!white,
+  boxrule=0.3mm,
+  drop small lifted shadow,
+  titlerule=-0.5mm,
+  toptitle=2mm,
+  beforeafter skip=\baselineskip,
+  fonttitle=\upshape\bfseries\rmfamily,
+  coltitle=terra!90!black,
+  fontupper=\normalfont,
+  }{prop}
+
+% Observation environment (keeping existing):
 \newtcbtheorem[number within=chapter]{obs}{Proposition}{%
   theorem style=plain,
   enhanced,
@@ -50,25 +69,23 @@
   }{obs}
 \newenvironment{observation}[1]{\begin{obs}{}{#1}}{\end{obs}}
 
-% Theorem environment without 'Theorem' label:
-\newenvironment{theorem}[2]{%
-  \begin{tcolorbox}[%
-    enhanced,
-    title={#1},
-    colframe=terra!80,
-    colback=terra!2!white,
-    colframe=terra!80!white,
-    colbacktitle=terra!2!white,
-    coltitle=terra!90!black,
-    boxrule=0.3mm,
-    titlerule=-0.5mm,
-    toptitle=2mm,
-    fonttitle=\upshape\bfseries\rmfamily,
-    drop small lifted shadow,
-    beforeafter skip=\baselineskip,
-    ]\label{thm:#2}%
-  }%
-  {\end{tcolorbox}}
+% Theorem environment with automatic numbering:
+\newtcbtheorem[number within=chapter]{theorem}{Theorem}{%
+  enhanced,
+  breakable,
+  enhanced jigsaw,
+  colback=terra!2!white,
+  colframe=terra!80!white,
+  colbacktitle=terra!2!white,
+  boxrule=0.3mm,
+  drop small lifted shadow,
+  titlerule=-0.5mm,
+  toptitle=2mm,
+  beforeafter skip=\baselineskip,
+  fonttitle=\upshape\bfseries\rmfamily,
+  coltitle=terra!90!black,
+  fontupper=\normalfont,
+  }{thm}
 
 % Lemma environment with automatic numbering:
 \newtcbtheorem[number within=chapter]{lemma}{Lemma}{%
@@ -110,8 +127,9 @@
 \renewtcolorbox{proof}{
   blanker,enforce breakable,left=3mm,
   before skip=10pt,after skip=10pt,
-  parbox=false, % for paragraph indentation
-  borderline west={0.2mm}{0pt}{terra!60!white}
+  parbox=false,
+  borderline west={0.2mm}{0pt}{terra!60!white},
+  before upper={\setlength{\parindent}{0pt}\setlength{\parskip}{0.5\baselineskip}}
 }
 
 % semantics:
@@ -142,15 +160,11 @@
   \tcolorbox[
   breakable,
   enhanced jigsaw,
-  fonttitle=\rmfamily\upshape\bfseries,
-  coltitle=teal!10!white,
   colback=teal!02!white,
-  colbacktitle=teal,
-  colframe=teal!70!black,
+  colframe=teal!60!white,
   boxrule=0.3mm,
-  attach boxed title to top left={yshift=-1mm, xshift=1mm},
   beforeafter skip=.9\baselineskip,
-  title = Exercise~\GetExerciseProperty{counter}%
+  before upper={\noindent\textbf{Exercise~\GetExerciseProperty{counter}%
         \GetExercisePropertyT{subtitle}{ \textit{\PropertyValue}}%
         \IfInsideSolutionF{%
             \GetExercisePropertyT{points}{ % notice the space
@@ -161,7 +175,7 @@
                     {\XSIMtranslate{points}}%
                 )%
             }%
-        }%
+        }}~},
     ]%
     % \IfInsideSolutionT{%
     %   \tcbsubtitle{Exercise}
@@ -187,18 +201,16 @@
 
 \else
 
-\newtcolorbox[auto counter,number within=chapter]{exercise}{
+\newcounter{exercise}[chapter]
+\renewcommand{\theexercise}{\thechapter.\arabic{exercise}}
+\newtcolorbox{exercise}{
   breakable,
   enhanced jigsaw,
-  fonttitle=\rmfamily\upshape\bfseries,
-  coltitle=teal!10!white,
   colback=teal!02!white,
-  colbacktitle=teal,
-  colframe=teal!70!black,
+  colframe=teal!60!white,
   boxrule=0.3mm,
-  attach boxed title to top left={yshift=-1mm, xshift=1mm},
   beforeafter skip=.9\baselineskip,
-  title=Exercise~\thetcbcounter,
+  before upper={\refstepcounter{exercise}\noindent\textbf{Exercise~\theexercise}\quad},
 }
 \usepackage{comment}
 \excludecomment{solution}

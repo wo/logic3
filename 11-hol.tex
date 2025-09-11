@@ -1,5 +1,25 @@
 \chapter{HOL}
 
+
+Note that it is not obvious whether every first-order model represents a genuinely possible interpretation and scenario. There are lots of infinite sets of numbers, for example, many of which are not specifiable in English in any finite way. Could each of them possibly be the meaning of a predicate? We could restrict the possible interpretations of predicates to some subsets of the domain. But to which? Anyway, it makes no difference to the logic. We'll return to this in the case of 2nd-order logic though. (There, if we leave open the higher-order domain, only saying that it's some subset of the powerset of the domain, the class of models becomes much larger. As a result, the logic becomes much weaker.)
+
+
+
+Power of SOL for arithmetic:
+
+Single induction axiom
+
+Also can define + and *:
+
+A problem with recursive definitions is that they are not explicit definitions. The two principles implicitly define addition uniquely, but they don't give us an object-language formula φ(x,y,z) that says that x+y=z.
+
+In second-order logic, we can offer such a formula: x+y=z can be defined as $\forall f[(f(0)=x \land \forall v(f(s(v)) = s(f(v)))) \rightarrow f(y)=z]$.
+
+It turns out that there's no way to do this in first-order logic. So we add the two principles as axioms.
+
+https://math.stackexchange.com/questions/449146/why-are-addition-and-multiplication-included-in-the-signature-of-first-order-pea
+
+
 \section{Syntax}
 
 We can quantify over predicate position.
@@ -99,3 +119,19 @@ The same is true for all infinite mathematical structures.
 Remember that standard 2nd order logic assumes that the second-order quantifiers range over sets. One might worry that this undercuts the structuralist approach. We'd now need to be assured that the set-theoretic universe is definite.
 
 Hamlin p.32
+
+
+
+Can we settle the continuum hypothesis in second-order ZFC? It isn't derivable.
+But if we use a particular set theory to study models of second-order ZFC, then
+all of them will decide the CH within ZFC2, but how they decide them depends on
+the ambient set theory!
+
+For set theory, categoricity is a delicate matter anyway. Categoricity means that all models are isomorphic, but models are set-theoretic objects, with sets as their domains. In a sense, every model of set theory (first or second order) is a non-standard model!
+
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "logic3.tex"
+%%% End:

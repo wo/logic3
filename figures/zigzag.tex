@@ -1,0 +1,66 @@
+% ----------------------------  LAYERS  ---------------------------------
+\pgfdeclarelayer{bg}
+\pgfsetlayers{bg,main}        % bg drawn first (→ behind the grid)
+% -----------------------------------------------------------------------
+
+\begin{tikzpicture}[>=Stealth,
+  every node/.style={font=\scriptsize},
+  cell/.style={draw,minimum size=1cm},
+  zig/.style ={orange!60,very thick,
+               -{Stealth[length=3mm,width=3mm]},
+               shorten >=5pt,shorten <=5pt}]
+
+\def\N{4}                      % explicit indices 0…4 (→ 5×5 visible block)
+\def\NN{\numexpr\N+1\relax}    % position of dotted row/column
+
+% --------------------------  GRID + LABELS  ----------------------------
+\foreach \i in {0,...,\NN}{%
+  \foreach \j in {0,...,\NN}{%
+    \coordinate (p) at (\j,-\i);
+    \node[cell] (c\i\j) at (p) {};
+    % what goes into the cell?
+    \ifnum\i=\NN                     % last (dotted) row
+        \ifnum\j=\NN
+            \node at (p) {$\ddots$};
+        \else
+            \node at (p) {$\vdots$};
+        \fi
+    \else
+        \ifnum\j=\NN                 % last (dotted) column
+            \node at (p) {$\cdots$};
+        \else                        % ordinary ordered pair
+            \node at (p) {(\i,\j)};
+        \fi
+    \fi
+  }%
+}
+% row and column headers
+\foreach \i in {0,...,\N}{ \node at (-0.7,-\i) {\i}; }
+\node at (-0.7,-\NN) {$\vdots$};
+\foreach \j in {0,...,\N}{ \node at (\j,0.7) {\j}; }
+\node at (\NN,0.7) {$\cdots$};
+
+% -------------------------  CANTOR PATH  -------------------------------
+\begin{pgfonlayer}{bg}
+  \coordinate (prev) at (c00.center);  % starting point (0,0)
+
+  % start with diagonal 1 – diagonal 0 would be only (0,0)
+  \foreach \s in {1,...,\N}{%
+     \ifodd\s                         % odd diagonal : NE direction
+        \foreach \k in {0,...,\s}{%
+           \pgfmathtruncatemacro\a{\k}
+           \pgfmathtruncatemacro\b{\s-\k}
+           \draw[zig] (prev) -- (c\a\b.center);
+           \coordinate (prev) at (c\a\b.center);
+        }%
+     \else                            % even diagonal : SW direction
+        \foreach \k in {0,...,\s}{%
+           \pgfmathtruncatemacro\a{\s-\k}
+           \pgfmathtruncatemacro\b{\k}
+           \draw[zig] (prev) -- (c\a\b.center);
+           \coordinate (prev) at (c\a\b.center);
+        }%
+     \fi
+  }%
+\end{pgfonlayer}
+\end{tikzpicture}

@@ -1,0 +1,29 @@
+\tikzset{
+  tape/.style = {draw, minimum width=8mm, minimum height=8mm,
+                 anchor=center, font=\small},
+  head/.style = {isosceles triangle,
+                 isosceles triangle apex angle = 60,
+                 shape border rotate = 90,    % apex points up
+                 draw, fill=blue!25,
+                 minimum width=8mm, minimum height=7mm,
+                 inner sep=0pt, font=\scriptsize,
+                 anchor=north}
+}
+
+\begin{tikzpicture}
+
+% ------------------------------------------------------------------
+% 2) after one step  (state q1, moved right onto a blank)
+% ------------------------------------------------------------------
+\matrix (t2) [matrix of nodes,
+              nodes={tape},
+              column sep=0pt,
+              ampersand replacement=\&,
+              right=3.2cm of t1] {
+    {} \& 1 \& |[name=h2]| {} \& {} \& {} \\ };
+\node[head] at (h2.south) {$q_1$};
+\node at ($(t2-1-1.west)+(-3mm,0)$) {$\cdots$};
+\node at ($(t2-1-5.east)+(3mm,0)$)  {$\cdots$};
+
+\end{tikzpicture}
+% ------------------------------------------------------------------

@@ -1,0 +1,87 @@
+\tikzset{
+  subroutine/.style = {rectangle,double,draw,
+                       minimum width  = 25mm,
+                       minimum height = 11mm,
+                       text width     = 20mm,
+                       align          = center,
+                       font           = \footnotesize},
+}
+
+
+\begin{tikzpicture}[node distance=30mm, thick]
+
+  %-------------------------------------------------------------
+  % States
+  %-------------------------------------------------------------
+  \node[state]           (q0) {$q_{0}$};
+  \node[state, right of=q0]       (q1) {$q_{1}$};
+  \node[state, right of=q1]       (q2) {$q_{2}$};
+  \node[state, right of=q2]       (q8) {$q_{8}$};
+  \node[state, below right of=q8]       (q9) {$q_{9}$};
+  \node[state, below of=q9]      (q10) {$q_{10}$};
+  \node[state, below right of=q2]       (q3) {$q_{3}$};
+  \node[state, below of=q3]       (q4) {$q_{4}$};
+  \node[subroutine, left of=q4]   (shift) {SHIFT\\BLOCKS};
+  \node[state, left of=shift] (q5) {$q_{5}$};
+  \node[state, left of=q5]        (q6) {$q_{6}$};
+  \node[state, above of=q6]       (q7) {$q_{7}$};
+
+% Erase the current stroke and move right.
+\path[->] (q0) edge node {1:BR} (q1);
+
+% Move right once more.
+\path[->] (q1) edge node {1:1R} (q2);
+
+% If there's a stroke here, move right.
+\path[->] (q2) edge node {1:1R} (q3);
+
+% Keep moving right past all strokes in the counter block.
+\path[->] (q3) edge[loop right] node {1:1R} ();
+
+% Move right past the blank after the counter block.
+\path[->] (q3) edge node {B:BR} (q4);
+
+% Move right past the initial stroke of the second argument.
+% NB: The subroutine moves past any more blanks.
+\path[->] (q4) edge node {1:1R} (shift);
+
+% The subroutine ends on the blank just before the moved block.
+% Move left from here.
+\path[->] (shift) edge node {B:BL} (q5);
+
+% Keep moving left past all blanks in the right block.
+\path[->] (q5) edge[loop below] node {B:BL} ();
+
+% Move left past the initial stroke in the right block.
+\path[->] (q5) edge node {1:1L} (q6);
+
+% Move left past the separator blank.
+\path[->] (q6) edge node {B:BL} (q7);
+
+% Move to the left-most stroke of the counter block.
+\path[->] (q7) edge[loop left] node {1:1L} ();
+\path[->] (q7) edge node {B:BR} (q0);
+
+% Now for the tidy-up routine.
+% This is triggered if we find a blank at q2,
+% which happens iff there were only two strokes in the counter block;
+% We've erased one, and we're now on the separator block:
+% ...1*B1BBBBB11111...
+% We need to erase the counter and fill the blanks in the right block.
+
+% Move left.
+\path[->] (q2) edge node {B:BL} (q8);
+
+% Erase the last counter stroke.
+\path[->] (q8) edge[loop above] node {1:BR} (q8);
+
+% Move right past the separator blank.
+\path[->] (q8) edge node {B:BR} (q9);
+
+% Move right past the initial stroke of the right block.
+\path[->] (q9) edge node {1:1R} (q10);
+
+% Replace any blanks by strokes.
+\path[->] (q10) edge[loop below] node {B:1R} (q10);
+
+\end{tikzpicture}

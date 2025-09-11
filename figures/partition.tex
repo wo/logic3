@@ -1,0 +1,58 @@
+\begin{tikzpicture}[
+  >=Stealth,
+  dot/.style = {circle, fill, inner sep=1.9pt},
+  dir/.style = {->, line width=1.0pt, shorten <=1.2pt, shorten >=1.2pt, draw=gray}
+]
+
+% Square domain
+\draw[thick] (0,0) rectangle (8,8);
+
+% Dots
+\node[dot] (A) at (2.0,5.0) {};
+\node[dot] (B) at (4.0,6.5) {};
+\node[dot] (C) at (6.4,5.5) {};
+\node[dot] (E) at (4.8,4.3) {};
+\node[dot] (F) at (2.2,1.4) {};
+\node[dot] (G) at (6.2,1.6) {};
+
+% B <-> C
+\draw[dir] (B) to[bend left=20] (C);
+\draw[dir] (C) to[bend left=20] (B);
+
+% E <-> F
+\draw[dir] (E) to[bend left=20] (F);
+\draw[dir] (F) to[bend left=20] (E);
+
+% F <-> G
+\draw[dir] (F) to[bend left=22] (G);
+\draw[dir] (G) to[bend left=22] (F);
+
+% E <-> G
+\draw[dir] (E) to[bend right=20] (G);
+\draw[dir] (G) to[bend right=20] (E);
+
+% Self-loop arrows at each node (kept, now grey)
+\draw[dir, looseness=28, out=150, in=210] (A) to (A);
+\draw[dir, looseness=28, out=100, in=160] (B) to (B);
+\draw[dir, looseness=28, out=350, in=290] (C) to (C);
+\draw[dir, looseness=28, out=130, in=70]  (E) to (E);
+\draw[dir, looseness=28, out=300, in=240] (F) to (F);
+\draw[dir, looseness=28, out=0,   in=300] (G) to (G);
+
+% Dotted grey partition lines (wavy, to edges), separating the three classes:
+% {A}, {B,C}, {E,F,G}. Chosen to avoid crossing arrows.
+\coordinate (J) at (3.2,5.6);
+
+% To top edge (between A and B/C)
+\draw[densely dotted, very thick, draw=gray]
+  (J) .. controls (2.9,5.6) and (2.9,6.9) .. (2.0,8.0);
+
+% To left edge (between A and E/F/G)
+\draw[densely dotted, very thick, draw=gray]
+  (J) .. controls (2.4,4.9) and (1.4,2.6) .. (0.0,2.1);
+
+% To right edge (between B/C and E/F/G)
+\draw[densely dotted, very thick, draw=gray]
+  (J) .. controls (4.6,5.1) and (6.5,5.3) .. (8.0,3.2);
+
+\end{tikzpicture}

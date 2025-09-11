@@ -1,5 +1,11 @@
 \chapter{Recursive Functions}
 
+need to call identity projection.
+
+need to define: regular minimization
+
+need: a relation is recursive iff its characteristic function is recursive
+
 \section{Primitive recursive functions}
 
 % ** Review: computable functions on N
@@ -47,6 +53,10 @@ Given some computable functions f and g, we can define a new function h by compo
 
         h(x) = f(g(x))
 
+If f and g is computable, then h is also computable:
+to compute $h(x)$,
+we only need to compute $g(x)$ and feed that value into $f$.
+ 
 Here we assume that f and g both take one number as input. For the general case, assume that f is a function of m arguments, and each of $g_1, \ldots, g_m$ is a function of n arguments. Then we define the \textit{composition} of f and $g_1, ..., g_m$ as:
 
 \[
@@ -54,6 +64,7 @@ Here we assume that f and g both take one number as input. For the general case,
 \]
 
 Instead of introducing a new name 'h' for the composed function, we can also write the composition as $Cn[f, g_1, \ldots, g_m]$.
+
 
 % ** Examples
 
@@ -178,6 +189,13 @@ n \dotminus (k + 1) &= \text{pred}(n \dotminus k)
 
 Thus $n \dotminus k$ is the difference between n and k if $n \geq k$ and is 0 if $n \leq k$.
 
+
+All p.r. functions are total.
+We can see this by induction on their structural definition.
+The base functions are total.
+The composition of total functions is total.
+The primitive recursion of total functions is total.
+
 % ** p.r. sets and relations
 
 \begin{definition}{Primitive Recursive Relations}{pr-relations}
@@ -227,6 +245,15 @@ addition, multiplication, truncated difference, and switcheroo thus, thereby sho
 that this function is primitive recursive:
 $k \cdot k \cdot α(k \dotminus n) + n \cdot n \cdot α(n + 1 \dotminus k)$
 
+switcheroo:
+\[
+  z(x) = \begin{cases}
+    1 & \text{if } x = 0 \\
+    0 & \text{if } x > 0
+  \end{cases}
+\]
+
+
 [BBJ p.74]
 
 % ** Bounded quantification
@@ -255,7 +282,27 @@ A final definition-method we shall use frequently is bounded leastness. This is
 used to define a new function from a given relation. The notation we use is this: an
 expression
 $(μk \leq p)R(k)$
-denotes the least number $k \leq p$ such that R holds of k, if there is such a number, and denotes 0 otherwise.
+denotes the least number $k \leq p$ such that R holds of k, if there is such a number, and denotes p otherwise.
+
+This can also be thought of as a bounded search operation.
+The computation basically goes through all $k$ from 0 to $p$
+until it finds one for which $R(k)$ holds;
+it than returns that value of $k$.
+
+$\mu$ successively tests 0,1,2,\ldots until the test condition is satisfied.
+In programming languages,
+this corresponds to a `for' loop that
+iterates through a fixed list of numbers.
+
+This can be defined by recursion like this:
+Let $f(x,p)$ be the target function $\mu k \leq p [r(x,k)=0]$.
+We define $f(x,0) = 0$ and
+$f(x,n+1) = f(x,n)$ if this is leq $n$,
+otherwise $f(x,n+1) = n$ if $f(x,n)=0$,
+otherwise $f(x,n+1) = n+1$. [??]
+
+
+
 
 % ** Operations on code numbers are p.r.
 
@@ -306,9 +353,19 @@ entry(x , i)  =  if i < len(x) then exp(x , i) else 0.
 
 % ** Diagonalizing out
 
-But these can't be all the computable functions. We can diagonalize out.
+But Gödel realized that
+these can't be all the computable functions. We can diagonalize out.
 
 The antidiagonal is computable, but not primitive recursive.
+
+Why not?
+Think of how we'd compute its value for input n.
+We enumerate the pr functions up to n.
+Now we have a description of an algorithm,
+which we need to run until it halts.
+We can't tell how long this will take.
+So we need an open-ended loop.
+
 
 Somehow, this trick must not work for set of all computable functions. But if we define the functions in terms of applying operations to the base functions, then we can always mechanically enumerate the set. So how could the argument fail?
 
@@ -348,6 +405,11 @@ These sequences grow very large very quickly. Surprisingly, however, their
 growth eventually stalls and reverses, until the process reaches 0, where it
 ends. This is \textit{Goodstein's Theorem}, proved by Reuben Goodstein in 1944.)
 
+The proof of Goodstein's Theorem assigns to each item in the sequence a certain transfinite ordinal, in a rather direct way,
+and shows that successive ordinals always decrease.
+Since there is no infinite descending sequence,
+it follows that the sequence must reach 0 after finitely many steps.
+
 The \textit{Goodstein function} now simply maps any number $n$ to the length of the
 Goodstein sequence that starts with $n$. This function maps each natural number
 n to the number of steps it takes for the Goodstein sequence for n to reach 0.
@@ -359,6 +421,19 @@ sequence to reach zero, one must simply go through the items in the sequence, in
 an unbounded loop.
 
 % ** Minimization
+
+What we need is unbounded search.
+We have an operation that searches
+through all numbers up to a given bound.
+We'll now introduce an operation that searches
+through all numbers until it finds a number $x$ for which a given condition $C(x)$ is satisfied.
+If there is no such number, the operation returns nothing.
+(It ``runs forever''.)
+Since we're defining operations on functions,
+the relevant condition $C(x)$ will be that some other function $f$ returns
+some desired value $k$ when given $x$ as input,
+possibly in addition to other inputs.
+We can always reduce the case of $k$ to the case of 0.
 
 \begin{definition}{Minimization}{minimization}
 Formally, the third operation we need is called \emph{minimization}. The minimization
@@ -376,11 +451,21 @@ What is Mn[+]? What is Mn[*]?
 \end{exercise}
 Mn[+] is defined only for x=0, in which case it returns 0; Mn[*] is z.
 
+Example (Enderton): the one-place function that is defined for no input is recursive.
+How is it defined? E.g. by minimization from g(x,y) = 1.
+
 % ** How to compute Mn[f]
 
 If f is computable then so is Mn[f]: we simply need to compute
 $f(x_{1},\ldots,x_{n},i)$ for each $i$ starting at 0 until we find a case where
 $f(x_{1},\ldots,x_{n},i) = 0$, in which case we return $i$.
+
+What if we diagonalize out of the general recursive functions?
+We can define $d(x)$ to output the $x$'th function applied to $x$, plus 1.
+If $d$ is the $x$'th function and outputs a number,
+we get a contradiction.
+But no contradiction arises if $d$ is the $x$'the function and outputs nothing.
+
 
 \section{Every μ-recursive function is Turing computable}
 
@@ -429,3 +514,80 @@ Then HALT$\leq$(e,x,s) $\equiv$ "state of CONF$^s$(e,x) is halting'' is primitiv
 \textbf{Step E} Extracting the output A primitive recursive function RESULT($\langle C\rangle$) returns the contents of the designated output track of configuration C. Compose: Out(e,x) = RESULT(CONF$^{t(e,x)}$(e,x)) where t is from Step D. Therefore Out is μ-recursive and agrees exactly with the function computed by machine e.
 
 Conclusion: for every Turing machine M there is a μ-recursive function $f_M$ that coincides with M's input/output behaviour.
+
+\section{Computational complexity}
+
+The theory of computable functions I've described
+doesn't just sort the functions into computable and uncomputable.
+It also assigns a ``number of steps'' to each computable function,
+depending on the input.
+Or rather,
+it assigns such a number to each way of defining a computable function
+in terms of the base functions and operations.
+Any such definition in effect describes an algorithm for computing the function.
+The (input-relative) step count for an algorithm is called the algorithm's \emph{computational complexity}.
+
+We can also have define computational complexity in terms of Turing machines.
+(This is, in fact, the more common definition.)
+The computational complexity of a Turing machine program is
+given by the number of steps it takes the machine to return an output,
+which generally depends on the input.
+Technically,
+then,
+computational complexity is a function from an input to a number (a step count).
+
+In the field of complexity theory,
+people study the general form of this function.
+For example,
+in the class of \emph{linear-time} algorithms,
+the number of steps it takes to compute an output
+is (at most) proportional to the size of the input.
+In the broader class of \emph{polynomial-time} algorithms,
+the number of steps bound by a polynomial function of the input size.
+For example,
+if the input has size $n$,
+the number of steps might be bound by $n^{2}$,
+or by $10 n^{10} + 3 n^{7}$.
+
+The class of polynomial-time algorithms is very natural class.
+It doesn't depend on details of how we count steps or the length of an input,
+and it is closed under composition and ``subroutine insertion'',
+wherein an arbitrary part of an algorithm is replaced by another algorithm.
+In analogy to the Church-Turing theses,
+the polynomial-time algorithms are often identified with the \emph{feasible} algorithms,
+where `feasible' is an informal, pre-theoretic concept.
+
+Consider, for example, the task of checking
+a given sentence of propositional logic is true relative to
+a given assignment of truth-values to sentence letters.
+This can be done in polynomial time.
+By contrast,
+consider the task of checking whether a sentence of $\L_{0}$
+is true relative to \emph{any} assignment of truth-values
+(i.e., whether it is satisfiable).
+The obvious algorithm of trying out all possible assignments
+is exponential in the number of sentence letters.
+For 100 sentence letters,
+it requires over $10^{100}$ steps,
+more than the number of atoms in the observable universe.
+This algorithm is not feasible.
+
+Is there a feasible, polynomial-time algorithm for
+deciding whether a sentence of $\L_{0}$ is satisfiable.
+Nobody has yet found such an algorithm,
+and it is generally believed that none exists.
+But oddly,
+we don't know for sure.
+This is an instance of the notorious \emph{P vs NP problem},
+widely regarded as the most important open problem in computer science.
+
+
+
+\section{The MRDP theorem}
+
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "logic3.tex"
+%%% End:

@@ -1,183 +1,783 @@
 \chapter{Turing computability}
 
-\section{Turing machines}
-
 Follow IGT ch.41?
 
 % ** Informal motivation
 
-A Turing machine is an idealized machine.
+\section{Turing machines}
+
+A Turing machine is a simplified and idealized model of a computer.
+A computer is a person who follows strict rules,
+in order to carry out a particular computational task.
+They work on paper,
+perhaps organized in a notebook.
+They are given an input -- a task -- on that paper.
+To compute the output,
+which they also write on paper,
+they typically write down other things.
+What they write down,
+at each step,
+depends on what they've read
+and what internal state they are in.
+
+There are only a finite number of different configurations
+that could occur on each page in the notebook,
+since the eye can only make finitely many discriminations
+(and the hand isn't infinitely precise either).
+We can therefore consider each page in the notebook as holding a single ``symbol''
+from a suitably large alphabet.
 
 % ** Tape and computation steps
 
-A Turing machine works on a tape that is unbounded in both directions. The tape
-is divided into cells, each of which is either blank or hold a symbol from some
-finite alphabet.
+Never mind the inspiration.
+Let's define what a Turing machine looks like.
+A Turing machine works on a tape
+that is unbounded in at least one direction.
+We'll assume that it is infinite to the right.
+The tape is divided into cells or squares,
+each of which is either blank or hold a symbol from some finite alphabet.
 
-The machine works in discrete steps. Each step operates on a single cell at a
-time. At the start of a step, the machine \textit{reads} the symbol in the cell. It
-then erases that symbol and either leaves the cell blank or writes a new symbol
-onto the cell. (The new symbol might be the same as the old symbol.) Finally,
+The machine works in discrete steps.
+Each step operates on a single cell at a time.
+At the start of a step,
+the machine \textit{reads} the symbol in the cell.
+It then erases that symbol and
+either leaves the cell blank or writes a new symbol onto the cell.
+(The new symbol might be the same as the old symbol.)
+Finally,
 the machine moves its head one cell to the left or right.
+
+The concept of Turing computability turns out to be very ``robust'',
+meaning that
+if we change this or that part of the definition,
+the very same functions come out as computable.
+For example,
+it makes no difference
+if we allow the machine to operate on multiple tapes.
+It doesn't matter how many symbols we allow, as long as there is at least one.
+For simplicity,
+we'll henceforth assume that the alphabet consists of a single symbol,
+which we call a `stroke'.
 
 % ** Instructions: states
 
-To program a Turing machine, we need to give it instructions for which action to take depending on the content of the cell it is currently reading. For example, an instruction might say "if the cell contains a 1, erase it and move right; if the cell is blank, write a 1 and move left".
+To program a Turing machine,
+we need to give it instructions for which action to take
+depending on the content of the cell it is currently reading.
+For example, we might program the machine to follow the following instruction:
+
+I1: "if the cell contains a 1, erase it and move right; if the cell is blank, write a 1 and move left".
 
 A single instruction of this kind would not allow the machine to perform any
-interesting computation. Instead, we need a set of instructions that can be
-applied in sequence. For example, we might program a machine to first follow the
-above instruction and then a different instruction: "if the cell contains a 1,
-erase it and move left; if the cell is blank, write a 0 and move right".
+interesting computation.
+Instead, we need a set of instructions that can be applied in sequence.
+For example, we might program a machine to
+first follow the above instruction and then a different instruction:
 
-Of course, the machine isn't really reading English instructions. To implement such a set of instructions, the machine must be able to go into different internal \textit{states} in which it responds to the scanned symbol in different ways.
+I2: "if the cell contains a 1, erase it and move left; if the cell is blank, leave it blank and move right".
 
-The machine begins in a \textit{starting state}. We program what it should do, including possibly that it should go into a different state.
+To build a machine that can follow both I1 and I2,
+we need to supply it with some kind of internal switch to determine which instruction to follow.
+We might then design the machine so that it starts with the switch in ``up'' position,
+in which case it follows I1.
+After executing I1, the switch is set to ``down'' position,
+and the machine follows I2.
 
-% ** Example
+% Machine tables
 
-Here is a simple example. q1 is the start state.
+More generally,
+we allow the switch to be in any of a finite number of positions.
+They are called the \textit{states} of the machine.
+We label them $q_{0}, q_1, q_2, \ldots$.
+The machine begins in the \textit{starting state} $q_{0}$.
+Its program
+then gives instructions for what action to perform depending on
+(a) the current state, and
+(b) the currently read symbol,
+where an action consists of three parts:
+(a) the new symbol to write in the cell,
+(b) the direction in which to move on the tape (left or right),
+and (c) the new state to switch to.
+
+There are different ways to present the program of a Turing machine.
+We can, for example, give a \textit{machine table},
+in which each cell holds the instruction for what to do
+in a given state (the row) when reading a given symbol (the column).
+Here is the machine table for the machine that follows the above instructions.
+
+\begin{center}
+\begin{tabular}{c | c c}
+  \cellcolor{gray!20} & \cellcolor{gray!20} 1 & \cellcolor{gray!20} B \\
+  \hline
+  \cellcolor{gray!20} $q_0$ & $B, R, q_1$ & $1, L, q_1$ \\
+  \cellcolor{gray!20} $q_1$ & $B, L, q_2$ & $B, R, q_2$ \\
+  \cellcolor{gray!20} $q_2$ &  & \\
+\end{tabular}
+\end{center}
+
+The top-left cell says that if the machine is in state $q_{0}$ and reads a 1,
+then it should write a blank, move right, and go into state $q_{1}$.
+The instructions in the second row refer to a state $q_{2}$,
+for which the table has no instructions.
+If a Turing machine has no instructions for the present state/symbol combination,
+it \textit{halts}:
+the computation is finished.
+
+Another way to represent the program of a Turing machine is as a flow chart.
+Here is the same machine again:
+
+\begin{center}
+  \input{figures/turing1-chart.tex}
+\end{center}
+
+The nodes of the chart represent the states.
+Each arrow represents an instruction.
+For example, `1: B,R' means:
+`if you read 1, write a blank, and move right'.
+The new state is given by the node to which the arrow points.
+
+A third, and more economical way to represent a Turing machine program is simply as a list of quintuples,
+like so:
+
+\begin{center}
+  $q_{0}, 1, B, R, q_{1}$ \\
+  $q_{0}, B, 1, L, q_{1}$ \\
+  $q_{1}, 1, B, L, q_{2}$ \\
+  $q_{1}, B, B, R, q_{2}$
+\end{center}
+
+The first item says that
+if in state $q_{0}$ and reading 1,
+the machine should write a blank, move right, and switch to state $q_{1}$.
+
+% ** Visualizing the example
+
+What does this machine do?
+It depends on its input:
+on the contents of the tape when it starts.
+Suppose the machine starts on a tape with a single stroke,
+right where the machine (or its ``head'') is positioned.
+
+\begin{center}
+  \input{figures/turing1-conf1.tex}
+\end{center}
+
+Then:
+
+\begin{center}
+  \input{figures/turing1-conf2.tex}
+\end{center}
+
+Then:
+
+\begin{center}
+  \input{figures/turing1-conf3.tex}
+\end{center}
+
+
+\begin{exercise}
+  What does the machine do if it starts on an empty tape?
+\end{exercise}
 
 % ** We allow reusing states
 
-For most computational tasks, it isn't necessary to keep track of all the past symbols and acts. This means that we can allow the machine to return to an earlier state.
-
-We can simplify the above algorithm.
-
-% ** Simplification: only one symbol
-
-We could say that the machine EITHER changes the cell content OR moves. Some
-authors do this. The definitions are equivalent.
-
-We can also restrict the number of symbols. It turns out that it makes no
-difference whether there is one symbol or two symbols, or any finite number. A
-common assumption, that we'll follow, is that there is only one symbol, a
-"stroke".
-
-% ** Programs as flow charts
-
-The \textit{program} of a Turing machine can be represented as a flow chart.
-
-Here is one.
+Here's a more interesting machine.
 
 \begin{center}
-\begin{tikzpicture}[>=stealth', shorten >=1pt, auto, node distance=5cm, thick]
-  % States
-  \node[state] (A) {$q_{1}$};
-  \node[state, right of=A] (B) {$q_{2}$};
-  %\node[right of=B] (H) {$H$};
-
-  % A to B: read 0 (top arc)
-  \path[->] (A) edge[bend left=20] node[above] {0: 1,R} (B);
-
-  % A to B: read 1 (bottom arc)
-  \path[->] (A) edge[bend right=20] node[below] {1: 1,L} (B);
-
-  % B to A: read 0 (wide top arc)
-  \path[->] (B) edge[bend right=60] node[above right] {0: 1,L} (A);
-
-  % B to H: read 1
-  %\path[->] (B) edge node[above] {1: 1,R} (H);
-\end{tikzpicture}
+  \input{figures/turing2-chart.tex}
 \end{center}
 
-under its head, then it writes a new symbol in that cell, and finally it moves the head one cell to the left or right.
+This program contains \emph{loops}.
+It can go into the same state multiple times.
+Can you figure out what the machine does if it starts
+at the left end of a sequence of strokes
+on an otherwise empty tape?
 
-We'll assume that there is only one symbol, a "stroke", so that each cell on the tape is either blank or contains a stroke.
+It starts in state $q_{0}$, reading the first stroke.
+It then erases the stroke and moves right (following the top arrow), entering state $q_{1}$.
+Then it reads the second stroke.
+It erases it, moves right, and goes back into state $q_{0}$.
+This way, it alternates between states $q_{0}$ and $q_{1}$,
+erasing each stroke
+until it reaches the first blank.
+At that point,
+the machine is either in state $q_{0}$ or $q_{1}$,
+depending on whether the original tape had an even or odd number of strokes.
+If the number was even,
+the machine is in state $q_{0}$;
+it reads the blank, prints a stroke, moves right and halts in state $q_{2}$.
+If the tape had an odd number of strokes,
+the machine is in state $q_{1}$;
+it reads the blank, prints a stroke, moves right, and goes into $q_{0}$,
+where it reads another blank, prints another stroke, moves right, and halts.
 
-The tape is infinite, so it can be thought of as a sequence of cells indexed by integers, with the leftmost cell being indexed by 0.
+In sum,
+when this program is given a sequence of strokes as input,
+it figures out whether the number of strokes is even or odd:
+if even, it outputs a single stroke;
+if odd, it outputs two strokes.
 
-The machine has a head that can read and write symbols on the tape and move left or right.
-
-% ** Exercise: ex-erase
+% Note that the loop between states $q_{0}$ and $q_{1}$ is \emph{unbounded}.
+% -- Ah, not true.
+% The input on the tape fixes the number of iterations,
+% and that makes the loop a for loop...
+% The program doesn't specify in advance how many times to go through the loop.
+% The loop ends if and when the machine reads the first blank.
+% Unbounded loops are also called \emph{while loops},
+% in contrast to \emph{for loops},
+% which run a predefined number of times.
+% The labels reflect the fact that in
+% many programming languages,
+% one writes something like
+%
+% \begin{verbatim}
+%   while (condition) { instruction }
+% \end{verbatim}
+%
+% to indicate that the instruction should be repeated as long as the condition is true,
+% whereas one typically writes something like the following if
+% the number of repetitions is known in advance:
+%
+% \begin{verbatim}
+%   for (i = 0; i < n; i++) { instruction }
+% \end{verbatim}
+%
+% (Technically,
+% in just about every language that has for loops,
+% one can also write a for loop that runs indefinitely,
+% and one can write while loops that run a predefined number of times;
+% so the labels have to be taken with a grain of salt.)
 
 \begin{exercise}
-Describe a TM that erases a consecutive string of 1s at whose left end it starts.
+  In computer programming,
+  it is important to check for edge cases.
+  Does the program correctly handle the case of an empty tape?
 \end{exercise}
 
-% ** Example: unary addition
+\begin{exercise}\label{ex:tm-add-stroke}
+  Design a Turing machine that extends any input sequence of strokes
+  by a 1 stroke.
+  That is,
+  when starting on the left-most stroke of a sequence of $n$ strokes
+  on an otherwise blank tape,
+  the machine eventually halts on an otherwise blank tape with
+  a sequence of $n + 1$ strokes.
+\end{exercise}
 
-\section{Coding}
+\begin{exercise}
+  Draw a flow chart for the machine given by the following quadruples:
+  $(q_0, B, 1, R, q_1)$,
+  $(q_0, 1, 1, L, q_2)$,
+  $(q_1, B, 1, L, q_{0})$,
+  $(q_1, 1, 1, R, q_{1})$,
+  $(q_2, B, 1, L, q_{1})$.
 
-% ** Encoding strings
+  What does this machine do,
+  when started on a blank tape?
+  % It writes six strokes, then halts.
+%
+% 3-state BB from https://en.wikipedia.org/wiki/Turing_machine_examples
+%                  ┌────────────── Current state ──────────────┐
+% Tape symbol      │     q₀              q₁              q₂     │
+% ─────────────────┼────────────────────────────────────────────┤
+% B   (blank)      │  1 , R ,  q₁   1 , L ,  q₀    1 , L ,  q₁ │
+% 1   (stroke)     │  1 , L ,  q₂   1 , R ,  q₁    1 , N , HALT │
+%                  └────────────────────────────────────────────┘
+\end{exercise}
 
-We've assumed that a TM takes sequences of 1s as input.
 
-Mention the general fact that we need to express questions in a particular string format to make algorithms applicable. When we say that a function is computable, we mean the function from numbers to numbers, but computations require a representation of the numbers.
+\section{Computing arithmetical functions}
 
-Some representations of numbers make computations easier. It is easier to compute 34 * 100 in decimal than in Roman. But in principle, it can be done either way.
+Strictly speaking,
+the input to a Turing machine is a pattern of strokes and blanks on the tape,
+and so is the output.
+Typically,
+the things we want to compute aren't
+functions on such patterns.
+Instead, we may want to compute functions that
+take one or more numbers as input and return a number as output.
+To explain how a Turing machine can compute such functions,
+we need a convention for encoding numbers as patterns of strokes and blanks.
+(As I explained in the previous chapter,
+any actual process of computation must operate on
+some representation of the numbers.
+You never operate directly on the numbers.)
 
-% ** Coding of strings
+There are many ways to code numbers as patterns of strokes and blanks.
+We'll focus on natural numbers,
+and adopt the most popular coding scheme,
+in which
+each number $n$ is represented by a sequence of $n+1$ strokes:
+a single stroke represents the number 0,
+a sequence of two strokes represent the number 1,
+and so on.
 
-Suppose, for example, that we define an algorithm on strings of symbols. We need to code the strings as sequences of strokes and blanks.
+We say that a Turing machine \emph{computes a function $f$ from $\mathbb{N}$ to $\mathbb{N}$}
+if,
+whenever it starts on the left-most stroke of a sequence of $n+1$ strokes on an otherwise blank tape,
+it eventually halts on a tape with a sequence of $f(n) + 1$ strokes on an otherwise blank tape.
+We can also define what it means for a Turing machine to compute a function of more than one argument.
+For a two-place function,
+the input is given by two sequences of strokes, separated by a blank.
+The machine starts on the left-most stroke of the first (left) sequence.
+In general,
+each argument is given by a sequence of strokes,
+and the arguments are separated by blanks.
 
-There are many ways to do this. We can use sequences of strokes alone. In
-effect, we code the strings as numbers.
+(We use $n+1$ strokes, rather than $n$ strokes, to represent the number $n$,
+so that we can unambiguosly determine the input to a Turing machine.
+If we used 0 strokes for the number 0,
+we couldn't tell if a tape with, say, a single sequence of two strokes
+represents the input 2 for a one-place function,
+or the inputs 2 and 0 for a two-place function.
+But this is just a matter of aesthetics:
+some authors do use $n$ strokes for the number $n$.)
 
-The obvious technique is to first code each symbol as a number. Now we need to
-code sequences of symbols, or equivalently sequences of code numbers. How could
-we do that?
+\begin{exercise}
+  One might suggest to code numbers in binary, like so:
+  $0 \mapsto \text{B}$, $1 \mapsto \text{1}$, $2 \mapsto \text{1B}$, $3 \mapsto \text{11}$,
+  $4 \mapsto \text{1BB}$, etc.
+  Explain why this is not a good idea.
+\end{exercise}
 
-(As BBJ say, the most important aspect of coding strings is that the concatenation function that takes two code numbers and returns the code number of their concatenation is recursive.)
+In exercise \ref{ex:tm-add-stroke},
+you designed a Turing machine that adds a single stroke to the input.
+We can now say that this machine computes the ``add 1'' function
+that takes a number as input and returns the number plus 1.
 
-% ** Coding pairs of symbols/numbers
+Below is a machine that doubles the input number,
+converting a sequence of $n+1$ strokes into a sequence of $2n+1$ strokes.
+The output sequence is constructed to the right of the input,
+separated by a blank.
+The machine successively removes one stroke from the input,
+then moves right past the first blank after the input,
+then moves right past all strokes that follow the blank,
+prints two strokes, and returns to the left-most stroke
+on what remains of the input sequence,
+until that sequence is completely erased.
+At this point,
+the machine has created a sequence with $2n+2$ strokes,
+so it removes the left-most stroke of the output and halts.
 
-Suppose we have a countable alphabet of symbols $a_{1}, a_{2}, \ldots$. We assign to
-each symbol a number: $a_{1} = 1$, $a_{2} = 2$, etc.
+\begin{center}
+  \input{figures/turing-double-chart.tex}
+\end{center}
 
-In $L_A$, we have infinitely many variables. (Could we simply insist that
-variables are written $v_1, v_2$, etc. in decimal notation?)
+The next machine that adds two input numbers.
 
-Let's think about the simplest case: coding pairs of symbols.
+  Need to convert n+1 strokes + blank + m+1 strokes into n+m+1 strokes.
+  Erase the first stroke, move right to the first blank, replace it by a stroke,
+  then move either to the left or the right end of the sequence and remove
+  the final stroke.
 
-In effect, we need to code pairs of numbers as single numbers.
-Cantor's zig-zag method.
-The formula for this is $J(x,y) = \ldots$.
+For more complex functions,
+it is advisable to think in terms of subroutines.
+Let's try to tackle multiplication.
+The machine starts on the first stroke of the first block of strokes n+1 strokes,
+which is followed by a blank and m+1 strokes.
+The aim is to halt on a tape with $n\cdot m +1$ strokes.
+My plan is to use the first block of strokes as a counter
+(as in the doubling machine),
+erasing one stroke at a time until only two strokes are left.
+For each stroke that's erased in the first block,
+we insert $m$ blanks \emph{inside} the second block,
+by shifting the last $m$ strokes of the second block $m$ squares to the right.
+When we're done,
+we fill these blanks with strokes.
 
-% ** Coding sequences based on prime decomposition
+For example, consider the case of $n=3$ and $m=2$.
+The input tape is \ldots 1111B111\ldots.
+The desired output is \ldots 1111111\ldots.
+We erase the first stroke in the left block (the counter block),
+getting \ldots B111B111\ldots.
+Then we shift the two last strokes in the right block two squares to the right.
+This gives us \ldots B111B1BB11\ldots.
+Returning to the start of the algorithm, we erase another stroke in the counter block
+(\ldots BB11B1BB11\ldots)
+and shift the two strokes on the right by two more squares:
+\ldots BB11B1BBBB11\ldots.
+Now there are only two strokes left in the counter.
+We erase these two strokes (\ldots BBBBB1BBBB11\ldots)
+and fill in all the blanks we've inserted in the right block:
+\ldots BBBBB1111111\ldots.
+We have the desired output of seven strokes.
 
-We can also code sequences of numbers by exploiting the fact that
-every number has a unique prime factorization.
+Most of this is straightforward to implement.
+The only slightly tricky part is the subroutine for shifting the strokes in the second block.
+Let's think of this as a separate task.
+We can easily move the head to the first of strokes we want to shift.
+So our task is to write a program that
+starts on the left-most a consecutive sequence of strokes,
+followed only by blanks,
+and that shifts the entire sequence to the right,
+to where the blanks begin.
+The machine should not change anything to the left of its starting position.
+Here is a program that does this.
 
-Recall that a prime number is a natural number which is greater than 1 and can
-be divided only by 1 and the number itself (all the other numbers greater than 1
-are "composite"). There are infinitely many prime numbers; the beginning of the
-sequence is 2, 3, 5, 7, 11, 13, 17, …
+\begin{center}
+  \input{figures/turing-shift-chart.tex}
+\end{center}
 
-The fundamental theorem of arithmetic (or the unique-prime-factorization
-theorem) states that any natural number greater than 1 can be written as a
-unique product (up to ordering of the factors) of prime numbers.
+We can now plug this into our multiplication machine.
 
-Let then p1 be the first prime number, p2 the second prime number, and so forth.
-Given an arbitrary finite sequence of positive numbers (0 would cause
-complications) with length k+1, $(n_0,n_1,\ldots,n_k)$, it can be uniquely coded as a
-product of powers of the prime numbers $p_1,p_2,\ldots,p_{k+1}$ as follows: \ldots
+\begin{center}
+  \input{figures/turing-multiplication-chart.tex}
+\end{center}
 
-Suppose we want to code the sequence 10,4,6. Since the sequence has length 3, we use the first three prime numbers: 2, 3, and 5. We can then code the sequence as
+At $q_{0}$,
+the machine removes the current stroke in the counter block.
+It then moves right twice.
+If it lands on a blank,
+there is only one stroke left in the counter block,
+and the machine goes into the cleanup routine $q_{8}$--$q_{10}$,
+where it erases the stroke in the counter and
+fills the blanks in the right block.
+Alternatively,
+if there are more strokes in the counter block,
+the machine moves right past the remainder of the counter block,
+the separator blank,
+and the first stroke of the right block.
+It then calls the 'SHIFT BLOCKS' subroutine,
+which I've conveniently defined so that
+if it starts on a blank it first moves right until it finds a stroke.
+At the end of that subroutine,
+the machine moves back to the very left of the counter block.
 
+It takes some practice and patience to design Turing machines that compute arithmetical functions.
+In the next chapter, we'll show with one very general argument that
+a wide range of arithmetical functions can be computed by Turing machines.
+
+\begin{exercise}
+  The multiplication machine doesn't work if the first argument is 0.
+  Design an improved machine that embeds the multiplication machine I've defined
+  and correctly deals with the case of 0 as the first argument.
+
+  % Move right once.
+  % If we're on a blank, the first argument is zero.
+  % The output should also be zero.
+  % So move right once again to the first stroke of the second argument.
+  % Keep erasing 1s and moving right until you reach a blank.
+  % If, after moving right at the start, we're not on a blank,
+  % move left again and call my machine.
+\end{exercise}
+
+  % Design a Turing machine that computes the function $f(n) = n^2$.
+  % (Hint: Use the machine that doubles the input, and run it $n$ times.)
+
+
+\section{Universal Turing machines}
+
+Turing machines are highly simplified models of computation,
+stripped down to the bare essentials.
+They are not meant to be practical.
+The kinds of computers we have today aren't based on the architecture of Turing machines.
+For example,
+the computers we use as laptops or phones have memory registers from which the processor can read (and to which it can write) in one command,
+without painfully traversing along a memory tape.
+This is convenient,
+but it isn't essential.
+Anything you can compute with designated memory registers
+can also be computed by a Turing machine.
+
+Another important difference between today's computers and Turing machines is that
+our computers store programs as data.
+If we want to run a particular program,
+we don't need to re-wire the internal circuitry of our computers.
+Rather,
+we install the \emph{program code} in memory
+and tell the central processor to execute it.
+
+This feature, too, can be simulated by a Turing machine,
+as Turing himself showed in his 1936 paper.
+That is,
+one can design a Turing machine that
+takes the \emph{code of a Turing machine} as input,
+and then simulates the behavior of that machine.
+This is called a \emph{universal Turing machine}.
+Let's think about how it could be designed.
+
+First,
+we need to code Turing machines as patterns of strokes and blanks,
+so that we can feed them as input to the universal machine.
+Each Turing machine can be represented as a list of quintuples of the form
 \[
-2^{10} \cdot 3^{4} \cdot 5^{6} = 1296000000.
+  (q_{i}, s, s', d, q_{j}),
 \]
+where $q_{i}$ and $q_{j}$ are states,
+$s$ and $s'$ are tape symbols (`1' or `B'),
+and $d$ is a direction (`L' or `R').
+We can code each of these components by a string of strokes:
 
-To decode the number, we can factor it into primes and read the exponents. In this case, the code number uniquely factors into primes as $2^{10} \cdot 3^{4} \cdot 5^{6}$. This tells us that the number codes a sequence of three numbers, where the first number is 10, the second is 4, and the third is 6.
+\begin{itemize*}
+  \item $q_{i}$ $\mapsto$ $i+1$ strokes;
+  \item `B' $\mapsto$ `1', `1' $\mapsto$ `11';
+  \item `L' $\mapsto$ `1', `R' $\mapsto$ `11'.
+\end{itemize*}
 
-In practice, this method is terribly inefficient, in part because the code numbers grow large very quickly. But efficiency is not our concern here.
+To represent a quintuple,
+we put the component codes end to end,
+separated by a blank.
+To represent the entire machine,
+we put these quintuple codes end to end,
+separated by three blanks.
+The first machine from section,
+for example,
+would be represented as the following pattern,
+which we'll call its \emph{Turing code}:
 
-% ** Encoding TMs
+  % $q_{0}, 1, B, R, q_{1}$ \\
+  % $q_{0}, B, 1, L, q_{1}$ \\
+  % $q_{1}, 1, B, L, q_{2}$ \\
+  % $q_{1}, B, B, R, q_{2}$
+
+\begin{quote}
+  1B11B1B11B11BBB1B1B11B1B11BBB11B11B1B1B111BBB11B1B1B11B111.
+\end{quote}
+
+Next,
+we need to design a Turing machine $U$ that can read the code of a machine $M$ and
+simulate the behavior of that machine.
+To this end,
+the universal machine must also be supplied with the input that
+the simulated machine is supposed to process.
+The input to $U$ therefore consists of two parts:
+the code number of $M$ and the input to $M$.
+We assume that these are separated by four blanks, with the code to the left.
+$U$ starts on the left-most stroke of the code.
+
+While simulating $M$,
+$U$ will divide its tape into three parts.
+The left-most part contains the code of $M$.
+The middle part is a working area.
+The right part is a simulation of $M$'s tape.
+
+MACHINE CODE | WORK AREA | SIMULATED TAPE AREA
+
+To simulate $M$ step by step,
+$U$ needs to keep track of
+$M$'s position on its tape.
+To do this,
+it first adds a changes the simulated tape area
+by inserting a blank in between any two squares,
+so that the original input is in the odd-numbered squares.
+For example, if the original input was 11B1BB111 (followed only by blanks),
+the simulated tape area becomes 1\textbf{B}1\textbf{B}B\textbf{B}1\textbf{B}B\textbf{B}B\textbf{B}1\textbf{B}1\textbf{B}1 (followed by blanks).
+The even-numbered positions can now be used to mark the position of $M$'s head.
+At the beginning,
+$M$'s head is positioned on the first square,
+so the first even-numbered square is marked with a stroke.
+(In the example,
+the simulation would begin with 1\textbf{1}1BB1BBBB1B1B1B in the simulated tape area.)
+
+$U$ also needs to keep track of $M$'s current state.
+This is written in the work area.
+Since the starting state is always $q_{0}$,
+the initial state is represented by a single stroke in the work area.
+
+Here's how the simulation works.
+
+\emph{Step 1.}
+Find to the active position in the simulated tape area,
+by moving right until you meet the first even quare with a stroke.
+The cell to the left holds the currently scanned symbol.
+Remember it by branching into distinct states depending on whether it is a blank or a stroke.
+
+\emph{Step 2.}
+Either way, move left to the work area and print,
+to the right of the code of $M$'s current state,
+a blank, followed by the code for the currently scanned symbol
+(1 or 11).
+Now the work area contains the initial string of the part of the machine code
+that holds the instruction for what to do in the current state
+when reading the currently scanned symbol.
+
+\emph{Step 3.}
+Move left to find the position in the machine code that matches
+the string in the work area,
+preceded by three blanks.
+If there's no match,
+the simulation is finished.
+In this case,
+erase everything but the simulated tape area,
+as well as all the even-numbered squares in that area,
+and halt.
+
+\emph{Step 4.}
+Scanning the current instructions,
+remember the symbol to be written onto the tape and the direction to move
+by branching into one of four corresponding states.
+
+\emph{Step 5.}
+Copy the target state from the instructions into the work area,
+erasing the previous content of the work area.
+Then move to the marked position in the simulated tape area:
+insert the remembered symbol
+into the cell next before the marker stroke.
+Move the marker in the remembered direction
+by two steps
+(because the simulated tape contains the marker spaces).
+Return to step 1.
+
+The most fiddly part of this is in step 3,
+where we need to find the position in the machine code that matches the string in the work area.
+This requires keeping track of the positions in both strings,
+which is also done in the work area.
+If the work area runs out of space,
+or the simulated machine runs off the left edge
+of the simulated tape,
+the entire content of the simulated tape area has to be shifted to the right.
+
+As described,
+this machine is unbearably inefficient.
+But efficiency is not our concern when we work with Turing machines.
+We're interested in the underlying ideas.
+The idea of a universal computer is a profound.
+It shows that a single mechanical architecture can in principle carry out any computation.
+
+\begin{exercise}
+  What happens if you let the Universal Turing Machine simulate itself, on a given input?
+\end{exercise}
+
 
 \section{Uncomputability}
 
-% ** Diagonalizing the Turing machines
+We now introduce some computational problems that no Turing machine can solve.
+Given Church's (or Turing's) thesis that
+any algorithm can be implemented by a Turing machine,
+it follows that
+there is no algorithm for solving these problems.
 
-Need to code TMs so that we can enumerate them.
+The first of the problems is the \emph{halting problem}.
+In the previous chapter,
+I've argued that
+the set of effective algorithms is effectively enumerable,
+and inferred that
+there can be no effective algorithm that
+detects whether any given algorithm halts on a given input.
+We can now see how this plays out for Turing machines.
 
-% ** The busy beaver problem
+The set of Turing machines is countable because
+each Turing machine is represented by a finite list of quintuples
+in a countable alphabet.
+It's also (in principle) trivial to recognize if
+a finite list of quintuples represents a Turing machine.
+(We only need to check that
+the first and last items in each quintuple have the form `$q_{i}$',
+that the second and third are a '1' or a 'B',
+that the fourth is an 'L' or an 'R',
+that no two quintuples have the same first two items,
+and that at least one quintuple has `$q_{0}$' as first item.)
+So the set of Turing machines is effectively enumerable:
+we can enumerate all lists of quintuples in the alphabet of Turing machines,
+and filter out those that do not represent a genuine machine.
+As we saw in the previous chapter,
+it follows that
+there can't be an effective algorithm that
+detects whether a given Turing machine returns any output for a given input.
 
-https://scottaaronson.blog/?p=8972
+A Turing machine fails to return an output if it runs forever.
+This happens if the machine goes into an infinite loop.
+It's easy to design a machine that does this.
+Here,
+for example,
+is a machine that,
+when started on a consecutive string of strokes,
+keeps expanding that string on both ends,
+without ever halting.
+(A real computer would ``crash'' when running this kind of program.)
 
-What makes BB(748) independent of ZFC is not its value, but the fact that one of the 748-state machines (call it TM\_ZFC\_INC) looks for an inconsistency (proof of FALSE) in ZFC and only halts upon finding one.
+\begin{center}
+  \input{figures/turing-loop-chart.tex}
+\end{center}
 
-Thus, any proof that BB(748) = N must either show that TM\_ZF\_INC halts within N steps or never halts. By Gödel's famous results, neither of those cases is possible if ZFC is assumed to be consistent.
+In this example,
+it is obvious on inspection that the machine will never halt,
+no matter its input.
+But is there a general recipe
+for determining whether a given Turing machine will halt,
+on a given input?
+This is the \textit{halting problem} for Turing machines.
+
+To be clear,
+the problem is not to determine,
+for a fixed machine $M$ and input $x$,
+whether $M$ will halt on $x$.
+\emph{This} problem is trivially decidable.
+The answer is either 'yes' or 'no'.
+Rather,
+the problem is to determine,
+for any Turing machine $M$ and any input $x$,
+whether $M$ halts on $x$.
+A solution would be an algorithm...
+
+We can show that the halting problem can't be solved by a Turing machine.
+We ask whether there exists a Turing machine $H$ such that
+when given as input the code of machine $M$ followed by input $x$,
+$H$ outputs two strokes if $M$ halts on $x$,
+and 1 stroke if $M$ runs forever on $x$.
+
+\begin{theorem}
+  The Halting Problem is undecidable by a Turing machine.
+\end{theorem}
+
+\begin{proof}
+  Suppose for reductio that
+  there is a Turing machine $H$ that decides the Halting Problem.
+  If there is such a machine,
+  we can use it to determine,
+  for any machine $M$,
+  whether $M$ halts when given \emph{its own code} (the code of $M$) as input.
+  That is,
+  we can build a machine $D$ that
+  takes as input the code of a Turing machine $M$ and
+  outputs two strokes if $M$ halts on the code of $M$ and otherwise one stroke.
+  We can then extend this machine $D$ to a new machine $D^{*}$ that
+  goes into an infinite loop if $D$ outputs two strokes.
+  Now what happens if we start $D^{*}$ on the code of $D^{*}$?
+
+  Suppose $D^{*}$ halts on its own code.
+  Given how it is designed,
+  it follows that $D$ outputs a single stroke on the code of $D^{*}$.
+  But $D$ does this only if $D^{*}$ does not halt on its own code.
+  Contradiction.
+
+  Suppose $D^{*}$ does not halt on its own code.
+  Then $D$ outputs two strokes on the code of $D^{*}$,
+  But $D$ does this only if $D^{*}$ halts on its own code.
+  Contradiction.
+\end{proof}
+
+% ** From the unsolvability of the Halting Problem to incompleteness and undecidability
+
+We already know from the unsolvability of the halting problem that there is no
+complete maths: Whether a Turing Machine halts on a given input is a
+mathematical question. (It's not a question in engineering!) If there was a
+complete axiomatic theory of Turing Machines, we could try to derive that M
+halts on input x, while also trying to derive that M doesn't halt. One of these
+would yield a positive answer in a finite amount of time.
+
+We also have an uncomputable \emph{arithmetical} function,
+if we code TMs and their input as numbers.
+Of course,
+this function is ``arithmetical'' only in the sense that it takes numbers to numbers.
+It doesn't seem genuinely arithmetical in that
+its specification involves non-arithmetical concepts.
+It turns out, in fact, that
+there is a purely arithmetical definition of the halting function,
+in terms of addition and multiplication.
+But to show this,
+we have some more work to do in the next two chapters.
+
+Meanwhile...
+
+\begin{exercise}
+I often see the halting problem misconstrued as "it's impossible to
+tell if a program will halt before running it." This is wrong. The halting
+problem says that we cannot create an algorithm that, when applied to an
+arbitrary program, tells us whether the program will halt or not. It is
+absolutely possible to tell if many programs will halt or not.
+\end{exercise}
+
 
 % ** The undecidability of predicate logic
 
@@ -206,10 +806,109 @@ To complete the proof, one needs to show that the machine does indeed halt iff
 $\Gamma$ entails $D$. This is not hard, but it takes a few pages of labour. We'll
 give another proof of Church's Theorem later.
 
+This proof illustrates a common method for showing that a decision problem is unsolvable:
+we've ``reduced the halting problem'' to the decision problem for validity in predicate logic.
+We've done this by showing that
+any algorithm for deciding validity could be converted into an algorithm for solving the halting problem.
+More concretely,
+if you gave a Turing machine an ``oracle'' for deciding validity in predicate logic
+-- say,
+in the form of a separate tape on which it can write a formula and a special (``query the oracle'') state
+that converts the tape content into the answer --
+then it could solve the halting problem.
+
 \begin{exercise}
-Show equivalence between decision problem for entailment and DP for validity and DP for satisfiability.
+   Could the oracle Turing Machine just describe solve the halting problem for oracle Turing Machines, or only for ordinary Turing Machines?
 \end{exercise}
+
+
+
+
+
+% ** The busy beaver problem
+
+\begin{theorem}{(Rado 1962)}{bb}
+  The Busy Beaver function is not Turing-computable.
+\end{theorem}
+\begin{proof}
+  We'll show that
+  every Turing-computable total function $f$ is eventually overtaken by the Busy Beaver function $\sigma$.
+  That is,
+  for every Turing-computable total $f$ there is a number $k$ such that $\sigma(k) > f(k)$.
+  It follows that $\sigma$ is not Turing-computable.
+
+  Let $f$ be a Turing-computable total function.
+  Then the following function is also Turing-computable and total:
+  \[
+    g(x) = \max(f(2x), f(2x+1)) + 1.
+  \]
+  Take any machine $M$ that computes $g$.
+  If $M$ has $k$ states,
+  we can define, for any $x$, a machine $N_{x}$ with $x+k$ states that
+  first writes $x$ strokes on the tape (using the first $x$ states) and then imitates $M$.
+
+  When started on a blank tape,
+  $N_{x}$ writes $g(x)$ strokes and then halts.
+  By definition of the Busy Beaver function,
+  this means that $\sigma(x+k) \geq g(x)$.
+  By definition of $g$,
+  both $f(2x)$ and $f(2x+1)$ are less than $g(x)$.
+  So we have
+  \begin{gather*}
+    \sigma(x+k) \geq g(x) > f(2x); \\
+    \sigma(x+k) \geq g(x) > f(2x+1).
+  \end{gather*}
+  But obviously, if $x \geq k$ then
+  \begin{gather*}
+    \sigma(2x+1)\geq \sigma(2x) \geq \sigma(x+k). \\
+  \end{gather*}
+  Combining these inequalities, we infer that $f(x)<\sigma(x)$ for $x \geq 2k$.
+\end{proof} % From Enderton p.17
+
+\begin{exercise}
+  Explain why the BB function would be computable if we could solve the halting problem.
+\end{exercise}
+% We could simply discard the non-halting machines and wait until the remaining machines halt.
+
+
+  
+  
+\end{proof}
+
+Proof
+
+https://scottaaronson.blog/?p=8972
+
+What makes BB(748) independent of ZFC is not its value, but the fact that one of the 748-state machines (call it TM\_ZFC\_INC) looks for an inconsistency (proof of FALSE) in ZFC and only halts upon finding one.
+
+Thus, any proof that BB(748) = N must either show that TM\_ZF\_INC halts within N steps or never halts. By Gödel's famous results, neither of those cases is possible if ZFC is assumed to be consistent.
 
 \begin{exercise}
 Using Church's thesis, prove Trakhtenbaum's Theorem.
 \end{exercise}
+
+\begin{exercise}
+  Let the \textit{power} of a formula be the size of its smallest model.
+  Consider the function that maps any number to the largest power of a formula of that length.
+  Explain why this function is not computable, given that first-order logic is undecidable.
+\end{exercise}
+
+[Maybe move to after Turing section, where we could prove undecidability?]
+
+\begin{exercise}
+  What's wrong with this argument against the Church-Turing thesis?
+  ``We can effectively enumerate all Turing machines in a list $M_{1}, M_{2}, M_{3}, \ldots$.
+  Define the function $d(n)$ so that $d(n) = M_{n}(n) + 1$,
+  where $M_{n}(n)$ is the output of machine $M_{n}$ on input $n$.
+  This function $d$ is computable,
+  but it can't be computed by any machine on our list:
+  if it were computed by $M_{n}$ for some $n$,
+  we'd have $M_{n}(n) = M_{n}(n) + 1$.''
+  % Point is: this diagonal machine must be undefined for its own input, so one can't add 1.
+\end{exercise}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "logic3.tex"
+%%% End:

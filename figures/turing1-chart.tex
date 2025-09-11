@@ -1,0 +1,24 @@
+% --------------------------------------------------------------
+% State-transition diagram for the example Turing machine
+% --------------------------------------------------------------
+\begin{tikzpicture}[>=stealth', shorten >=1pt, auto,
+                    node distance=5cm, thick]
+  % ------------------------------------------------------------
+  % Nodes
+  % ------------------------------------------------------------
+  \node[state]                 (q0) {$q_{0}$};
+  \node[state, right of=q0]    (q1) {$q_{1}$};
+  \node[state, right of=q1]    (q2) {$q_{2}$};
+
+  % ------------------------------------------------------------
+  % Edges  (label =  read : write , move )
+  % ------------------------------------------------------------
+  % --- from q0 to q1 ------------------------------------------
+  \path[->] (q0) edge[bend left=20]  node[above] {$1:BR$} (q1);  % read 1
+  \path[->] (q0) edge[bend right=20] node[below] {$B:1L$} (q1);  % read B
+
+  % --- from q1 to q2 ------------------------------------------
+  \path[->] (q1) edge[bend left=20]  node[above] {$1:BL$} (q2);  % read 1
+  \path[->] (q1) edge[bend right=20] node[below] {$B:BR$} (q2);  % read B
+\end{tikzpicture}
+% --------------------------------------------------------------

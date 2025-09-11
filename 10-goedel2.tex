@@ -1,5 +1,73 @@
 \chapter{The unprovability of consistency}
 
+\section{Provability predicates}
+
+Note that the S4 conditions are very weak.
+They by no means capture provability in particular.
+E.g., 'x is the gn of a sentence' also satisfies them.
+
+
+
+PA can't prove Con(PA).
+But we believe that Con(PA) is true.
+So we can add it as a further axiom.
+In the resulting theory,
+we can prove Con(PA).
+But the second incompleteness theorem will still apply:
+we can't prove Con(PA+Con(PA)),
+even though it's true.
+We can add it as an axiom.
+And so on.
+We might even consider the theory defined by
+the union of \emph{all} such additions,
+with infinitely many ever-stronger consistency assertions.
+This theory,
+too,
+won't prove its own consistency.
+We can add its consistency as an axiom.
+And so on.
+
+But incompleteness is inescapable.
+
+
+\section{Löb's Theorem}
+\label{sec:lobs-theorem}
+
+Gödel's proof of Incompleteness with his sentence `I am not provable' skirts the Liar paradox.
+The proof of Löb's Theorem skirts Curry's Paradox.
+Curry's Paradox goes like this.
+
+Let $S$ be the sentence `if $S$ is true then Santa Claus exists'.
+Suppose that $S$ is true.
+Then it's true that if $S$ is true then Santa Claus exists
+(as that is what $S$ says).
+But we've assumed that $S$ is true.
+By Modus Ponens,
+we can infer that Santa Claus exists.
+Discharging the assumption,
+we've shown that \emph{if} $S$ is true then Santa Claus exists.
+That's just what $S$ says.
+So $S$ is true.
+Since we've shown that if $S$ is true then Santa Claus exists,
+we can conclude that Santa Claus exists.
+
+Proof of Löb's Theorem. (Hamkins p.251?)
+
+
+\begin{exercise}
+  Is there a consistent extension of PA than can prove its own inconsistency?
+\end{exercise}
+
+\begin{exercise}
+  What's the difference between the hypothesis $PA \proves A$ and the arithmetical
+  hypothesis $Prov(A)$? Can one be true without the other? % cf Hamkins ex 7.9
+\end{exercise}
+
+\begin{exercise}
+  Suppose someone provides a list of new arithmetical axioms from which one can prove that this list is consistent. What does this tell us? % Hamkins 7.11
+\end{exercise}
+
+
 \section{Fineness of grain}
 
 The Montagovian point...
@@ -19,3 +87,8 @@ draw. We can have operators like Prov that are sensitive to very fine-grained
 distinctions.
 
 But there are surprising limitations to what operators we can have! \ldots
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "logic3.tex"
+%%% End:

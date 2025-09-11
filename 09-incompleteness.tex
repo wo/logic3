@@ -1,5 +1,220 @@
 \chapter{Incompleteness}
 
+In the previous chapter,
+we showed that all total recursive functions and relations on natural numbers
+are representable in every $\L_{A}$-theory that satisfies a few simple conditions.
+Call such theories robinsonian.
+Now we'll show that no consistent robinsonian theory can be complete.
+
+\section{Arithmetization}
+
+Hilbert saw that we can reason mathematically
+about provability in axiomatic theories like PA.
+Gödel saw that we carry out such reasoning within the theories themselves,
+allowing the theory to reason about what is or isn't provable in itself.
+
+Having gone through the work of the previous chapter,
+this is straightforward.
+We know that we can code $L_{A}$-sentences, and lists of $L_{A}$-sentences, as numbers.
+In this context,
+the code number of a sentence $A$ is called its \emph{Gödel number},
+and written $\gn{A}$.
+
+Now consider the relation that
+holds between a list of sentences $A_{1},\ldots,A_{n}$ and a sentence $A$
+iff $A_{1},\ldots,A_{n}$ is a proof of $A$ in some computably axiomatized theory $T$.
+This relation is computable:
+there is a mechanical test for checking whether
+a given list of sentences is a $T$-proof of a given sentence.
+By Church's Thesis,
+it follows that
+the relation $\text{Proof}(x,y)$ that holds between numbers $x,y$
+iff $x$ is the code number of a $T$-proof of the sentence with code number $y$
+is recursive.
+By theorem \ref{thm:recrep},
+this relation is representable in any robinsonian theory.
+That is,
+if $T$ is a robinsonian theory then
+there is a formula $\text{Prf}(x,y)$ such that for all natural numbers $a,b$,
+
+\begin{enumerate}[(i)]
+  \item if $\text{Proof}(a,b)$ then $\proves_{T}\text{Prf}(\num{a},\num{b})$; and
+  \item if not $\text{Proof}(a,b)$ then $\proves_{T}\neg\text{Prf}(\num{a},\num{b})$.
+\end{enumerate}
+
+It doesn't really matter how sentences and proofs are coded.
+Gödel used the powers of primes method.
+
+These numbers are called \emph{Gödel numbers}.
+We can then define
+Then we can define numerical relations that
+hold between code numbers iff
+the coded strings satisfy certain syntactic
+correspond to syntactic rel
+
+Let's begin with the task of
+coding $\L_{A}$-sentences and lists of $\L_{A}$-sentences as numbers.
+We've talked about coding strings in ch.6.
+There I suggested that we can code an
+$L_A$ string in two steps.
+
+First, we assign a code number to each symbol of the language.
+For $\L_{A}$,
+this might look as follows:
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+Symbol & $\neg$ & $\to$ & $=$ & $\forall$ & $0$ & $s$ & $+$ & $\times$ & $($ & $)$ & $,$ & $x_{1}$ & $x_{2}$ & $\ldots$ \\
+\hline
+Code & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & $\ldots$ \\
+\hline
+\end{tabular}
+\end{center}
+
+Having coded each symbol by a number,
+the second step is to code sequences of numbers as single numbers.
+We can use the prime factor decomposition technique.
+Take the string '$0 = 0$'.
+This will be coded as $2^5 \times 3^3 \times 5^5$, which is 2345xxx.
+
+In general, let $p_{i}$ be the $i$-th prime. Then the gn of a string $a_{1} \ldots a_{n}$
+of symbols is
+
+\[
+ p_{1}^{a_{1}} \cdot p_{2}^{a_{2}} \cdots p_{n}^{a_{n}}.
+\]
+
+(The empty sequence is coded by the empty product, 1.)
+
+Given these two methods, it is possible to code an arbitrary expression of the language by a single number: first, replace each symbol s by it symbol number \#(s). This way a sequence of symbols becomes a sequence of numbers. Second, using the above powers of primes coding, associate to this sequence of numbers a unique single number as its code.
+
+The Gödel number of a formula (sentence, derivation) A is denoted by $\ulcorner A\urcorner$. E.g.
+
+\[
+\langle 0 = 0 \rangle = 2^{5} \cdot 3^{5} = 243.
+\]
+
+% ** Syntactic categories are p.r.
+
+Our mapping of $\L_{A}$-strings to numbers
+induces a mapping of syntactic properties and relations to properties and relations among numbers.
+For example,
+there's a numerical property $sent(x)$ that applies to a number $x$
+iff $x$ codes an $L_A$-sentence.
+And there's a numerical relation $proof(x,y)$ that applies to numbers $x,y$
+iff $x$ codes the proof of $y$ in some computably axiomatized theory.
+
+By a lazy application of Church's Thesis,
+this relation is recursive.
+In the remainder of this section we're going to show that it is,
+in fact,
+primitive recursive.
+This will be a little tedious.
+
+
+
+
+We've actually shown this for some of them in the previous chapter, where we've
+shown that they are in fact p.r..
+
+
+
+
+There are also numerical functions that operate on code numbers.
+For example,
+there's a function $len(x)$ that returns
+the length of string coded by a code number $x$.
+
+By a lazy application of Church's Thesis,
+all these functions are recursive.
+We've actually shown this for some of them in the previous chapter, where we've
+shown that they are in fact p.r..
+
+Key propositions about pr functions:
+
+\begin{enumerate}
+\item Sent(x) is recursive. [BBJ 15.2]
+\item Prf(x,y) is recursive.  [BBJ 15.3]
+\end{enumerate}
+
+Proof sketch
+
+Let's start slowly.
+For example,
+consider the property of being a variable.
+In our mapping,
+variables have Gödel numbers xxx.
+[Maybe define ``Gödel nubmer'' in terms of sequences,
+so that the gn of x is $2^{\#x}$.]
+So the property of being a variable
+is mapped to the property of xxx.
+
+Note that this property is primitive recursive.
+
+Define:
+
+\textit{Var(x)} for "x codes a variable symbol in $L_A$".
+
+Define:
+
+\textit{Term(x)} for "x codes a term in $L_A$".
+
+
+
+This is p.r.: we need to check if x codes 0 or a variable of a sequence beginning with '$s($' followed by a term followed by '$)$'.
+
+\textit{Formula(x)} for "x codes a formula in $L_A$".
+
+This is directly definable by primitive recursion.
+
+% ** Substitution is p.r.
+
+Define the substitution function \textit{sub(x,v,t)} that takes a code number x of a
+formula and a code number v of a variable and t of a term, and returns the code
+number of the formula obtained by substituting the term for all occurrences of
+the variable in the formula.
+
+This is tedious but mechanical to construct.
+
+Algorithm: walk through the sequence coded by x; whenever you meet the
+single-symbol sequence v that is free (check the binding structure on the fly)
+splice in the code for t. All the operations "read symbol i", "write symbol",
+"concatenate" and "test bound/free" are p.r.
+
+% ** Prf is p.r.
+
+A mathematical proof consists of a sequence of formulas. So Gödel gave every sequence of formulas a unique Gödel number too. In this case, he starts with the list of prime numbers as before — 2, 3, 5 and so on. He then raises each prime to the Gödel number of the formula at the same position in the sequence ($2^{243,000,000} \times \ldots$, if $0 = 0$ comes first, for example) and multiplies everything together.
+
+We can now define a p.r. predicate Prf(x,y) that holds between x and y iff x codes a proof of the sentence coded by y from the axioms of Q.
+
+A finite sequence of $L_A$-strings is a proof if each item satisfies one of the following conditions:
+
+\begin{enumerate}[label=(\roman*)]
+\item it is an axiom of Q;
+\item it is a logical axiom;
+\item it follows from earlier items by MP
+\item it follows from earlier items by HG
+\end{enumerate}
+
+The corresponding predicate Pr(x) is p.r.
+
+(What if we replace Q by another theory? Doesn't matter if the theory is finitely axiomatizable. The proof also works for PA, which is p.r. axiomatized.)
+
+We can define Prf(x,y) as: Pr(x) and Last(x)=y.
+
+
+% ** Set of consequences from rec set of axioms is r.e.
+
+An interesting consequence: the set of sentences deducible from a rec set of axioms is r.e. (BBJ 15.4)
+
+
+xxxxxxxxxxxxxxx
+
+
+
+
+
 See handout wk10.
 
 A theory is \emph{axiomatizable} if it is axiomatized by a decidable set of axioms.
@@ -34,6 +249,11 @@ What does this say? It says that the predicate has a diagonalisation. Well every
 
 Now we do this in the language of arithmetic, using numerals of gns instead of quoted predicates.
 
+We can for example construct a sentence that says of itself that it is a sentence, or that it is an axiom of PA. The first is true, the second false (in arithmetic!).
+
+xxx first define the semantic lemma, then show semantic incompleteness.
+
+
 \section{Tarski's Theorem}
 
 A proof of Tarski's Theorem that does not mention formal systems at all can
@@ -58,6 +278,15 @@ that we assume that diag defines, rather than numeralwise represents,
 diagonalisation. Note that the only properties of L needed are these: the
 function diag is definable in L; and L contains the usual logical signs
 
+Tarski's theorem shows that incompleteness holds not just if T is computably axiomatizable.
+It holds even if the axioms are merely arithmetically definable.
+This is much stronger.
+I.e., we can't arithmetically describe the complete truth of arithmetic.
+
+In a way, this is the more profound result than Gödel's first theorem.
+And it doesn't require detailed arithmetization of the proof system.
+
+
 \section{Church's Theorem}
 
 Gödel's work immediately tells us that there is no primitive recursive decision
@@ -65,3 +294,46 @@ procedure for PA; and that work is extendible to any notion that will be
 representable in PA. All that was necessary after 1931, then, was to formulate
 the appropriate general notion of computability, and show that all computable
 functions were numeralwise representable.
+
+\section{Undecidable sentences}
+
+Can we construct an undecidable sentence?
+Yes.
+Gödel's suggestion requires $\omega$-consistency.
+That's fine.
+
+But Rosser saw that one can drop this assumption by taking a more complicated sentence.
+Instead of diagonalizing ``there is no prove of $X$'',
+he diagonalizes ``for every proof of $X$ there is a shorter proof of $\neg X$''.
+Let $R$ be the Rosser sentence.
+
+If $T \proves R$,
+this proof has some godel number.
+By what $R$ asserts,
+$T$ must prove that there is a shorter proof of $\neg R$.
+So there must be such a proof. [Why?]
+So $T$ is inconsistent.
+
+If $T \proves \neg R$,
+then by what $R$ says,
+$T$ proves that there is a proof of $R$ with no smaller proof of $\neg R$.
+Since we have a proof of $\neg R$,
+there must be an even shorter proof of $R$.
+So $T$ is again inconsistent.
+
+Are there any natural examples?
+Yes, Goodstein's Theorem!
+
+In set theory, there are many more examples.
+In 1930,
+it was an open question whether ZFC is complete.
+Now we know that
+there are many natural hypotheses,
+such as the Continuum Hypotheses and so-called ``large cardinal axioms'',
+that it doesn't decide.
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "logic3.tex"
+%%% End:

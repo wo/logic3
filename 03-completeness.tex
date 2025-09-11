@@ -31,37 +31,376 @@ if one of the following conditions holds.
 
 \fi
 
+In this chapter,
+we're going to meet some important results about the powers and deficiencies of first-order logic.
+Our starting point is the completeness theorem,
+which shows that there is a mechanical way to check for first-order entailment.
+We'll see that this positive result is tightly connected to some negative results:
+the compactness theorem and the Löwenheim-Skolem theorems.
+These results concern the \emph{size} of models,
+by which we mean the size of their domain.
+To fully appreciate their implications,
+I'll begin with some background about the sizes of sets,
+which will be needed in later chapters anyway.
+
+\section{Cardinalities}\label{sec:cardinalities}
+
+$\{$ Athens $\}$ is a set with a single member:
+the city Athens.
+We say that $\{$ Athens $\}$ has size 1.
+$\{$ Athens, Berlin $\}$ has size 2.
+$\{$ Athens, Berlin, Cairo $\}$ has size 3.
+And so on.
+It seems straightforward.
+But now consider the set $\mathbb{N}$ of natural numbers 0, 1, 2, 3, \ldots.
+What is its size?
+
+The official set-theoretic term for the size of a set is \textit{cardinality}.
+So $\{$ Athens, Berlin, Cairo $\}$ has cardinality 3.
+Finite sets have a finite cardinalities, which are natural numbers.
+But infinite sets also have a cardinality.
+These aren't natural numbers,
+but numbers of a more general sort,
+called \emph{cardinals}.
+The infinite cardinals are also known as the \emph{alephs},
+because they are conventionally written using the Hebrew letter `$\aleph$' (``aleph'').
+For example,
+the cardinality of $\mathbb{N}$ is called `$\aleph_0$'.
+This is the smallest infinite cardinal.
+The next one is $\aleph_1$,
+followed by $\aleph_2$, and so on.
+
+% You may be puzzled what sort of things the alephs are.
+% I'll give an answer in the next chapter.
+% But note that it is equally unclear what sort of thing the natural numbers are.
+% The more important question is how the alephs behave.
+How do we determine the cardinality of an infinite set?
+The crucial idea goes back to Galileo and Hume,
+although it was only fully developed by Georg Cantor in the 19th century.
+Cantor,
+following Galileo and Hume,
+suggested that two sets have the same cardinality iff there is a one-to-one correspondence between there members.
+
+To make this precise, we define the notion of a one-to-one correspondence or bijection.
+
+\begin{definition}{}{bijection}
+  A function $f$ from a set $A$ to a set $B$ is a \emph{bijection}
+  if it satisfies the following two conditions.
+  \begin{enumerate*}
+    \item[(i)] For every $x, y \in A$, if $f(x) = f(y)$ then $x = y$. (Injectivity)
+    \item[(ii)] For every $b \in B$ there is some $a \in A$ such that $f(a) = b$. (Surjectivity)
+  \end{enumerate*}
+\end{definition}
+
+Intuitively, a bijection pairs up each element of $A$ with exactly one element of $B$,
+and vice versa,
+so that every element of either set gets a unique partner.
+As a shorthand,
+let's say that sets $A$ and $B$ are \emph{equinumerous} if there is a bijection from $A$ to $B$.
+(In this case, there is always also a bijection from $B$ to $A$.)
+
+The Galileo-Hume-Cantor principle now says that
+\emph{two sets have the same cardinality iff they are equinumerous}.
+Obviously,
+no finite set of numbers is equinumerous with $\mathbb{N}$.
+So $\mathbb{N}$ has an infinite cardinality.
+Let's introduce `$\aleph_0$' as a name for this cardinality.
+Using the Galileo-Hume-Cantor principle,
+we can determine,
+for any other set,
+whether it also has cardinality $\aleph_0$.
+
+Consider,
+for example,
+the set of odd numbers $1, 3, 5, 7, \ldots$.
+The following function $f$ is a bijection from $\mathbb{N}$ to the set of odd numbers:
+\[
+  f(n) = 2n + 1.
+\]
+The function maps 0 to 1, 1 to 3, 2 to 5, and so on.
+Every natural number is mapped to a unique odd number,
+and no odd number is left unmapped.
+So the set of odd numbers also has cardinality $\aleph_0$.
+
+Galileo found this paradoxical:
+how can there be as many odd numbers as natural numbers,
+given that the odd numbers are a proper subset of the natural numbers?
+Never mind,
+said Cantor:
+the resulting theory of cardinalities is consistent and mathematically fruitful,
+even if it may initially seem strange.
+
+Sets that are equinumerous with $\mathbb{N}$ are also called \emph{countably infinite} or \emph{denumerable}.
+A set is \emph{countable} if it is either finite or countably infinite.
+The label alludes to the fact that
+a bijection between $\mathbb{N}$ and another set
+effectively assigns a ``counter'' to each member of the set.
+For example,
+the above bijection between $\mathbb{N}$ and the odd numbers
+can be written as follows:
+\begin{align*}
+  0. 1\\
+  1. 3\\
+  2. 5\\
+  3. 7\\
+  \vdots
+\end{align*}
+
+\begin{exercise}
+  Show that (a) the set of even natural numbers and (b) the set of integers $\ldots, -2, -1, 0, 1, 2, \ldots$ are both countably infinite.
+\end{exercise}
+
+% The set of integers $\mathbb{Z} = \{\ldots, -2, -1, 0, 1, 2, \ldots\}$ is also countably infinite.
+% We can establish a bijection between $\mathbb{N}$ and $\mathbb{Z}$ by mapping:
+% \begin{align*}
+% 0 &\mapsto 0 \\
+% 1 &\mapsto 1 \\
+% 2 &\mapsto -1 \\
+% 3 &\mapsto 2 \\
+% 4 &\mapsto -2 \\
+% 5 &\mapsto 3 \\
+% &\vdots
+% \end{align*}
+% In general, we map even numbers $2n$ to positive integers $n$, and odd numbers $2n+1$ to negative integers $-n$.
+
+% As the example illustrates,
+% we can conceptualize a mapping from $\mathbb{N}$ to some set $S$ as a \emph{list}
+% of the members of $S$.
+% If we allow lists with repetitions,
+% we can say that a set is countable iff its members can be put on an infinite list,
+% each item of which has as ``index'' a natural number.
+
+Are there any \emph{uncountable} sets?
+We might suspect that the set of \emph{pairs} of natural numbers is uncountable.
+But not so.
+Cantor's \emph{zig-zag method} shows that
+there is a bijection between $\mathbb{N}$ and the set of pairs of natural numbers.
+We begin by arranging all pairs of natural numbers in a two-dimensional grid.
+
+\begin{center}
+  \input{figures/zigzag.tex}
+\end{center}
+
+We then define a path through this grid that visits each cell exactly once.
+The orange arrows indicate that path.
+It effectively enumerates all pairs $(x, y)$,
+starting with $(0,0)$,
+followed by $(0,1)$, $(1,0)$, $(2,0)$, $(1,1)$, $(0,2)$, and so on.
+The enumeration amounts to a lists of all the pairs.
+We get a bijection to $\mathbb{N}$ by assigning to each pair
+its position in the list (starting with position 0).
+Thus $(0,0)$ is mapped to 0,
+$(0,1)$ to 1,
+$(1,0)$ to 2,
+and so forth.
+
+(We can find a formula for this bijection.
+As we follow the arrow,
+the pairs \emph{before} any given pair $(x,y)$ comprise
+all the pairs on the left-to-top diagonals before $(x,y)$,
+which have 1, 2, 3, etc. pairs,
+plus the $y$ pairs on the diagonal containing $(x,y)$ itself.
+The total number of pairs preceding $(x,y)$ is therefore
+$(1 + 2 + \ldots + (x+y)) + y$.
+In exercise \ref{ex:gauss-sum},
+you showed that $1+2+ \ldots + (x+y) = (x + y)(x + y + 1)/2$.
+So the position of any pair $(x,y)$ in the enumeration is
+$(x+y)(x+y+1)/2 + y$.)
+
+% Since each rational number can be expressed as a pair of natural numbers (the numerator and denominator),
+% the zig-zag argument also shows that the set of rational numbers $\mathbb{Q}$ is countably infinite.
+
+\begin{exercise}
+  Show that the set of ordered triples of natural numbers is countably infinite.
+  % Can zig zag the cube. But easier: zig zag a 2D grid in which the rows are the pairs $(x,y)$ of natural numbers and the columns are natural numbers. We know that the pairs can be numerated.
+\end{exercise}
+
+% Example: the set of formulas of $L_A$ is enumerable.
+
+But it's true that not all sets are countable.
+Cantor established this with another powerful technique:
+\emph{diagonalization}.
+
+\begin{theorem}{Cantor's Theorem}{cantor}
+  The set of all sets of natural numbers not countable.
+\end{theorem}
+
+\begin{proof}
+  Assume for reductio that the set of all sets of natural numbers is countable.
+  This means that we can list them as $S_0, S_1, S_2, \ldots$.
+  Now consider the set $D = \{ n \in \mathbb{N} : n \notin S_n \}$.
+  This is a set of natural numbers,
+  so it must be somewhere in the list.
+  That is,
+  there is some $S_k$ such that $D = S_k$.
+  Now the number $k$ is either in $D$ or not.
+  If $k$ is in $D$
+  then by definition of $D$,
+  $k$ is not in $S_k$.
+  This is impossible, as $D = S_k$.
+  If $k$ is not in $D$,
+  then by definition of $D$,
+  $k$ is in $S_k$.
+  Again, this is impossible.
+  \qed
+\end{proof}
+
+We can again picture this method with a two-dimensional grid.
+
+\begin{center}
+  \input{figures/diagonal.tex}
+\end{center}
+
+Each row represents a set of natural numbers.
+Each column stands for a number.
+A checkmark indicates that the number is in the set,
+a cross that it is not.
+(So $0$ is in $S_0$, $1$ is not in $S_0$, 2 is not in $S_{0}$, and so on.)
+Cantor's method now looks at the diagonal, in bold.
+It defines the new set $D$ by \emph{inverting} the diagonal,
+swapping crosses and checkmarks.
+In the picture,
+the inverted diagonal would begin with \xmarkd \cmarkd \xmarkd \xmarkd \cmarkd \ldots,
+meaning that $D$ does not contain $0$,
+does contain 1,
+does not contain 2 and 3,
+does contain 4,
+and so on.
+The so-defined set $D$ is called the \emph{antidiagonal} of the grid.
+It can't be anywhere in the list.
+And so there can be no list of all sets of natural numbers.
+
+Theorem \ref{thm:cantor} can be strengthened:
+
+\begin{theorem}{Cantor's Theorem (general version)}{cantor}
+  For any set $A$,
+  the set of subsets of $A$ has strictly greater cardinality than $A$.
+\end{theorem}
+
+\begin{proof}
+  \emph{Proof}.
+  The proof proceeds essentially as before.
+  Suppose for reductio that there is a bijection $f: A \to \mathcal{P}(A)$,
+  where $\mathcal{P}(A)$ (called the \emph{power set} of $A$)
+  is the set of all subsets of $A$.
+  Define the antidiagonal set $D = \{ X \in A : X \notin f(X) \}$.
+  Since $D$ is a subset of $A$,
+  it is in $\mathcal{P}(A)$.
+  But it can't be in an output of $f$.
+  For suppose it is.
+  That is,
+  suppose $D = f(X)$ for some $X \in A$.
+  Either $X$ is in $D$ or not.
+  If $X$ is in $D$,
+  then by definition of $D$,
+  $X$ is not in $f(X)$.
+  But $f(X) = D$,
+  so this is impossible.
+  If $X$ is not in $D$,
+  then by definition of $D$,
+  $X$ is in $f(X)$.
+  Again, this is impossible.
+  \qed
+\end{proof}
+
+% Applied to the natural numbers, Cantor's theorem shows that $\mathcal{P}(\mathbb{N})$
+% -- the set of all subsets of natural numbers --
+% is uncountably infinite.
+% Its cardinality is denoted $2^{\aleph_0}$ or $\mathfrak{c}$ (the cardinality of the continuum).
+% In fact, $\mathcal{P}(\mathbb{N})$ is equinumerous with the real numbers $\mathbb{R}$.
+
+Cantor's theorem reveals a hierarchy of infinities.
+Starting with $\mathbb{N}$,
+we can produce larger and larger infinities by taking power sets:
+$\mathcal{P}(\mathbb{N})$ is larger than $\mathbb{N}$,
+$\mathcal{P}(\mathcal{P}(\mathbb{N}))$ is larger than $\mathcal{P}(\mathbb{N})$,
+and so on,
+without end.
+There are infinitely many infinite cardinals.
+
+% (We have just learned that ``infinitely many'' is not a precise answer.
+% Are there \emph{countably many} infinities -- that is, $\aleph_{0}$?
+% Or $\aleph_{1}$?
+% Or what?
+% According to modern set theory,
+% the number of infinities is so large that
+% it is not measured by any cardinality.)
+
+\begin{exercise}
+  Show that if $A$ and $B$ are countably infinite sets, then their union $A \cup B$ is countably infinite.
+\end{exercise}
+
+\begin{exercise}
+  Show that the set of finite subsets of $\mathbb{N}$ is countably infinite.
+\end{exercise}
 
 
-In this chapter, we meet some important metalogical results.
-The first is the completeness theorem.
-This shows that different approaches to first-order logical consequence coincide.
-It shows that there is a mechanical way to check for first-order entailment.
-This is a great strength of first-order logic (not shared by second-order logic).
-But it is tightly connected to some limitations: compactness and Löwenheim-Skolem.
+\section{Planning the completeness proof}
 
-\section{Plan of the completeness proof}
+In section \ref{sec:prop-completeness},
+we showed that all valid sentences in propositional logic
+are derivable from the axiom schemata A1--A3 by Modus Ponens.
+This particular result is wasn't easy to foresee,
+but it wasn't a surprise that
+there is \emph{some} mechanical way of checking if
+a sentence of propositional logic is valid.
+Models of propositional logic are essentially finitary.
+A model is a truth-value assignment to the sentence letters.
+Since each sentence of propositional logic is composed of finitely many proposition letters,
+and there are only finitely many ways of assigning truth-values to these sentence letters,
+it is to be expected that
+there is a finitary algorithm for deciding whether all
+of these assignments make the sentence true.
+% (or whether all of them make the sentence true
+% if they make some other sentences true).
 
-We'll prove completeness.
-This will make it plausible that all mathematical reasoning can indeed be the captured in our first-order calculus.
-Almost all mathematical statements can be expressed in a suitable first-order language.
-Before Gödel's completeness proof,
-it was known that a lot of ordinary mathematical inferences could be replicated in the first-order calculus that we've reviewed in the previous chapter,
-but it was an open question whether
-this is true for all such inferences.
-The completeness proof provides strong evidence for a positive answer.
-It shows that any form of inference that \emph{can't} be replicated in the first-order calculus
-can lead from true premises to false conclusions.  % BBJ 185
+% Of course,
+% it's not too surprising that the precise proof system I've introduced is sound and complete.
+% The axioms and rules were chosen with an eye to completeness.
+% This is unlike the situation in some nonclassical logics,
+% like intuitionistic logic,
+% were the proof-theoretic angle takes priority
+% and models are defined so that
+% the desired proof system comes out sound and complete.
+% Hamkins pp.183ff.
 
-Completeness is surprising.
-Think about the usefulness of the semantic conception of entailment.
-Any model where this is true is a model where that is true.
-No need to posit a finite derivation.
-Model-theoretic validity is a highly infinitary notion.
-Why should it map onto finitary proofs?
-(We seemingly need to check every possible model.)
+In first-order logic,
+the situation very different.
+A first-order model consists of an arbitrary set $D$
+together with an interpretation of the non-logical vocabulary,
+where, for example, every subset of $D$ is a possible interpretation of any monadic predicate.
+Even if $D$ itself is countable,
+this means that there are usually uncountably many models with that domain.
+And $D$ doesn't have to be countable.
+It can have any cardinality whatsoever.
+The space of first-order models is enormous.
+Their number is vastly greater than $\aleph_0$.
+There is, in fact, no aleph big enough to measure the number of first-order models.
+It is therefore astonishing that
+there is a finitary, mechanical method
+-- a proof system --
+by which one can determine precisely the sentences
+that are true across the realm of all first-order models.
 
-More dramatically:
+The completeness theorem for first-order logic is noteworthy for other reasons as well.
+For example,
+it supports the conjecture
+that all intuitively valid mathematical arguments can be formalized
+as deductions in the first-order calculus.
+Let's take for granted, for the sake of the argument, that
+every mathematical statement can be expressed in a first-order language.
+Now suppose some mathematical argument \emph{can't} be replicated in the first-order calculus.
+By the completeness theorem,
+it follows that
+there is a model in which the premises are true but the conclusion false.
+This strongly suggests that the argument wasn't valid.
+We'll meet further applications of the completeness theorem later.
+First we need to prove it.
+% BBJ 185
+
+\iffalse
+
+Also,
 suppose I like the number 1, the number 2, the number 3, etc.
 It follows model-theoretically that I like all numbers.
 But proofs are finite.
@@ -78,130 +417,157 @@ Completeness entails that all (first-order) logical truths are provable.
 Obviously, not all truths are logical truths.
 So completeness doesn't mean that all truths are provable.
 
-\begin{exercise}
-Which, if any, of these statements are correct? (1) The soundness theorem implies that every sentence provable from the Peano axioms is a true sentence of arithmetic; (2) The completeness theorem implies that every true sentence of arithmetic is provable from the Peano axioms. [yes/no]
-\end{exercise}
+\fi
 
-We'll use not Gödel's 1929 technique, but Henkin's.
-We've already used this technique in ch.1 as a warm up.
-Let's recall the key ideas.
+% \begin{exercise}
+% Which, if any, of these statements are correct? (1) The soundness theorem implies that every sentence provable from the Peano axioms is a true sentence of arithmetic; (2) The completeness theorem implies that every true sentence of arithmetic is provable from the Peano axioms. [yes/no]
+% \end{exercise}
 
+The first completeness proof for first-order Logic was developed by Kurt Gödel in 1929.
+We're going to follow the simpler strategy due to Henkin (1949)
+that we've already used in chapter~\ref{ch:propcal}.
+Let's recall the key steps.
+
+We want to show that
+whenever a sentence $A$ is entailed by a set of sentences $\Gamma$
+(meaning that every model that makes all members of $\Gamma$ true also makes $A$ true),
+then there is a deduction of $A$ from $\Gamma$.
+For short:
+if $\Gamma \models A$ then $\Gamma \vdash A$.
 The proof is by contraposition.
-We assume $\Gamma \not\vdash A$ and show that, in any such case, $\Gamma \not\models A$.
+We assume $\Gamma \not\vdash A$ and derive $\Gamma \not\models A$,
+as follows.
 
 \begin{cenumerate}
 \item Assume $\Gamma \not\vdash A$.
 \item Infer that $\Gamma \cup \{ \neg A \}$ is consistent.
 \item Show that $\Gamma \cup \{ \neg A \}$ can be extended to a maximal consistent set $\Gamma^{+}$.
-\item Construct a model $M$ based on $\Gamma^{+}$ in which all members of $\Gamma^{+}$ are true.
+\item Construct a model $\mathcal{M}$ based on $\Gamma^{+}$ in which all members of $\Gamma^{+}$ are true.
 \item Infer that $\Gamma \not\models A$.
 \end{cenumerate}
 
 % Why this fails for SOL: https://math.stackexchange.com/questions/4913675/how-completeness-fails-in-second-order-logic
 
-Steps 2 and 5 are easy,
-and proceed just like in chapter 1.
-The following lemma established step 2.
+A set of sentences is \emph{consistent}
+if no contradiction can be derived from it.
+That is,
+$\Gamma$ is consistent iff
+there is no sentence $A$ such that $\Gamma \vdash A$ and $\Gamma \vdash \neg A$.
+Equivalently
+(as you've shown in exercise \ref{ex:inconsistency}:
+the proof carries over from propositional logic),
+$\Gamma$ is consistent iff
+$\Gamma \not\vdash \bot$.
 
-\begin{lemma}{}{negation-consistency}
-  If $\Gamma \notproves A$ then $\Gamma \cup {\neg A}$ is consistent.
+Steps 2 and 5 are easy.
+The following lemma establishes step 2,
+and is proved exactly like its propositional counterpart,
+lemma \ref{lem:consistency-lemma}.
+
+\begin{lemma}{}{negation-consistency1}
+  $\Gamma \not\vdash A$ iff $\Gamma \cup \{\neg A\}$ is consistent.
 \end{lemma}
 \begin{proof}
-  Assume the contrary.
-  Then $\Gamma \cup {\neg A} \proves B$ and $\Gamma \cup {\neg A} \proves \neg B$ for some closed sentence $B$.
-  By the deduction theorem,
-  $\Gamma \proves \neg A \to B$ and $\Gamma \proves \neg A \to \neg B$.
-  So $\Gamma \proves \neg\neg A$ (by \emph{Ex Falso Quodlibet}),
-  and therefore $\Gamma \proves A$ (by double negation elimination).
-  Contradiction.
+  \emph{Proof.}
+  Suppose $\Gamma \cup \{\neg A\}$ is inconsistent.
+  Then $\Gamma \vdash \neg \neg A$ by RAA
+  and so $\Gamma \vdash A$ by DNE.
+  Contraposing,
+  this means that if $\Gamma \not\vdash A$ then $\Gamma \cup \{ \neg A \}$ is consistent.
+  Conversely,
+  suppose $\Gamma \vdash A$.
+  Then $\Gamma, \neg A \vdash A$ by Mon
+  and $\Gamma, \neg A \vdash \neg A$ by Mon and Id.
+  So $\Gamma \cup \{ \neg A \}$ is inconsistent. \qed
 \end{proof}
 
-TODO: Explain step 5?
+It remains to fill in steps 3 and 4:
+we need to show that
+\emph{every consistent set of sentences is satisfiable},
+meaning that there is a model in which all its members are true.
 
-It remains to fill in steps 2 and 3.
-In effect,
-what remains to show is this:
+Here is the plan.
+Let $\Gamma$ be a consistent set of sentences in some first-order language $\L$
+(with identity and function symbols).
+We'll show how one can construct a model $\mathcal{M}_{\Gamma}$
+in which all members of $\Gamma$ are true.
 
-\begin{quote}
-  \emph{Every consistent set of $\L$-sentences has a model.}
-\end{quote}
-
-Let's focus on this.
-We'll show how,
-given any consistent set $\Gamma$ of sentences in a first-order language $\L$,
-we can construct a model $M_{\Gamma}$
-in which all sentences in $\Gamma$ are true.
-
-As in chapter 1,
+As in chapter \ref{ch:propcal},
 it helps to extend $\Gamma$ to a maximal consistent set $\Gamma^{+}$.
-If, say, $\Gamma$ contains $Fa \lor Gb$,
+For example,
+if $\Gamma$ contains $Fa \lor Gb$,
 it's not obvious if
-we should have build model in which $Fa$ is true,
-or $Gb$ is true, or both.
-$\Gamma^{+}$ will contain $Fa$ or $Gb$ or both, so it will answer this question.
-Clearly, if our model is a model of $\Gamma^{+}$,
-then it will be a model of $\Gamma$.
+we our model should satisfy $Fa$ or $Gb$ or both.
+$\Gamma^{+}$ will contain $Fa$ or $Gb$ or both,
+so it answer this question.
+The atomic sentences in $\Gamma^{+}$ will instruct us how to build the model.
 
-Now suppose we have $Fa$ in $\Gamma^{+}$.
-Our model $M$ must then contain an object $[a]^{M}$ denoted by $a$ that falls in the extension $[F]^{M}$ of $F$.
-The nature of that object is irrelevant.
-For convenience, we'll choose \emph{the individual constant} $a$ as the object denoted by $a$.
-Then we can say that the extension of $F$ comprises all individual constants $c$ for which
-$Fc \in \Gamma^{+}$.
+Suppose we have $Fa$ in $\Gamma^{+}$.
+Our model $\mathcal{M}$ must then contain an object $\llbracket a\rrbracket^{\mathcal{M}}$ denoted by $a$ that falls in the extension $\llbracket F \rrbracket^{\mathcal{M}}$ of $F$.
+The nature of the object $\llbracket a\rrbracket^{\mathcal{M}}$ is irrelevant.
+For convenience,
+we might choose \emph{the individual constant} $a$ as the object denoted by $a$.
+Then we can say
+that the extension of $F$ comprises all individual constants $c$ for which $Fc \in \Gamma^{+}$.
+(It might seem odd to have a model whose domain consists of individual constants,
+and in which each constant denotes itself.
+But noting in the definition of a first-order model prevents us from doing this.)
 
-TODO: say a little more about this. It's odd to have a name for a name. But that's allowed. Why it helps.
-
-But there's a problem.
+Unfortunately,
+there are some complications.
 Suppose $\Gamma$ contains $\exists x Fx$.
-We want this to be true in $M$.
-So the extension of $F$ in $M$ must be non-empty.
-If, as I just said,
-the extension of $F$ comprises all individual constants $c$ for which $Fc \in \Gamma^{+}$,
-this means that
-there must be some constant $c$ such that $Fc \in \Gamma^{+}$.
-(Otherwise $\exists x Fx$ would not be true in $M$.)
-So we need to ensure that there is such a ``witnessing'' sentence $Fc$ in $\Gamma^{+}$,
-for each existential sentence $\exists x Fx$ in $\Gamma^{+}$.
-Now the problem is that
-$\Gamma$ may already contain $\neg Fc$ for every individual constant $c$,
-and then we can't add the required witness!
+(Which is short for $\neg \forall x \neg Fx$.)
+We want this sentence to be true in our model $\mathcal{M}$.
+So there must be some object in $\llbracket F \rrbracket^{\mathcal{M}}$.
+But if $\llbracket F \rrbracket^{\mathcal{M}}$ is defined as the set of individual constants $c$ for which $Fc \in \Gamma^{+}$,
+there might be no such object,
+as there might be no constant $c$ for which $Fc \in \Gamma^{+}$.
+We need to ensure that this doesn't happen.
+That is,
+we need to ensure that
+for each existential sentence $\exists x Fx$ in $\Gamma^{+}$,
+there is a ``witnessing'' sentence $Fc$ in $\Gamma^{+}$.
+The problem is that
+$\Gamma$ may already contain $\neg Fc$ for every individual constant $c$.
+Then we can't add the required witness without making $\Gamma$ inconsistent.
 
 To get around this problem,
-we'll let $\Gamma^{+}$ be a set in an extend ed language $\L^{+}$
+we'll construct $\Gamma^{+}$ in an extend language $\L^{+}$
 that adds new individual constants to $\L$.
 We can then use these constants to ensure that
 every existential sentence in $\Gamma$ has a witness.
 
-There is one more complication,
-arising from the fact that we have the identity symbol in $\L$ (and $\L^{+}$).
+Another complication arises from the presence of the identity symbol.
 If we let each individual constant denote itself,
 any identity statement involving different individual constants will be false.
 After all,
 no constant is identical to any other constant.
 But $a=b$ is consistent,
-and might occur in $\Gamma$ and therefore in $\Gamma^{+}$.
-So, really, we let each constant denote a \emph{set} of terms.
-The constant $a$ will denote the set $\{ c \mid a\!=\!t \in \Gamma^{+} \}$.
+and might be in $\Gamma$ and therefore in $\Gamma^{+}$.
+So we'll actually let each constant denote a \emph{set} of terms:
+the constant $a$ will denote the set $\{ c \mid a\!=\!c \in \Gamma^{+} \}$.
 % We can't just use sets of terms,
 % because we need to interpret f for all possible inputs,
 % even if there's no constant c for which f(a)=c is in the Henkin set.
 
-\section{The proof}
+Let's fill in the details.
 
-Let $\Gamma$ be a consistent set of $\L$-sentences.
-Let's remind ourself of what this means.
+\section{The completeness proof}
 
-\begin{definition}{}{consistent}
-  A set $\Gamma$ of sentences in a first-order language $\L$ is \emph{consistent} (within $\L$)
-  if there is no $\L$-sentence $A$ in the language such that
-  $\Gamma \proves A$ and $\Gamma \proves \neg A$.
-\end{definition}
+We'll show that every consistent set of first-order sentences is satisfiable.
+As we've seen above
+(and as we'll spell out again below),
+from this it is only a small step to the completeness theorem.
 
+So let $\Gamma$ be a consistent set of sentences in a first-order language $\L$.
 We'll extend $\Gamma$ to a maximal consistent set in a language $\L^{+}$
-with infinitely many new individual constants.
-We first confirm that $\Gamma$ is consistent within the extended language $\L^{+}$.
-This is not entirely trivial
-because there are axioms in $\L^{+}$ that aren't in $\L$.
+that has infinitely many further individual constants.
+We first need to confirm that
+$\Gamma$ is still consistent in the extended language $\L^{+}$.
+Consistency is language-relative because
+the language determines which instances of the axioms are available.
+As we switch from $\L$ to $\L^{+}$,
+new axioms become available.
 We need to confirm that
 these new axioms don't allow deriving a contradiction from $\Gamma$.
 
@@ -211,66 +577,74 @@ these new axioms don't allow deriving a contradiction from $\Gamma$.
   then $\Gamma$ is consistent within $\L^{+}$.
 \end{lemma}
 
-\begin{proof} \emph{Proof}.
+\begin{proof}
+  \emph{Proof}.
   Assume for contraposition that $\Gamma$ is inconsistent within $\L^{+}$.
-  Then there is a deduction $A_{1},\ldots,A_{n}$ of $\bot$ from $\Gamma$ and the axioms in $\L^{+}$.
+  Then there is a deduction $A_{1},\ldots,A_{n}$ of $\bot$ from $\Gamma$,
+  where each $A_{i}$ is an $\L^{+}$-sentence.
   Being finite,
-  this deduction only uses finitely many of the new constants in $\L^{+}$.
-  Call them $c_{1},\ldots,c_{k}$.
-  The deduction also uses only finitely many of the old constants in $\L$.
-  Since $\L$ has infinitely many constants,
+  the deduction only uses finitely many of the new constants:
+  call them $c_{1},\ldots,c_{k}$.
+  The deduction also can't use more than finitely many of the old constants in $\L$.
+  Since first-order languages have infinitely many constants,
   we can choose $k$ distinct constants $d_{1},\ldots,d_{k}$ from $\L$
   that don't occur in the deduction.
-  Consider the sequence of sentences $A_{1}',\ldots,A_{n}'$ that results from
-  $A_{1},\ldots,A_{n}$ by replacing each new $c_{i}$ by $d_{i}$.
+  Now consider the sequence of sentences $A_{1}',\ldots,A_{n}'$ that results from
+  $A_{1},\ldots,A_{n}$ by replacing each $c_{i}$ by $d_{i}$.
   It is easy to see that
-  \begin{enumerate}[(i)]
-    \item If $A_{i}$ is an axiom then so is $A_{i}'$;
-    \item If $A_{i} \in \Gamma$ then $A_{i}' \in \Gamma$
-      (because sentences in $\Gamma$ contain no new constants);
-    \item If $A_{i}$ follows from $A_{1},\ldots,A_{i-1}$ by MP or Gen,
+  \begin{enumerate*}
+    \item[(i)] if $A_{i}$ is an axiom then so is $A_{i}'$;
+    \item[(ii)] if $A_{i} \in \Gamma$ then $A_{i}' \in \Gamma$
+      (sentences in $\Gamma$ don't contain any new constants);
+    \item[(iii)] if $A_{i}$ follows from $A_{1},\ldots,A_{i-1}$ by MP or Gen,
       then $A_{i}'$ follows from $A_{1}',\ldots,A_{i-1}'$ by MP or Gen.
-  \end{enumerate}
-  So $A_{1}',\ldots,A_{n}'$ is a deduction of $\bot$ from $\Gamma$ and the axioms in $\L$,
-  meaning that $\Gamma$ is inconsistent within $\L$.
+  \end{enumerate*}
+  So $A_{1}',\ldots,A_{n}'$ is a deduction of $\bot$ from $\Gamma$,
+  showing that $\Gamma$ is inconsistent within $\L$.
+  \qed
 \end{proof}
 
-Now we want to show that
-we can extend $\Gamma$ to a maximal consistent set $\Gamma^{+}$ in which
-every sentence $\neg \forall x A$ has a witness $\neg A(x/c)$.
-
-\begin{definition}{}{max-cons}
-  A set of sentences $\Gamma$ in a first-order language $\L$ is \emph{maximal consistent} within $\L$ if
-  it is consistent and for every $\L$-sentence $A$,
-  either $A \in \Gamma$ or $\neg A \in \Gamma$.
-\end{definition}
+Next,
+we show that
+$\Gamma$ can be extended to a maximal consistent set $\Gamma^{+}$ in which
+every existential sentence $\exists x A$ has a witness $A(x/c)$.
+Such sets are called \emph{Henkin sets}.
 
 \begin{definition}{}{henkin-set}
-  A set of sentences $\Gamma$ in a first-order language $\L$ is a \emph{Henkin set in $\L$} if
-  it is maximal consistent and
-  for every $\L$-formula $A$ in which a single variable $x$ is free,
-  if $\neg \forall x A$ is in $\Gamma$ then there is an individual constant $c$ for which $\neg A(x/c)$ is in $\Gamma$.
+  A set of sentences $\Gamma$ in a first-order language $\L$ is a \emph{Henkin set in $\L$} if it satisfies the following conditions.
+  \begin{enumerate*}
+    \item[(i)] $\Gamma$ is consistent (within $\L$).
+    \item[(ii)] For every $\L$-sentence $A$, either $A \in \Gamma$ or $\neg A \in \Gamma$. (Maximality)
+    \item[(iii)] Whenever $\Gamma$ contains a sentence of the form $\neg \forall x A$
+    then it also contains $\neg A(x/c)$ for some individual constant $c$. (Witnessing)
+  \end{enumerate*}
 \end{definition}
+%
+In the presence of (i) and (ii),
+(iii) is equivalent to the requirement that
+if $\Gamma$ contains $\neg \forall x \neg A$
+then it contains $A(x/c)$ for some $c$.
 
-The following lemma will be useful.
+\begin{exercise}\label{ex:henkin-closure}
+  Show that if $\Gamma$ is a Henkin set and $\Gamma \vdash A$, then $A \in \Gamma$.
+  % Proof exactly as for lem:max-cons-closure.
+\end{exercise}
 
-\begin{lemma}{}{maxcons-closure}
-  If $\Gamma$ is maximal consistent and $\Gamma \proves A$ then $A \in \Gamma$.
-\end{lemma}
-\begin{proof}
-  [exactly as in the propositional case?]
-  Assume $\Gamma$ is maximal consistent and $\Gamma \proves A$.
-  If $A \not\in \Gamma$ then $\neg A \in \Gamma$ by maximality,
-  and $\Gamma \proves \neg A$ by the Identity property of $\proves$.
-  This would render $\Gamma$ inconsistent.
-  So $A \in \Gamma$.
-\end{proof}
+\begin{exercise}\label{ex:henkin-terms-constants}
+  Show that if $\Gamma$ is a Henkin set (in first-order language with identity) then
+  for every closed term $t$ of the language
+  there is an individual constant $c$ such that $t=c$ is in $\Gamma$.
+  % t=t entails ∃x(x=t). Witnessing requires x=c.
+\end{exercise}
 
-The next lemma is our first major step.
+\begin{exercise}\label{ex:henkin-quantifiers}
+  Show that if $\Gamma$ is a Henkin set then
+  $\forall x A \in \Gamma$ iff $A(x/c) \in \Gamma$ for every individual constant $c$.
+\end{exercise}
 
 \begin{lemma}{}{henkin-extension}
   Every consistent set of $\L$-sentences $\Gamma$ can be extended
-  to a Henkin set in any language $\L^{+}$ that adds infinitely many individual constants to $\L$.
+  to a Henkin set $\Gamma^+$ in any language $\L^{+}$ that adds infinitely many individual constants to $\L$.
 \end{lemma}
 
 \begin{proof}
@@ -288,6 +662,11 @@ The next lemma is our first major step.
   Let $\Gamma'$ be the union $\bigcup_{n} \Gamma_{n}$ of all sets in this sequence.
   (That is, a sentence $A$ is in $\Gamma'$ iff it is in some $\Gamma_{n}$.)
 
+  % Careful: it's not enough to add witnesses for all existential sentences,
+  % or to loop only over the universal sentences in $\L$.
+  % E.g., if $\Gamma$ contains ∃x∃yRxy, we'd only get the witness ∃yRay.
+  % We also want a witness for that, which isn't in Γ and not even in \L, due to the new constant a.
+
   We show that $\Gamma'$ is consistent.
   Suppose not.
   Then there is a derivation of $\bot$ from $\Gamma$
@@ -300,77 +679,92 @@ The next lemma is our first major step.
 
   For the inductive step, assume $\Gamma_{n}$ is consistent and
   suppose for reductio that $\Gamma_{n+1}$ is inconsistent.
-  Then $\Gamma_{n} \proves \neg (\neg\forall x A_{n} \to \neg A_{n}(x/c_{n}))$ by lemma xxx.
-  % ------- NEED: ------
-  % If Γ,A ⊢ then Γ ⊢ A.
-  % --------------------
-  And then by lemma xxx and DNE,
-  \begin{enumerate}[(i)]
-    \item $\Gamma_{n} \proves \neg \forall x A_{n}$, and
-    \item $\Gamma_{n} \proves \neg\neg A_{n}(x/c_{n})$.
-  \end{enumerate}
-  % ------- NEED: ------------------------
-  % If Γ ⊢ ¬(A → B) then Γ ⊢ A and Γ ⊢ ¬B.
-  % --------------------------------------
-  From (ii), we get $\Gamma_{n} \proves A_{n}(x/c_{n})$ by DNE.
+  By RAA, we then have
+  \begin{gather}
+    \Gamma_{n} \proves \neg (\neg\forall x A_{n} \to \neg A_{n}(x/c_{n})). \tag{1}
+  \end{gather}
+  It's easy to show that
+  if $\Gamma_n \proves \neg (A \to B)$ then
+  $\Gamma_n \proves A$ and $\Gamma_n \proves B$.
+  (Both $\neg (A \to B) \to A$ and $\neg (A \to B) \to B$ are truth-functional tautologies.)
+  So (1) implies
+  \begin{gather}
+    \Gamma_{n} \proves \neg \forall x A_{n}, \text{ and} \tag{2}\\
+    \Gamma_{n} \proves \neg\neg A_{n}(x/c_{n}). \tag{3}
+  \end{gather}
+  From (3), we get $\Gamma_{n} \proves A_{n}(x/c_{n})$ by DNE.
   As $c_{n}$ does not occur in $\Gamma_{n}$,
-  we have
-  \begin{enumerate}
-    \item[(iii)] $\Gamma_{n} \proves \forall x A_{n}$ by UG.
-  \end{enumerate}
-  % ------ NEED: ----------------------------------
-  % UG: If Γ ⊢ A(x/c) then Γ ⊢ ∀x A, if c not in Γ.
-  % -----------------------------------------------
-  (i) and (iii) contradict the assumption that $\Gamma_{n}$ is consistent.
+  Gen yields
+  \begin{gather}
+    \Gamma_{n} \proves \forall x A_{n}. \tag{4}
+  \end{gather}
+  (2) and (4) show that $\Gamma_{n}$ is inconsistent,
+  which contradictions the induction hypothesis.
 
-  % Careful: it's not enough to add witnesses for all existential sentences,
-  % or to loop only over the universal sentences in $\L$.
-  % E.g., if $\Gamma$ contains ∃x∃yRxy, we'd only get the witness ∃yRay.
-  % We also want a witness for that, which isn't in Γ and not even in \L, due to the new constant a.
-
-  Next, we need to extend $\Gamma'$ to a maximal consistent set $\Gamma^{+}$.
-  The construction follows the proof of Lindenbaum's Lemma (xxx).
+  Next, we extend $\Gamma'$ to a maximal consistent set $\Gamma^{+}$.
+  The construction follows the proof of Lindenbaum's Lemma (lemma \ref{lem:lindenbaum}).
   Let $S_{1}, S_{2}, \ldots$ be a list of all $\L^{+}$-sentences.
   Starting with $\Gamma'$,
   We define another sequence of sets $\Gamma'_{0}, \Gamma'_{1}, \ldots$:
   \begin{align*}
-        \Gamma'_{0} & := \Gamma' \\
-        \Gamma'_{n+1} & := \begin{cases}
+    \Gamma'_{0} & := \Gamma' \\
+    \Gamma'_{n+1} & := \begin{cases}
         \Gamma'_{n} \cup \{ S_{n} \} & \text{if } \Gamma'_{n} \cup \{ S_{n} \} \text{ is consistent,} \\
         \Gamma'_{n} \cup \{ \neg S_{n} \} & \text{otherwise.}
         \end{cases}
   \end{align*}
-  Let $\Gamma^{+}$ be the union $\bigcup_{n} \Gamma'_{n}$ of all sets in this sequence.
 
-  The maximal consistency of $\Gamma^{+}$ follows exactly as in the proof of Lindenbaum's Lemma.
-  % ------ NEED: ------------------------------------
-  % Every cons set can be extended to a max cons set.
-  % -------------------------------------------------
-  It remains to show that $\Gamma^{+}$ has the witnessing property,
-  meaning that for every sentence $\neg \forall x A$ in $\Gamma^{+}$,
-  there is a corresponding sentence $\neg A(x/c)$ in $\Gamma^{+}$.
+  We show by induction that each $\Gamma'_{n}$ is consistent.
+  The \emph{base case}, for $n=0$, holds because $\Gamma'_0$ is $\Gamma'$,
+  which we've just shown to be consistent.
+  For the \emph{inductive step},
+  assume that a set $\Gamma'_n$ in the list is consistent.
+  By lemma \ref{lem:extension-consistency1},
+  either $\Gamma'_n \cup \{ S_n \}$ or $\Gamma'_n \cup \{ \neg S_n \}$ is consistent.
+  If $\Gamma'_n \cup \{ S_n \}$ is consistent,
+  then $\Gamma'_{n+1}$ is $\Gamma'_n \cup \{ S_n \}$ (by construction),
+  so $\Gamma'_{n+1}$ is consistent.
+  If $\Gamma'_n \cup \{ S_n \}$ is not consistent,
+  then $\Gamma'_{n+1}$ is $\Gamma'_n \cup \{ \neg S_n \}$,
+  so again $\Gamma'_{n+1}$ is consistent.
 
+  Let $\Gamma^{+}$ be the union $\bigcup_{n} \Gamma'_{n}$ of $\Gamma'_{0}, \Gamma'_{1}, \ldots$.
+  Evidently, $\Gamma$ is a subset of $\Gamma^{+}$.
+  We show that $\Gamma^{+}$ is a Henkin set.
+
+  Maximality holds because for each sentence $S_n$,
+  one of $S_n$ or $\neg S_n$ is in $\Gamma'_{n+1}$ and therefore in $\Gamma^{+}$.
+
+  To show consistency,
+  suppose that $\Gamma^{+}$ is inconsistent.
+  Then there are sentences $A_1,\ldots,A_n$ in $\Gamma^+$ from which $\bot$ is deducible.
+  All of these sentences have to occur somewhere on the list $S_1,S_2,\ldots$.
+  Let $S_j$ be the first sentence from $S_1,S_2,\ldots$ that occurs after
+  all the $A_1,\ldots,A_n$.
+  Then all $A_1,\ldots,A_n$ are  in $\Gamma'_j$.
+  So $\Gamma'_j$ is inconsistent.
+  But we've seen that all of the $\Gamma'_n$ are consistent.
+
+  It remains to show that $\Gamma^{+}$ has the witnessing property:
+  whenever $\neg \forall x A$ is in $\Gamma^{+}$ then
+  $\Gamma^+$ contains a corresponding sentence $\neg A(x/c)$.
   Let $A$ be any formula in which $x$ is the only free variable.
   By construction,
   $\Gamma'$ contains $\neg \forall x A \to \neg A(x/c)$,
   for some constant $c$.
   Since $\Gamma^{+}$ extends $\Gamma'$,
   it also contains this sentence.
-  If $\Gamma^{+}$ contains $\neg \forall x A$,
-  it must contain $\neg A(x/c)$ as well,
-  as otherwise it would contain $A(x/c)$,
-  which would make it inconsistent.
+  So if $\Gamma^{+}$ contains $\neg \forall x A$
+  then it contains $\neg A(x/c)$, by lemma~\ref{lem:max-cons-closure1}.
+  \qed
 \end{proof}
 
-Done!
-
-Next, we show how to read off a model $M_{\Gamma^{+}}$ from a Henkin set $\Gamma^{+}$.
-The domain $D$ of $M_{\Gamma^{+}}$ will consist of sets of $\L^{+}$-terms.
-We could simply say that
-\[
-  D = \{ \{ s \mid t\!=\!s \in \Gamma^{+} \} \mid t \text{ is a closed $\L^{+}$ term} \}.
-\]
-But let's be more explicit about what this amounts to.
+Next,
+we show how to read off a model from a Henkin set.
+The model's domain will consist of sets of closed terms,
+so that we can stipulate that
+each constant $c$ denotes the set of all terms $t$ for which $c=t$ is in the Henkin set.
+Let's have a closer look at these sets.
 
 \begin{definition}{}{equivalence}
   A binary relation $R$ on some domain $D$ is an \emph{equivalence relation} if it is
@@ -383,268 +777,316 @@ But let's be more explicit about what this amounts to.
 
 \begin{lemma}{}{=equivalence}
   If $\Gamma$ is a Henkin set then
-  the relation $\sim_{\Gamma}$ that holds between $\L^{+}$-terms $t,s$ iff $t=s \in \Gamma$ is an equivalence relation.
+  the relation $R$ that holds between $\L^{+}$-terms $t,s$ iff $t=s \in \Gamma$ is an equivalence relation.
 \end{lemma}
 \begin{proof}
-  check!
-    \begin{itemize}
-        \item Reflexivity: by axiom A6, $\Gamma^{+} \proves^+ t=t$; so $t=t \in \Gamma^{+}$.
-        \item Symmetry: $\Gamma^{+} \proves^+ t=s \to s=t$, from A7 with $A$ the formula $x=y$). So if $t=s \in \Gamma^{+}$ then $s=t \in \Gamma^{+}$.
-        \item Transitivity: $\Gamma^{+} \proves t=s \to (s=u \to t=u)$, by xxx.
-        So if $t=s \in \Gamma^{+}$ and $s=u \in \Gamma^{+}$ then $t=u \in \Gamma^{+}$.
-    \end{itemize}
+  \emph{Proof.}
+  By A6, $\proves t=t$.
+  So $t=t \in \Gamma$ by exercise~\ref{ex:henkin-closure}.
+  Symmetry and transitivity follow similarly from exercise~\ref{ex:identity}.
+  \qed
 \end{proof}
 
-An equivalence relation \emph{partitions} the domain over which it is defined into distinct cells,
-within which all objects stand in the relation to one another.
+\begin{wrapfigure}{r}{0.4\textwidth}
+  \centering
+  \scalebox{0.7}{
+  \input{figures/partition.tex}
+  }
+\end{wrapfigure}
+
+An equivalence relation \emph{partitions} the domain over which it is defined into distinct cells so that
+within each cell,
+all objects stand in the relation to one another.
 These cells are called \emph{equivalence classes}.
 If $R$ is an equivalence relation and $x$ an object in the domain,
-we write `$[x]_{R}$' for the equivalence class (of $R$) that contains $x$.
+we write `$[x]_{R}$' for the equivalence class of $R$ that contains $x$.
 That is, $[x]_{R} = \{ y \in D \mid x R y \}$.
+If the relation $R$ is clear from the context,
+we may simply write `$[x]$'.
 
-We can now specify the domain of $M_{\Gamma^{+}}$ as follows:
-\[
-  D = \{ [t]_{\sim} \mid t \text{ is a closed $\L^{+}$-term} \},
-\]
-where $\sim$ is $\sim_{\Gamma^{+}}$.
+When we're talking about a Henkin set $\Gamma$,
+the relevant equivalence relation is the one defined in lemma \ref{lem:=equivalence}.
+So `$[t]$' denotes the set of all terms $s$ for which $t=s \in \Gamma$.
 
-Each individual constant $c$ will denote $[c]_{\sim}$.
-We'll extend this idea to function terms:
-$f(c)$ will denote $[f(c)]_{\sim}$.
-But we can't directly assign a denotation to $f(c)$.
-Instead, we have to interpret $f$ as denoting a function on $D$.
-By definition \ref{def:satisfaction},
-the denotation of $f(c)$ is the denotation of $f$ applies to that of $c$.
-Since the denotation of $c$ is $[c]_{\sim}$,
-we want the denotation of $f$ to be a function that returns $[f(c)]_{\sim}$ for input $[c]_{\sim}$.
-So we'll stipulate that for any one-place function symbol $f$ and closed term $t$,
-\[
-  [f]^M([t]_{\sim}) = [f(t)]_{\sim}.
-\]
+If $\Gamma$ is a Henkin set,
+the model $\mathcal{M}$ that we'll construct from $\Gamma$ will have as its domain
+the set of all equivalence classes $[t]$,
+where $t$ is a closed term in the language of $\Gamma$.
+By exercise~\ref{ex:henkin-terms-constants},
+$[t]$ always contains an individual constant.
+So we can also say that $D = \{ [c] \mid c \text{is an individual constant} \}$.
+
+We'll stipulate that
+the interpretation function $I$ of $\mathcal{M}$
+assigns $[c]$ to each individual constant $c$.
+So we'll have $\llbracket c \rrbracket^{\mathcal{M}} = [c]$.
+We'll extend this to function terms,
+so that $\llbracket f(c) \rrbracket^{\mathcal{M}} = [f(c)]$.
+But we can't \emph{directly} stipulate this,
+because interpretation functions don't assign denotations to complex terms.
+We have to interpret $f$ as denoting a function on $D$.
+The denotation of $f(c)$ is then
+the denotation of $f$ applied to the denotation of $c$.
+Since the denotation of $c$ is $[c]$,
+we want the denotation of $f$ to be a function that returns $[f(c)]$ for input $[c]$.
+So we'll stipulate that for any one-place function symbol $f$ and constant $c$,
+$I(f)$ is the function that maps $[c]$ to $[f(c)]$.
 
 This kind of stipulation can go wrong.
-Suppose $[t]_{\sim}$ contains two terms $s$ and $t$,
-and $[f(s]_{\sim} \neq [f(t)]_{\sim}$.
-Then what is the value of $[f]^{M}$ for $[t]_{\sim}$?
-Our stipulation appears to say that
-\[
-  [f]^{M}([s]_{\sim}) = [f(s]_{\sim})
-\]
-and
-\[
-  [f]^{M}([t]_{\sim}) = [f(t]_{\sim}),
-\]
-But $[s]_{\sim}$ is the same object as $[t]_{\sim}$,
-and a function must return the same value for the same input.
-To legitimize our stipulation,
-we must therefore show that this problem can never arise.
+Suppose $[c]$ contains two constants $c$ and $d$,
+and $[f(c)] \neq [f(d)]$.
+Our stipulation entails that $I(f)$
+returns $[f(c)]$ for input $[c]$
+and $[f(d)]$ for input $[d]$.
+But a function can't return two different values for the same input.
+we must show that this problem can never arise.
 
-A similar issue arises when we define the interpretation of predicates.
-To ensure that $Ft$ is in $\Gamma$ iff it is true in $M$,
+A similar issue arises for the interpretation of predicates.
+To ensure that $Ft$ is in $\Gamma$ iff $\mathcal{M} \satisfies Ft$,
 we'll stipulate that
-\[
-  [t]_{\sim} \in [F]^{M} \text{ iff } Ft \in \Gamma.
-\]
-Here, too, we have to ensure that
-if $s$ and $t$ are both in $[t]_{\sim}$,
-we can never have only one of $Fs$ and $Fs$ in $\Gamma$.
+$I(F)$ is the set of all $[t]$ for which $Ft \in \Gamma$.
+This set isn't well-defined if
+there are cases where $[t]$ contains two terms $t$ and $s$
+for which $Ft \in \Gamma$ but $Fs \notin \Gamma$.
 
-The following lemma shows that neither problem can arise,
-legitimizing the following definition.
+The following lemma shows that neither problem can arise.
 
 \begin{lemma}{}{congruence}
   If $f$ is an $n$-ary function symbol,
   $P$ an $n$-ary predicate symbol,
   and $s_{1}, \ldots, s_{n}, t_{1}, \ldots, t_{n}$ are terms such that
-  $[s_{1}]_{\sim} = [t_{1}]_{\sim}, \ldots, [s_{n}]_{\sim} = [t_{n}]_{\sim}$,
+  $[s_{1}] = [t_{1}], \ldots, [s_{n}] = [t_{n}]$,
   then
-  \begin{enumerate}[(i)]
-    \item $[f(s_1,\ldots,s_n)]_{\sim} = [f(t_{1},\ldots,t_{n})]_{\sim}$;
-    \item $P(s_1,\ldots,s_n) \in \Gamma \quad \text{iff} \quad P(t_1,\ldots,t_n) \in \Gamma$.
-  \end{enumerate}
+  \begin{cenumerate}
+    \item[(i)] $[f(s_1,\ldots,s_n)] = [f(t_{1},\ldots,t_{n})]$;
+    \item[(ii)] $P(s_1,\ldots,s_n) \in \Gamma \quad \text{iff} \quad P(t_1,\ldots,t_n) \in \Gamma$.
+  \end{cenumerate}
 \end{lemma}
 
 \begin{proof}
-  Assume $[s_{i}]_{\sim} = [t_{i}]_{\sim}$, for $i=1,2,\ldots,n$.
-  Then $s_{i}\!=\!t_{i}$ is in $\Gamma$, for each such $i$.
+  \emph{Proof.}
+  Assume $[s_{i}] = [t_{i}]$, for $i=1,2,\ldots,n$.
+  So $\Gamma$ contains $s_{i}\!=\!t_{i}$, for each $i=1,2,\ldots,n$.
 
-  (i). By axiom A6, $f(s_{1},\ldots,s_{n})=f(s_{1},\ldots,s_{n})$ is in $\Gamma$.
+  (i).
+  By A6 (and exercise~\ref{ex:henkin-closure})),
+  $f(s_{1},\ldots,s_{n})=f(s_{1},\ldots,s_{n})$ is in $\Gamma$.
   By $n$ instances of A7 and MP,
   it follows that $f(s_{1},\ldots,s_{n})=f(t_{1},\ldots,t_{n})$ is in $\Gamma$,
-  which entails that $[f(s_1,\ldots,s_n)]_{\sim} = [f(t_{1},\ldots,t_{n})]_{\sim}$.
+  which entails that $[f(s_1,\ldots,s_n)] = [f(t_{1},\ldots,t_{n})]$.
 
-  (ii). Assume $P(s_{1},\ldots,s_{n}) \in \Gamma$.
+  (ii). Assume $P(s_{1},\ldots,s_{n})$ is in $\Gamma$.
   By $n$ instances of A7 and MP,
   $P(t_{1},\ldots,t_{n})$ is in $\Gamma$ as well.
   The converse holds by the same reasoning.
+  \qed
 \end{proof}
 
+Lemma \ref{lem:congruence} ensures that the following definition is legitimate.
+
 \begin{definition}{}{henkin-model}
-  The \emph{Henkin model} $M_{\Gamma}$ for a Henkin set $\Gamma$ in a language $\L$ is defined as follows.
+  Let $\Gamma$ be a Henkin set in a language $\L$.
+  The \emph{Henkin model} $\mathcal{M}_{\Gamma}$ of $\Gamma$ is defined as follows.
 
-  The domain $D$ of $M_{\Gamma}$ is the set $\{ [t]_{\sim} \mid t \text{ is a closed $\L$-term} \}$,
-  where $\sim$ is the equivalence relation $\sim_{\Gamma}$.
+  The domain $D$ of $\mathcal{M}_{\Gamma}$ is the set
+  $\{ [c] \mid c \text{ is an individual constant of $\L$} \}$,
+  where $[c]$ is the set of all closed $\L$-terms $t$ for which $c=t \in \Gamma$.
 
-  The interpretation function of $M$ is defined as:
-  \begin{enumerate}[(i)]
-    \item If $c$ is an individual constant then $c^M = [c]_{\sim}$.
-    \item If $f$ is an $n$-ary function symbol then
-          $f^M([t_1]_{\sim},\ldots,[t_n]_{\sim}) = [f(t_1,\ldots,t_n)]_{\sim}$.
-    \item If $P$ is an $n$-ary predicate symbol then
-          $([t_1]_{\sim},\ldots,[t_n]_{\sim}) \in R^M$ iff $R(t_1,\ldots,t_n) \in \Gamma$
-  \end{enumerate}
+  The interpretation function $I$ of $\mathcal{M}_{\Gamma}$ maps
+  \begin{cenumerate}
+    \item[(i)] each individual constant $c$ to $[c]$,
+    \item[(ii)] each $n$-ary function symbol $f$ to the function on $D$ that maps
+         any $n$-tuple $[t_1],\ldots,[t_n]$ to $[f(t_1,\ldots,t_n)]$,
+    \item[(iii)] each (non-logical) $n$-ary predicate symbol $P$ to
+         the set of all $n$-tuples $([t_1],\ldots,[t_n])$ such that $P(t_1,\ldots,t_n) \in \Gamma$.
+  \end{cenumerate}
 \end{definition}
 
-Now we're almost ready to prove our next big lemma:
-that a sentence is true in the Henkin model $M_{\Gamma}$ iff it is in the Henkin set $\Gamma$.
-We'll only need the following small lemma about terms.
+Now remember what we're trying to achieve.
+We want to show that
+every consistent set of sentences is satisfiable.
+We've shown in lemma~\ref{lem:henkin-extension} that
+every such set can be extended to a Henkin set.
+Definition~\ref{def:henkin-model} tells us
+how to construct a model from this Henkin set.
+It remains to show that
+all members of the Henkin set
+(and therefore all members of the original set)
+are true in this model.
 
-\begin{lemma}{}{terms}
-  $t^{M} = [t]_{\sim}$ for every closed term $t$.
+We'll need the following two facts.
+
+\begin{lemma}{}{henkin-terms}
+  If $\mathcal{M}$ is a Henkin model and $t$ a closed term then
+  $\llbracket t \rrbracket^{\mathcal{M}} = [t]$.
 \end{lemma}
 \begin{proof}
-  The proof is by induction on the complexity of $t$.
+  \emph{Proof}.
+  The proof is by induction on complexity of $t$.
   The base case is covered by clause (i) in definition \ref{def:henkin-model}.
   So let $t$ be $f(t_{1},\ldots,t_{n})$.
   Then
   \begin{align*}
-    [f(t_{1},\ldots,t_{n})]^{M} &= [f]^{M}([t_{1}]^{M},\ldots,[t_{n}]^{M}) &\text{ by def.\ \ref{def:satisfaction=}}\\
-                               &= [f]^{M}([t_{1}]_{\sim},\ldots,[t_{n}]_{\sim}) &\text{ by ind.\ hyp.}\\
-                               &= [f(t_{1},\ldots,t_{n})]_{\sim} &\text{ by def.~\ref{def:henkin-model}.}
+    \llbracket f(t_{1},\ldots,t_{n})\rrbracket^{\mathcal{M}} &= \llbracket f\rrbracket^{\mathcal{M}}(\llbracket t_{1}\rrbracket^{\mathcal{M}},\ldots,\llbracket t_{n}\rrbracket^{\mathcal{M}}) &&\text{ by def.\ \ref{def:satisfaction=}}\\
+                               &= \llbracket f\rrbracket^{\mathcal{M}}([t_{1}],\ldots,[t_{n}]) &&\text{ by ind.\ hyp.}\\
+                               &= [f(t_{1},\ldots,t_{n})] &&\text{ by def.~\ref{def:henkin-model}.} \qed
   \end{align*}
 \end{proof}
 
-Here's the big lemma.
+\begin{lemma}{}{henkin-quantifiers}
+  If $\mathcal{M}$ is a Henkin model and $B$ a formula then
+  $\mathcal{M} \satisfies \forall x B$ iff
+  $\mathcal{M} \satisfies B(x/c)$ for all individual constants $c$.
+\end{lemma}
+\begin{proof}
+  \emph{Proof.}
+  We first show that
+  if $\mathcal{M}^{d:[c]}$ is just like $\mathcal{M}$
+  except that it assigns $[c]$ to $d$,
+  and $d$ does not occur in $B$,
+  then
+  \begin{equation}\tag{1}
+    \mathcal{M}^{d:[c]} \satisfies B(x/d)\text{ iff }\mathcal{M} \satisfies B(x/c).
+  \end{equation}
+  There are two cases to consider.
+  If $d$ is $c$ then $\mathcal{M}^{d:[c]}$ is $\mathcal{M}$ and (1) holds trivially.
+  If $d$ is a constant other than $c$, then $d$ does not occur in $B(x/c)$.
+  So $\mathcal{M}^{d:[c]}$ and $\mathcal{M}$ agree on the interpretation of all symbols in $B(x/c)$,
+  and so (1) holds by lemma~\ref{lem:coincidence}.
+
+  Now, by definition \ref{def:satisfaction=},
+  $\mathcal{M} \satisfies \forall x B$ iff
+  $\mathcal{M}' \satisfies B(x/d)$ for every model $\mathcal{M}'$
+  that differs from $\mathcal{M}$ at most in the object assigned to $d$,
+  where $d$ is the alphabetically first constant that does not occur in $B$.
+  Since each such $\mathcal{M}'$ has the same domain as $\mathcal{M}$,
+  the set of $\mathcal{M}'$ is precisely the set of
+  variants $\mathcal{M}^{d:[c]}$ of $\mathcal{M}$,
+  So $\mathcal{M} \satisfies \forall x B$ iff
+  $\mathcal{M}^{d:[c]} \satisfies B(x/d)$ for every constant $c$,
+  which, by (1), is the case iff
+  $\mathcal{M} \satisfies B(x/c)$ for every constant $c$.
+  \qed
+\end{proof}
 
 \begin{lemma}{Truth Lemma}{truth}
-  For every closed sentence $A$,
-  \[
-    M_\Gamma \models A \quad \text{iff} \quad A \in \Gamma.
-  \]
+  If $\mathcal{M}$ is the Henkin model of a Henkin set $\Gamma$ in a language $\L$,
+  then
+  $\mathcal{M} \models A$ iff $A \in \Gamma$,
+  for every $\L$-sentence $A$.
 \end{lemma}
 
 \begin{proof}
-  By induction on $A$.
+  By induction on  complexity of $A$.
 
-  \begin{enumerate}[(i)]
-    \item $A$ is an atomic sentence $P(t_{1},\ldots,t_{n})$,
-          where $P$ is non-logical.
-          $M_{\Gamma} \models P(t_{1},\ldots,t_{n})$
-          iff $([t_{1}]^{M},\ldots,[t_{n}]^{M}) \in [P]^{M}$,
-          by definition \ref{def:satisfaction=},
-          iff $([t_{1}]_{\sim},\ldots,[t_{n}]_{\sim}) \in [P]^{M}$,
-          by lemma~\ref{lem:terms},
-          iff $P(t_{1},\ldots,t_{n}) \in \Gamma$,
-          by definition \ref{def:henkin-model}.
+  \emph{Base case}:
+  $A$ is atomic. There are two subcases.
 
-    \item $A$ is an identity sentence $s=t$.
-          $M_{\Gamma} \models s=t$ iff $[s]^{M} = [t]^{M}$,
-          by definition \ref{def:satisfaction=},
-          iff $[s]_{\sim} = [t]_{\sim}$,
-          by lemma~\ref{lem:terms},
-          iff $s=t \in \Gamma$,
-          by xxx.
+  Assume that $A$ is an identity sentence $s=t$.
+  Then $\mathcal{M} \satisfies s=t$
+  iff $\llbracket s\rrbracket^{\mathcal{M}} = \llbracket t\rrbracket^{\mathcal{M}}$
+  by definition \ref{def:satisfaction=},
+  iff $[s] = [t]$
+  by lemma~\ref{lem:terms},
+  iff $s=t \in \Gamma$,
+  by definition of the equivalence classes.
 
-    \item $A$ is a $\neg B$.
-          We first show that if $M_{\Gamma} \models \neg B$ then $\neg B \in \Gamma$.
-          Assume $M_{\Gamma} \models \neg B$.
-          Then $M_{\Gamma} \not\models B$ by definition \ref{def:satisfaction=},
-          so $B \notin \Gamma$ by induction hypothesis.
-          By maximality,
-          we must have $\neg B \in \Gamma$.
+  Assume next that $A$ is an atomic sentence $P(t_{1},\ldots,t_{n})$,
+  where $P$ is non-logical.
+  Then $\mathcal{M} \satisfies P(t_{1},\ldots,t_{n})$
+  iff $(\llbracket t_{1}\rrbracket^{\mathcal{M}},\ldots,\llbracket t_{n}\rrbracket^{\mathcal{M}}) \in \llbracket P\rrbracket^{\mathcal{M}}$
+  by definition \ref{def:satisfaction=},
+  iff $([t_{1}],\ldots,[t_{n}]) \in \llbracket P\rrbracket^{\mathcal{M}}$
+  by lemma~\ref{lem:terms},
+  iff $P(t_{1},\ldots,t_{n}) \in \Gamma$
+  by definition \ref{def:henkin-model}.
 
-          Next we show that if $\neg B \in \Gamma$ then $M_{\Gamma} \models \neg B$.
-          Assume $\neg B \in \Gamma$.
-          Then $B \not\in \Gamma$ because $\Gamma$ is consistent.
-          So $M_{\Gamma} \not\models B$, by induction hypothesis.
+  \emph{Inductive step:}
+  $A$ is composed of other sentences.
+  We have three subcases.
+  The first two,
+  where $A$ is $\neg B$ or $B \to C$,
+  are easy and work exactly as in lemma~\ref{lem:truth-lemma}.
+  I'll skip them.
 
-    \item $A$ is $B \to C$.
-          Again we take the two directions in turn.
-          Assume $M_{\Gamma} \models B \to C$.
-          Then $M_{\Gamma} \not\models B$ or $M_{\Gamma} \models C$ by definition \ref{def:satisfaction=}.
-          If $M_{\Gamma} \not\models B$, then by induction hypothesis $B \notin \Gamma$,
-          so by maximality $\neg B \in \Gamma$.
-          Since $\neg B \proves B \to C$,
-          it follows that $B \to C \in \Gamma$.
-          If $M_{\Gamma} \models C$, then by induction hypothesis $C \in \Gamma$.
-          Since $C \proves B \to C$,
-          it again follows that $B \to C \in \Gamma$.
+  % Assume that $A$ is a $\neg B$,
+  % for some sentence $B$.
+  % We need to show that $\mathcal{M} \satisfies \neg B$ iff $\neg B \in \Gamma$.
+  % Left to Right:
+  % Assume $\mathcal{M} \satisfies \neg B$.
+  % Then $\mathcal{M} \not\satisfies B$ by definition \ref{def:satisfaction=}.
+  % So $B \notin \Gamma$ by induction hypothesis.
+  % So $\neg B \in \Gamma$ by maximality of $\Gamma$.
+  % Right to Left:
+  % Assume $\neg B \in \Gamma$.
+  % Then $B \not\in \Gamma$ by consistency of $\Gamma$.
+  % So $\mathcal{M} \not\satisfies B$ by induction hypothesis.
 
-          For the converse direction,
-          assume $B \to C \in \Gamma$.
-          We consider two cases,
-          depending on whether $B \in \Gamma$.
-          If $B \in \Gamma$, then $C \in \Gamma$ by MP,
-          and by induction hypothesis $M_{\Gamma} \models C$.
-          By definition \ref{def:satisfaction=}, this means that
-          $M_{\Gamma} \models B \to C$.
-          If, on the other hand, $B \not\in \Gamma$
-          then by induction hypothesis $M_{\Gamma} \not\models B$,
-          and $M_{\Gamma} \models B \to C$ by definition \ref{def:satisfaction=}.
+  % Assume next that $A$ is $B \to C$,
+  % for some sentences $B$ and $C$.
+  % We need to show that $\mathcal{M} \satisfies B \to C$ iff $B \to C \in \Gamma$.
+  % Left to Right:
+  % Assume $\mathcal{M} \satisfies B \to C$.
+  % Then $\mathcal{M} \not\satisfies B$ or $\mathcal{M} \satisfies C$ by definition \ref{def:satisfaction=}.
+  % If $\mathcal{M} \not\satisfies B$, then by induction hypothesis $B \notin \Gamma$,
+  % so by maximality $\neg B \in \Gamma$.
+  % Since $\neg B \proves B \to C$,
+  % it follows that $B \to C \in \Gamma$.
+  % If $\mathcal{M} \satisfies C$, then by induction hypothesis $C \in \Gamma$.
+  % Since $C \proves B \to C$,
+  % it again follows that $B \to C \in \Gamma$.
+  % Right to Left:
+  % Assume $B \to C \in \Gamma$.
+  % If $B \in \Gamma$, then $C \in \Gamma$ by MP,
+  % and by induction hypothesis $\mathcal{M} \satisfies C$.
+  % By definition \ref{def:satisfaction=}, this means that
+  % $\mathcal{M} \satisfies B \to C$.
+  % If, on the other hand, $B \not\in \Gamma$
+  % then by induction hypothesis $\mathcal{M} \not\satisfies B$,
+  % and $\mathcal{M} \satisfies B \to C$ by definition \ref{def:satisfaction=}.
 
-    \item $A$ is $\forall x B$.
-          We first show that $M_{\Gamma} \models \forall x B$ iff
-          $M_{\Gamma} \models B(x/t)$ for every closed term $t$.
-          By definition \ref{def:satisfaction=},
-          $M_{\Gamma} \models \forall x B$ iff
-          $M' \models B(x/c)$ for every model $M'$ that differs from $M_{\Gamma}$ at most in the object assigned to $c$,
-          where $c$ is a constant that does not occur in $B$.
-          Since $M'$ has the same domain as $M$,
-          any object assigned to $c$ in $M'$ must be a set of closed terms.
-          That is, there must be a term $t$ such that $[c]^{M'} = [t]^{M}$.
-          By the transportation theorem [???],
-          $B(x/c)$ is true in $M'$ iff $B(x/t)$ is true in $M$
-          [because the two sentences only differ wrt the choice of a name,
-          and the two models coincide wrt the interpretation of the chosen name].
-          So $M_{\Gamma} \models \forall x B$ iff
-          $M_{\Gamma} \models B(x/t)$ for every closed term $t$.
-
-          Now we can prove the two directions of the equivalence.
-          Assume $M_{\Gamma} \models \forall x B$.
-          Then $M_{\Gamma} \models B(x/t)$ for every closed term $t$,
-          as we just showed.
-          By induction hypothesis, $B(x/t) \in \Gamma$ for every such $t$.
-          Suppose for contradiction that $\forall x B \notin \Gamma$.
-          Then $\neg \forall x B \in \Gamma$ by maximality
-          and by the Henkin property [xxx] there is a constant $c$ such that $\neg B(x/c) \in \Gamma$,
-          contradicting the fact that $B(x/t) \in \Gamma$ for every closed term $t$.
-
-          Conversely, assume $\forall x B \in \Gamma$.
-          Since $\forall x B \proves B(x/t)$ for every closed term $t$,
-          we have $B(x/t) \in \Gamma$ for every closed term $t$ by Lemma~\ref{lem:deductive_closure}.
-          By induction hypothesis, $M_{\Gamma} \models B(x/t)$ for every closed term $t$.
-          So $M_{\Gamma} \models \forall x B$.
-  \end{enumerate}
+  For the final subcase,
+  assume that $A$ is $\forall x B$,
+  for some formula $B$.
+  We have
+  $\mathcal{M} \satisfies \forall x B$ iff
+  $\mathcal{M} \satisfies B(x/c)$ for every constant $c$ by lemma~\ref{lem:henkin-quantifiers},
+  iff $B(x/c) \in \Gamma$ for every constant $c$ by induction hypothesis,
+  iff $\forall x B \in \Gamma$ by exercise~\ref{ex:henkin-quantifiers}.
+  \qed
 \end{proof}
 
-Phew!
-Now we have all the ingredients we needed to show that
-every consistent set of sentences has a model.
-TODO: explain.
-And with that,
-we've essentially proved the Completeness Theorem.
+With that,
+all the ingredients for the completeness proof are in place.
 
-\begin{theorem}{Completeness Theorem (Gödel 1929)}{completeness}
+\begin{theorem}{Completeness of the first-order calculus (Gödel 1929)}{completeness}
   If $\Gamma \models A$ then $\Gamma \proves A$.
 \end{theorem}
 
 \begin{proof}
-  Contraposition.
+  \emph{Proof.}
+  We argue by contraposition.
   Assume $\Gamma \notproves A$.
-  Then $\Gamma \cup \{\neg A\}$ is consistent by Lemma~\ref{lem:negation_consistency}.
-  By Lemma~\ref{lem:henkin-extension}, we can extend $\Gamma$ to a Henkin set $\Gamma^{+}$ in an extended language $\L^{+}$.
+  Then $\Gamma \cup \{\neg A\}$ is consistent,
+  by lemma~\ref{lem:negation-consistncy1}.
+  By lemma~\ref{lem:henkin-extension},
+  $\Gamma \cup \{ \neg A \}$ can be extended to a Henkin set $\Gamma^{+}$ in an extended language $\L^{+}$.
   By the Truth Lemma,
-  every sentence in $\Gamma^{+}$ is true in the Henkin model $M_{\Gamma^{+}}$.
-  So in particular,
-  xxx
+  the Henkin model $\mathcal{M}_{\Gamma^{+}}$ of $\Gamma^{+}$ satisfies every sentence in $\Gamma^{+}$,
+  and therefore every sentence in $\Gamma \cup \{\neg A\}$.
+  So there is a model that satisfies all sets in $\Gamma$ but doesn't satisfy $A$.
+  So $\Gamma \not\entails A$. \qed
 \end{proof}
 
-[Technically,
-$M$ is not a model of $\Gamma \cup \{\neg A\}$,
-because it interprets the new constants in $\L^{+}$?
-Or is it?]
-
-The reduct of this model to the original language satisfies T, as desired.
+Technically,
+the model $\mathcal{M}_{\Gamma^{+}}$ that figures in this proof is not
+an model for the original language $\L$ of $\Gamma$ and $A$,
+because it also interprets the added individual constants.
+We can get an $\L$-model that falsifies $\Gamma \entails A$
+by restricting the interpretation function of $\mathcal{M}_{\Gamma^{+}}$
+to $\L$-constants,
+without changing the domain.
+(This is called the \emph{reduct} of $\mathcal{M}_{\Gamma^+}$ to $\L$.)
 
 \begin{exercise}
   Assume that $\Gamma_{0}, \Gamma_{1}, \ldots$ are consistent sets of sentences
@@ -653,210 +1095,180 @@ The reduct of this model to the original language satisfies T, as desired.
   Show that their union $\bigcup_{i} \Gamma_{i}$ is consistent.
 \end{exercise}
 
-\section{Cardinalities}
+\section{Unintended Models}
 
-[There's some overlap with the next chapter, where I proof Cantor's theorem.]
+We've shown that the first-order calculus is sound (theorem~\ref{thm:soundness})
+and complete (theorem~\ref{thm:completeness}:
+$\Gamma \entails A$ iff $\Gamma \proves A$.
+As Gödel pointed out,
+this has a curious consequence:
 
-As I mentioned earlier,
-the completeness theorem reveals important limitations
-of the expressive power of first-order languages.
-Some of these limitations have something to do with the size of models,
-by which we mean the size of a model's domain.
-To state and appreciate these facts,
-let's take a break from logic and
-fill in some background about the sizes of sets.
-(This will be needed for later chapters, too.)
-
-For finite sets, size is straightforward.
-The set $\{ Kurt Gödel \}$ has size 1.
-The set $\{ Edinburgh, Paris, Canberra \}$ has size 3.
-But not all sets are finite.
-Consider the set of natural numbers $\mathbb{N} = \{0, 1, 2, 3, \ldots\}$.
-What is its size?
-
-The official set-theoretic term for the size of a set is \textit{cardinality}.
-So $\{\text{ Edinburgh}, \text{Paris}, \text{Canberra}\}$ has cardinality 3.
-Finite sets have a finite cardinality, which is simply a natural numbers.
-But infinite sets also have a cardinality.
-These aren't natural numbers,
-but numbers of a more general sort,
-called \emph{cardinals}.
-The infinite cardinals are also known as the \emph{alephs},
-because they are denoted by the Hebrew letter $\aleph$ (pronounced `aleph').
-The cardinality of $\mathbb{N}$ is $\aleph_0$.
-Other infinite sets have cardinality $\aleph_1$, $\aleph_2$, and so on.
-
-You may be puzzled what sort of things the alephs are.
-I'll give an answer in the next chapter.
-But note that it is equally unclear what sort of thing the natural numbers are.
-The more important question is how the alephs behave.
-What determines whether an infinite set has size $\aleph_0$ or $\aleph_1$ or whatever?
-That is,
-what's the principle for assigning cardinal numbers to sets?
-
-The crucial move was already made by Galileo and Hume.
-They proposed, in effect, that
-two sets have the same cardinality if they can be put into a one-to-one correspondence.
-
-To make this precise, we need the notion of a bijection.
-
-\begin{definition}{}{bijection}
-A function $f: A \to B$ is a \emph{bijection} if it is both injective and surjective.
-That is, $f$ is a bijection if
-\begin{enumerate}[(i)]
-\item for every $x, y \in A$, if $f(x) = f(y)$ then $x = y$ (injectivity); and
-\item for every $b \in B$, there exists some $a \in A$ such that $f(a) = b$ (surjectivity).
-\end{enumerate}
-\end{definition}
-
-Intuitively, a bijection pairs up each element of $A$ with exactly one element of $B$, and vice versa.
-Every element gets a unique partner.
-For finite sets, this happens precisely when both sets have the same number of elements.
-
-\begin{definition}{}{equinumerous}
-Two sets $A$ and $B$ are \emph{equinumerous} if there exists a bijection $f: A \to B$.
-\end{definition}
-
-By Hume's principle,
-we can know say that
-each set that is equinumerous with $\mathbb{N}$ has cardinality $\aleph_0$.
-$\aleph_{1}$ is defined as the next larger cardinal after $\aleph_0$.
-This means that
-the smallest sets that are not equinumerous with $\mathbb{N}$ have cardinality $\aleph_1$.
-
-Let's look at some examples.
-Consider the set of natural numbers $\mathbb{N} = \{0, 1, 2, 3, \ldots\}$ and the set of odd numbers $\{1, 3, 5, 7, \ldots\}$.
-The function $f: \mathbb{N} \to \{1, 3, 5, 7, \ldots\}$ defined by $f(n) = 2n + 1$ is a bijection.
-It maps $0 \mapsto 1$, $1 \mapsto 3$, $2 \mapsto 5$, and so on.
-So according to our definition, the natural numbers and the odd numbers are equinumerous—they have the same 'size'—even though the odd numbers form a proper subset of the natural numbers.
-This violates the intuitive principle that the whole is greater than the part.
-
-\begin{exercise}
-Show that the set of even natural numbers $\{0, 2, 4, 6, \ldots\}$ is equinumerous with $\mathbb{N}$.
-\end{exercise}
-
-This phenomenon—that infinite sets can be equinumerous with their proper subsets—is characteristic of infinite sets.
-Indeed, it can be taken as the \emph{definition} of what it means for a set to be infinite.
-
-We now introduce some standard terminology for infinite sets.
-
-\begin{definition}{}{countable}
-A set $A$ is \emph{countable} if it is either finite or equinumerous with $\mathbb{N}$.
-A set that is equinumerous with $\mathbb{N}$ is called \emph{countably infinite} or \emph{denumerable}.
-\end{definition}
-
-So the natural numbers are countably infinite.
-As we've seen, so are the odd numbers and the even numbers.
-The integers $\mathbb{Z} = \{\ldots, -2, -1, 0, 1, 2, \ldots\}$ are also countably infinite.
-We can establish a bijection between $\mathbb{N}$ and $\mathbb{Z}$ by mapping:
-\begin{align*}
-0 &\mapsto 0 \\
-1 &\mapsto 1 \\
-2 &\mapsto -1 \\
-3 &\mapsto 2 \\
-4 &\mapsto -2 \\
-5 &\mapsto 3 \\
-&\vdots
-\end{align*}
-In general, we map even numbers $2n$ to positive integers $n$, and odd numbers $2n+1$ to negative integers $-n$.
-
-More surprisingly, the rational numbers $\mathbb{Q}$ are also countably infinite.
-This can be shown using Cantor's ingenious \emph{zig-zag method}.
-
-The idea is to arrange all positive rational numbers in an infinite grid, then traverse this grid in a systematic zig-zag pattern to create a sequence.
-We arrange the fractions $\frac{p}{q}$ (in lowest terms) so that $\frac{p}{q}$ appears in row $p$ and column $q$:
-
-\begin{center}
-\begin{tabular}{c|cccccc}
-  & 1 & 2 & 3 & 4 & 5 & $\cdots$ \\
-\hline
-1 & $\frac{1}{1}$ & $\frac{1}{2}$ & $\frac{1}{3}$ & $\frac{1}{4}$ & $\frac{1}{5}$ & $\cdots$ \\
-2 & $\frac{2}{1}$ & $\frac{2}{2}$ & $\frac{2}{3}$ & $\frac{2}{4}$ & $\frac{2}{5}$ & $\cdots$ \\
-3 & $\frac{3}{1}$ & $\frac{3}{2}$ & $\frac{3}{3}$ & $\frac{3}{4}$ & $\frac{3}{5}$ & $\cdots$ \\
-4 & $\frac{4}{1}$ & $\frac{4}{2}$ & $\frac{4}{3}$ & $\frac{4}{4}$ & $\frac{4}{5}$ & $\cdots$ \\
-$\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ & $\ddots$ \\
-\end{tabular}
-\end{center}
-
-Now we traverse this grid along diagonals, starting from the top-left:
-$\frac{1}{1}$, then $\frac{1}{2}, \frac{2}{1}$, then $\frac{1}{3}, \frac{2}{2}, \frac{3}{1}$, then $\frac{1}{4}, \frac{2}{3}, \frac{3}{2}, \frac{4}{1}$, and so forth.
-We skip any fraction that isn't in lowest terms (like $\frac{2}{2} = 1$ or $\frac{2}{4} = \frac{1}{2}$) since it's already been counted.
-
-This gives us the sequence: $\frac{1}{1}, \frac{1}{2}, \frac{2}{1}, \frac{1}{3}, \frac{3}{1}, \frac{1}{4}, \frac{2}{3}, \frac{3}{2}, \frac{4}{1}, \frac{1}{5}, \ldots$
-
-Each positive rational appears exactly once in this list.
-To handle negative rationals and zero, we can interleave them: list zero first, then alternate between positive and negative rationals.
-This establishes a bijection between $\mathbb{N}$ and $\mathbb{Q}$.
-
-\begin{exercise}
-Show that the set $\mathbb{N} \times \mathbb{N} = \{(m,n) \mid m, n \in \mathbb{N}\}$ of ordered pairs of natural numbers is countably infinite.
-\end{exercise}
-
-So far, every infinite set we've encountered has been countably infinite.
-One might wonder whether all infinite sets have the same cardinality.
-Cantor showed that this is not the case using a powerful technique called \emph{diagonalization}.
-
-\begin{theorem}{Cantor's Theorem}{cantor}
-For any set $A$, the power set $\mathcal{P}(A) = \{X \mid X \subseteq A\}$ has strictly greater cardinality than $A$.
-That is, there is no bijection between $A$ and $\mathcal{P}(A)$.
+\begin{theorem}{Compactness of first-order logic (Gödel 1929)}{compactness}
+   If every finite subset of a set is satisfiable then the set itself is satisfiable.
 \end{theorem}
 
+% The word 'compact', in this use, is inherited from topology,
 \begin{proof}
-We show that no function $f: A \to \mathcal{P}(A)$ can be surjective.
-The key insight is to construct a subset of $A$ that cannot be in the range of $f$ by considering the \emph{diagonal} elements.
-
-Suppose $f: A \to \mathcal{P}(A)$ is any function.
-For each element $a \in A$, we have $f(a) \subseteq A$.
-Either $a \in f(a)$ or $a \notin f(a)$.
-
-The diagonalization step: Define $D = \{a \in A \mid a \notin f(a)\}$.
-We call this the \emph{diagonal set} because we're considering each element $a$ and asking whether it belongs to $f(a)$—that is, we're looking at the 'diagonal' entries in the correspondence.
-
-Since $D \subseteq A$, we have $D \in \mathcal{P}(A)$.
-We claim that $D$ is not in the range of $f$.
-
-Suppose for contradiction that $D = f(b)$ for some $b \in A$.
-Now we ask: is $b \in D$ or $b \notin D$?
-
-Case 1: $b \in D$.
-By definition of $D$, this means $b \notin f(b)$.
-But $f(b) = D$, so $b \notin D$.
-Contradiction.
-
-Case 2: $b \notin D$.
-Since $f(b) = D$, we have $b \notin f(b)$.
-By definition of $D$, this means $b \in D$.
-Contradiction.
-
-The diagonal element $b$ cannot consistently belong to the diagonal set $D$!
-Therefore, $D$ cannot equal $f(b)$ for any $b \in A$.
-So $f$ is not surjective.
-
-Since this holds for any function $f: A \to \mathcal{P}(A)$, there is no surjection from $A$ to $\mathcal{P}(A)$, and hence no bijection.
+  \emph{Proof.}
+  Let $\Gamma$ be a set of first-order sentences.
+  Assume for contraposition that $\Gamma$ is not satisfiable.
+  So $\Gamma \entails \bot$.
+  By completeness,
+  it follows that $\Gamma \proves \bot$:
+  there is a deduction of $\bot$ from $\Gamma$.
+  This deduction can only use finitely many sentences from $\Gamma$.
+  So there is a finite subset $\Gamma_{0}$ of $\Gamma$ for which $\Gamma_{0} \proves \bot$.
+  By soundness,
+  $\Gamma_{0} \entails \bot$.
 \end{proof}
 
-This diagonalization argument is extraordinarily important.
-We'll see similar reasoning later when we encounter Gödel's incompleteness theorems, where diagonalization shows that no formal system can prove its own consistency.
+% \begin{corollary}{}{}
+%   If $\Gamma \entails A$ then
+%   there is a finite subset $\Gamma_{0}$ of $\Gamma$ such that $\Gamma_{0} \entails A$.
+% \end{corollary}
 
-Applied to the natural numbers, Cantor's theorem shows that $\mathcal{P}(\mathbb{N})$—the set of all subsets of natural numbers—is uncountably infinite.
-Its cardinality is denoted $2^{\aleph_0}$ or $\mathfrak{c}$ (the cardinality of the continuum).
-In fact, $\mathcal{P}(\mathbb{N})$ is equinumerous with the real numbers $\mathbb{R}$.
+Why is this curious?
+Well, for one,
+it is easy to come up with cases where a conclusion is entailed by infinitely many premises,
+but not by any finite subset of those premises.
+For example.
+Consider the premises
+`I like the number 0',
+`I like the number 1',
+`I like the number 2',
+and so on, for all natural numbers.
+Together,
+these premises entail `I like all natural numbers'.
+But no finite subset of the premises does.
+This doesn't contradict the compactness theorem because the inference isn't \emph{logically} valid:
+it depends on the interpretation of `0', `1', `2', \ldots, and `natural number'.
+Compactness therefore implies that
+there is no way to fully pin down the interpretation of these terms in first-order logic.
+
+Let's think about this more carefully.
+Many branches of mathematics can be seen as studying certain \emph{mathematical structures}.
+A mathematical structure consists of a set of objects together with some operations and relations on these objects.
+For example,
+arithmetic studies operations and relations on the
+natural numbers.
+A formalized, first-order theory of arithmetic will therefore have
+nonlogical symbols for, say, addition (`$+$'),
+multiplication (`$\times$'),
+and the less-than relation (`$<$').
+We might add an individual constant `$n$' for each number $n$,
+but for the sake of economy we can instead have a single constant `0' for 0
+and another symbol `$s$' for the successor function
+that maps each number $n$ to its successor $n+1$.
+Instead of `1', we can then write `$s(0)$';
+`2' is `$s(s(0))$', and so on.
+In \emph{logic}, we abstract away from the meaning of the nonlogical symbols.
+In \emph{arithmetic}, we obviously don't.
+Here, `1+2=3'
+(that is, `$s(0) + s(s(0)) = s(s(s(0)))$')
+is a definite claim about the natural numbers.
+We say that it has an \emph{intended interpretation},
+or an \emph{intended model}.
+
+The intended model of arithmetic, $\mathcal{N}$, has as its domain
+the set of natural numbers $\mathbb{N}$;
+it interprets `0' as denoting 0,
+`+' as denoting the addition function +,
+`$\times$' as denoting the multiplication function $\times$,
+`$s$' as denoting the successor function $s$, and
+`$<$' as denoting the less-than relation $<$.
+We can package all these ingredients into a list:
+$(\mathbb{N}, 0, +, \times, s, <)$.
+This list represents the \emph{structure} of the natural numbers.
+It identifies a set $\mathbb{N}$
+and some operations and relations on that set.
+(0 counts as a zero-ary operation on $\mathbb{N}$.)
+
+As a formal language,
+the language of arithmetic also has many unintended models.
+For example,
+consider the model with domain $\{ Athens, Berlin \}$
+and an interpretation function that maps
+`0' to Athens,
+`+' and `$\times$' to the function that maps any pair of cities to Athens,
+`$s$' to the function that maps each city to itself,
+and
+`<' to the empty relation.
+In this model,
+`$s(0) + s(s(0)) = s(s(s(0)))$' is true,
+but so is `$s(0) = 0$'.
+
+xxx exercise.
+
+We might hope that by laying down sufficiently many postulates in the formal language,
+we can rule out all such unintended models.
+For example,
+if a formal theory of arithmetic contains `$s(0) \ne 0$'
+then the above model is no longer a model of the theory.
+
+Isomorphism.
+
+Sometimes this works.
+Linear order.
+
+
+
+and `$s$
+for example,
+
+
+formal theory of arithmetic would now contain statements like
+$s(0) + s(s(0)) = s(s(s(0)))$
+and $\forall x (x < x+1)$.
+These narrow down the interpretation of the nonlogical symbols.
+
+
+We might hope that there is some 
+
+
+That's why textbooks on mathematical logic often identify models with mathematical structures.
+
+Careful: when specifying the algebra, we don't use the first-order object
+language. So '+' here is metalanguage. The object language may also have a '+'
+symbol or a '0' symbol, but they are not treated as logical. So their meaning
+isn't fixed. When we talk about logical entailment, we need to consider any
+possible way of interpreting '0' and '+'.
+
+E.g, D = \{ Paris, Rome, Canberra \}, +(x,y) = Paris, $\times$(x,y) = Rome, 0 = Canberra.
+
+Note that, technically, we don't allow for languages with only one or two individual constants.
+We need an unending supply of constants for two reasons.
+One, the interpretation of $\forall x A$ appeals to $A(x/c)$,
+where $c$ is a constant that doesn't occur in $A$.
+The interpretation of $\forall x \forall y A$ therefore involves two constants, and so on.
+But it doesn't matter what $\mathcal{M}$ assigns to these further constants.
+This is also true for the other reason why we need extra constants:
+in our calculus,
+we often need to reason from $\forall x A(x)$ to $A(c)$,
+where $c$ is a new constant,
+so that if we have derived $B(c)$ from $A(c)$,
+we can later apply Gen to get $\forall x B(x)$.
+Here, too, the extra constants only serve a Hilfsfunktion.
+They aren't used to pick out a particular object.
+(Such constants are historically called \emph{eigenvariables}.)
+
+
+
+% ** Isomorphic structures
+
+\begin{definition}{Isomorphic Structures}{isomorphic}
+  Structures $\mathcal{A}$ and $\mathcal{B}$ are \emph{isomorphic} if there is a bijection $f$ from the domain of $\mathcal{A}$ to the domain of $\mathcal{B}$ such that xxx
+\end{definition}
+
+Clearly, truth at a structure is preserved under isomorphisms. A full proof is in BBJ pp.140ff. Might move to next chapter?
 
 \begin{exercise}
-Show that if $A$ and $B$ are countably infinite sets, then $A \cup B$ is countably infinite.
+Show that isomorphisms are equivalence relations
 \end{exercise}
 
-\begin{exercise}
-Show that the set of finite subsets of $\mathbb{N}$ is countably infinite.
-\end{exercise}
 
-Cantor's theorem reveals a hierarchy of infinities.
-Starting with any infinite set, we can always construct a strictly larger infinite set by taking its power set.
-From $\mathbb{N}$ we get $\mathcal{P}(\mathbb{N})$, then $\mathcal{P}(\mathcal{P}(\mathbb{N}))$, and so on, creating an endless sequence of ever-larger infinities.
-This shatters any simple picture of infinity as a single, uniform concept.
+Compactness is a purely model-theoretic fact.
 
 
-\section{Unintended Models}
 
 Now return to first-order logic.
 Suppose we want to formalize reasoning about, say, the natural numbers,
@@ -997,37 +1409,6 @@ Corollary: Every satisfiable set of sentences has a model whose domain is a set 
 
 
 
-
-Here are some easy consequences of the completeness theorem.
-
-\begin{definition}{}{satisfiable}
-  A set of first-order sentences is \emph{satisfiable} if it has a model.
-\end{definition}
-
-\begin{theorem}{Compactness (Gödel 1929)}{compactness}
-   If every finite subset of a set is satisfiable then the set itself is satisfiable.
-\end{theorem}
-
-\begin{proof}
-  \emph{Proof.}
-  Let $\Gamma$ be a set of first-order sentences.
-  Assume for contraposition that $\Gamma$ is not satisfiable.
-  So $\Gamma \entails \bot$.
-  By the Compactness Theorem,
-  it follows that $\Gamma \proves \bot$:
-  there is a deduction of $\bot$ from $\Gamma$.
-  This deduction can only use finitely many sentences from $\Gamma$.
-  So there is a finite subset $\Gamma_{0}$ of $\Gamma$ for which $\Gamma_{0} \proves \bot$.
-  By the Soundness Theorem,
-  $\Gamma_{0} \entails \bot$.
-\end{proof}
-
-\begin{corollary}{}{}
-  If $\Gamma \entails A$ then
-  there is a finite subset $\Gamma_{0}$ of $\Gamma$ such that $\Gamma_{0} \entails A$.
-\end{corollary}
-
-% The word 'compact', in this use, is inherited from topology,
 
 \begin{theorem}{(Downward) Löwenheim-Skolem}{lowenheim-skolem}
   If a set $\Gamma$ of countable first-order sentences has a model,
@@ -1248,5 +1629,13 @@ The Henkin model of $\Gamma^{+}$ is then a model of $\Gamma$.
   % So by MP, Γ ⊢ φ.
 \end{exercise}
 
+\begin{exercise}
+  Compactness is an immediate consequence of Completeness.
+  Can you argue in the other direction from Compactness to Completeness?
+\end{exercise}
 
 
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "logic3.tex"
+%%% End:
