@@ -187,6 +187,9 @@
 \newcommand{\Cfr}{\ensuremath{\mathfrak{C}}\xspace}
 \newcommand{\Mfr}{\ensuremath{\mathfrak{M}}\xspace}
 
+\newcommand{\Mod}[1]{\ensuremath{\mathfrak{#1}}\xspace}
+
+
 % make box and diamond larger, and vdash (too small in newtxmath):
 % \usepackage{scalerel}
 % \let\oldbox\Box
@@ -239,7 +242,7 @@
 }
 \makeatother
 
-\newcommand{\dn}[1]{\llbracket #1 \rrrbracket}
+\newcommand{\dn}[1]{\llbracket #1 \rrbracket}
 
 
 
