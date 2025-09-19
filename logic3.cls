@@ -265,6 +265,7 @@
 
 \usetikzlibrary{automata, arrows}
 \usetikzlibrary{matrix, positioning, shapes.geometric, calc}
+\usetikzlibrary{decorations.pathreplacing}
 \usetikzlibrary{arrows.meta}
 
 \tikzset{
