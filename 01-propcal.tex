@@ -21,7 +21,7 @@ that we'll also use for more powerful languages.
 \section{Syntax}
 
 When talking about language,
-it is important to distinguish the language that is being talked about,
+we must distinguish the language that is being talked about,
 the \emph{object language},
 from the \emph{meta-language} in which the talking takes place.
 Throughout these notes,
@@ -38,18 +38,18 @@ The \emph{primitive symbols} of $\L_{0}$ are:
 \item the parentheses, `(' and `)'.
 \end{itemize*}
 
-The sentence letters are classified as \emph{non-logical} symbols.
-The other expressions are \emph{logical}.
+The sentence letters are classified as \emph{non-logical} symbols;
+the other expressions are \emph{logical}.
 (The point of this classification will become clear in section~\ref{sec:semantics0}.)
 
 \begin{definition}{}{L0}
   A \emph{sentence} of $\L_{0}$ is a finite string of symbols,
   built up according to the following formation rules:
-  \begin{enumerate*}
+  \begin{cenumerate}
     \item[(i)] Every sentence letter is a sentence.
     \item[(ii)] If a string $A$ is a sentence, then so is $\neg A$.
     \item[(iii)] If strings $A$ and $B$ are sentences, then so is $(A \to B)$.
-  \end{enumerate*}
+  \end{cenumerate}
 \end{definition}
 
 In definition~\ref{def:L0},
@@ -73,8 +73,8 @@ which I failed to specify.
 Rather,
 it says that \emph{for all strings $A$},
 if $A$ is a sentence then $\neg A$ is a sentence.
-Also, by `$\neg A$',
-I mean the string that results by putting `$\neg$' in front of whatever string `$A$' picks out.
+By `$\neg A$',
+I mean the string that obtained by putting `$\neg$' in front of whatever string `$A$' picks out.
 Similarly for `$(A \to B)$' and other such cases.
 
 % (This can be explained as follows: The metalanguage in which these notes are
@@ -145,9 +145,9 @@ For example, I might write $A \to B$ instead of `$(A \to B)$'.
 
 % ** How to prove that infinitely many sentences have some property
 
-\begin{exercise}
-  How many sentences are there in $\L_{0}$?
-\end{exercise}
+% \begin{exercise}
+%   How many sentences are there in $\L_{0}$?
+% \end{exercise}
 
 \begin{exercise}
   Why did I say that no sentence letter of $\L_{0}$ must have
@@ -164,7 +164,7 @@ Proofs by induction on complexity are based on the fact that
 every $\L_{0}$-sentence is built up from sentence letters
 by finitely many applications of the formation rules in definition~\ref{def:L0}.
 The \emph{complexity} of a sentence is the number of applications of these rules.
-Thus a sentence letter has complexity 0;
+A sentence letter has complexity 0;
 $\neg p$ has complexity 1;
 $(p \to \neg q)$ has complexity 2;
 and so on.
@@ -250,11 +250,12 @@ we would have to check three more cases in every proof by induction on complexit
 
 \begin{exercise}
   Prove by induction on complexity that
-  the initial symbol of any $\L_{0}$-sentence $A$
-  never belongs to an $\L_{0}$-sentence that is a proper part of $A$.
-  (A \emph{proper part} of a string is a substring that is not the whole string itself.)
-  % [Bostock pp52f.]
+  in every $\L_{0}$-sentence,
+  the number of occurrences of sentence letters exceeds the number of occurrences of `$\to$' by 1.
+  (There are two \emph{occurrences} of `$p$' in `$p \to p$'.)
+  % (A -> B): n+1 letters in A, n ->s, m+1 letters in B, m ->s, total n+m+2 letters, n+m+1 ->s.
 \end{exercise}
+
 
 % \begin{exercise}
 %   Prove by induction on $n$ that a set consisting of $n$ elements has $2^n$
@@ -274,8 +275,8 @@ we would have to check three more cases in every proof by induction on complexit
 
 \section{The propositional calculus}
 
-Next,
-let's explain how one may reason in $\L_{0}$.
+In this section,
+I'll explain how one can reason in $\L_{0}$.
 We'll start with the ancient idea that
 to prove a statement means to derive it from some axioms.
 On this conception,
@@ -283,11 +284,11 @@ a \emph{proof system} consists of some axioms
 and some rules for deriving new sentences from old ones.
 
 The first complete proof system for propositional logic,
-using this approach,
+of this kind,
 was proposed by Gottlob Frege in 1879.
 I'll present a slightly simplified version,
 due to Jan Łukasiewicz and John von Neumann.
-We have three axiom schemas,
+We have three \emph{axiom schemas},
 meaning that every instance of these schemas is an axiom:
 
 \begin{axioms}
@@ -296,6 +297,17 @@ A2 & $(A \to (B \to C)) \to ((A \to B) \to (A \to C))$\\
 A3 & $(\neg A \to \neg B) \to (B \to A)$
 \end{axioms}
 %
+\noindent%
+An \emph{instance} of an axiom schema is a sentence obtained by
+uniformly replacing the metalinguistic variables `$A$', `$B$', and `$C$'
+by object-language sentences.
+For example,
+`$p \to ((p \to p) \to p)$' is an instance of A1,
+with `$A$' replaced by `$p$' and
+`$B$' by `$(p \to p)$'.
+
+\newpage
+
 The only rule of inference is \emph{modus ponens},
 which in this context is also known as \emph{detachment}:
 
@@ -312,11 +324,10 @@ all of which could be given that name.
   a finite sequence of $\L_{0}$-sentences $A_{1}, A_{2}, \ldots A_n$,
   each of which is either an instance of A1--A3 or
   follows from earlier sentences in the sequence by MP.
-  A proof is \emph{of} an $\L_{0}$-sentence $A$
-  if $A$ is the last sentence in the sequence.
+  A \emph{proof of $A$} is a proof whose last sentence is $A$.
 \end{definition}
 
-We write `$\vdash_{0} A$' to express that
+We write `$\vdash_{0} A$' (in the meta-language) to express that
 there is a proof of $A$ in the propositional calculus.
 
 Here is a proof of $p \to p$, showing that $\vdash_{0} p \to p$:
@@ -368,19 +379,19 @@ We can, however, also extend our calculus to handle deductions from non-logical 
 %
 We write `$\Gamma \vdash_{0} A$' to express that there is a deduction of $A$ from $\Gamma$.
 For example,
-`$\{ p,q \} \vdash_{0} p$' is a sentence in our metalanguage saying that $p$ is deducible from the set containing $p$ and $q$.
-We'll usually omit the set braces and simply write `$p,q \vdash_0 q$'.
+`$\{ p,q \} \vdash_{0} p$' is a sentence in our metalanguage saying that $p$ is deducible from $p$ and $q$.
+We usually omit the set braces and simply write `$p,q \vdash_0 q$'.
 
 The following \emph{structural principles} about the $\vdash_{0}$ relation
 immediately follow from definition~\ref{def:deduction0}.
 
 \begin{axioms}
-Id & $A \vdash_0 A$\\
-Mon & $\text{If }\Gamma \vdash_0 A\text{ then }\Gamma, B \vdash_0 A$\\
-Cut & $\text{If }\Gamma \vdash_0 A\text{ and }\Delta,A \vdash_0 B\text{ then }\Gamma,\Delta \vdash_0 B$
+Id & $A \vdash_0 A$.\\
+Mon & $\text{If }\Gamma \vdash_0 A\text{ then }\Gamma, B \vdash_0 A$.\\
+Cut & $\text{If }\Gamma \vdash_0 A\text{ and }\Delta,A \vdash_0 B\text{ then }\Gamma,\Delta \vdash_0 B$.
 \end{axioms}
 %
-Here, `Id' stands for `Identity',
+Here, `Id' stands for `Identity' and
 `Mon' for `Monotonicity'.
 As usual,
 `$A$' and `$B$' range over arbitrary $\L_{0}$-sentences;
@@ -389,8 +400,22 @@ As usual,
 the union of $\Gamma$ and $\{ B \}$.
 (The union of two sets is the set that contains all and only the elements that are in either of the two sets.)
 
+The Id principle says that
+for any sentence $A$,
+there is a deduction of $A$ from $A$.
+Why is this true?
+By definition~\ref{def:deduction0},
+a deduction of $A$ from $A$ would be a sequence of sentences ending in $A$,
+each of which is either an instance of A1--A3, the sentence $A$ itself, or follows from previous sentences by MP.
+The sequence consisting of the single sentence $A$ meets these conditions.
+(As do many longer sequences.
+But one sequence is enough to show that $A \vdash_0 A$.)
+
 \begin{exercise}
-  Explain why Id, Mon, and Cut follow from definition~\ref{def:deduction0},
+  Display another deduction of $A$ from $A$, with at least two sentences.
+\end{exercise}
+\begin{exercise}
+  Explain why Mon and Cut similarly follow from definition~\ref{def:deduction0},
   without invoking A1--A3 or MP.
 \end{exercise}
 
@@ -414,9 +439,11 @@ shows that every deduction can be converted into a proof.
   If $\Gamma,A \vdash_{0} B$ then $\Gamma \vdash_{0} A \to B$.
 \end{theorem}
 
+We'll prove this in a moment.
+First I want to explain how it converts deductions into proofs.
 Suppose there is a deduction of $B$ from $\Gamma$.
 Being finite,
-this deduction must use only finitely many premises from $\Gamma$.
+this deduction can use only finitely many premises from $\Gamma$.
 Call them $A_{1},\ldots,A_{n}$.
 So we have
 \[
@@ -438,9 +465,6 @@ until we get
 \[
   \vdash_{0} A_{1} \to (A_{2} \to (\ldots (A_{n} \to B)\ldots)).
 \]
-($A_{1} \to (A_{2} \to (\ldots (A_{n} \to B)\ldots))$ is provably equivalent to
-$(A_{1} \land A_{2} \land \ldots \land A_{n}) \to B$,
-so we also get $\vdash_{0} (A_{1} \land A_{2} \land \ldots \land A_{n}) \to B$.)
 
 To prove the Deduction Theorem,
 we use a method called \emph{strong induction}.
@@ -468,7 +492,7 @@ and so on.
   Let $B_{1}, B_{2}, \ldots, B_{n}$ be a deduction of $B$ from $\Gamma \cup \{ A \}$.
   We shall prove by strong induction on $k$ that
   $\Gamma \vdash_{0} A \to B_{k}$ for all $k = 1, 2, \ldots, n$.
-  Since $B_{k} = B$,
+  Since $B_{n} = B$,
   this will establish the theorem.
 
   We need to show that
@@ -511,24 +535,23 @@ and so on.
   \[
     (A \to (B_{i} \to B_{k})) \to ((A \to B_{i}) \to (A \to B_{k})).
   \]
-  Using A2,
-  the deduction of $A \to B_{i}$ and $A \to (B_{i} \to B_{k})$ from $\Gamma$
-  can therefore be extended by MP to a deduction of $(A \to B_{i}) \to (A \to B_{k})$
-  and from there to $A \to B_{k}$.
+  With this,
+  the deduction of $A \to (B_{i} \to B_{k})$ and $A \to B_{i}$  from $\Gamma$
+  can be extended by two applications of MP to a deduction of $A \to B_{k}$.
   \qed
 \end{proof}
 
-The proof uses axioms A1 and A2.
+The proof of the Deduction Theorem requires axioms A1 and A2.
 If we're interested in what can and can't be deduced in the propositional calculus,
-we never need to invoke A1 and A2 again:
-if needed,
+we never need to invoke A1 and A2 again.
+If needed,
 they can be recovered from DT and MP.
 Here is how we can recover A1 ($A \to (B \to A)$):
 
 \vspace{-\baselineskip}
 \begin{flalign*}
 \quad 1.\quad & A \vdash_0 A &&\text{(Id)}& \\
-\quad 2.\quad & A, B \vdash_0 A &&\text{(Mon)}& \\
+\quad 2.\quad & A, B \vdash_0 A &&\text{(1, Mon)}& \\
 \quad 3.\quad & A \vdash_0 B \to A &&\text{(2, DT)}& \\
 \quad 4.\quad & \vdash_0 A \to (B \to A) &&\text{(3, DT)} &
 \end{flalign*}
@@ -536,6 +559,35 @@ Here is how we can recover A1 ($A \to (B \to A)$):
 Note that this is not a proof in the propositional calculus.
 It is a metalinguistic argument
 showing that a certain proof in the propositional calculus exists.
+Let me go through the steps.
+
+Line 1 says that $A$ is deducible from $A$.
+This is the Id principle for deductions.
+I've explained above why it holds.
+Line 2 says that $A$ is deducible from $A$ and $B$.
+This follows from line 1 by the general fact (called Monotonicity) that
+if $A$ is deducible from some premises then $A$ is also deducible
+from these premises together with any further premises.
+In the present case,
+it's easy to see directly why the claim on line 2 holds:
+the sentence $A$ qualifies a deduction of $A$ from $A$ and $B$.
+Line 3 now applies the Deduction Theorem.
+It claims there is a deduction of $B \to A$ from $A$.
+It's not immediately obvious what this deduction looks like,
+and we don't need to know:
+since we've proved the Deduction Theorem,
+we can be sure that such a deduction exists.
+In the same way,
+line 4 infers that there is a proof of $A \to (B \to A)$.
+Of course,
+we knew that all along:
+if $A$ and $B$ are arbitrary sentences,
+$A \to (B \to A)$ is an axiom (A1),
+so it can be proved in one line, by simply writing it down.
+The point of the argument is that
+we didn't need to invoke A1:
+all A1 instances are provable in
+\emph{any} calculus that satisfies the structural rules and DT.
 
 \begin{exercise}
   Show in the same way that A2 can be derived from DT and MP.
@@ -576,6 +628,7 @@ Now for some facts about negation.
 
 \begin{proof}
   \emph{Proof.}
+\vspace{-2mm}
 \begin{flalign*}
 \quad 1.\quad & \Gamma \vdash_{0} A && \text{(Assumption)} &\\
 \quad 2.\quad & \Gamma \vdash_{0} \neg A && \text{(Assumption)}& \\
@@ -593,6 +646,7 @@ If $\Gamma \vdash_{0} \neg\neg A$ then $\Gamma \vdash_{0} A$.
 
 \begin{proof}
   \emph{Proof.}
+\vspace{-2mm}
 \begin{flalign*}
 \quad 1.\quad & \Gamma \vdash_{0} \neg\neg A && \text{(Assumption)}& \\
 \quad 2.\quad & \Gamma, \neg A \vdash_{0} \neg\neg A &&\text{(1, Mon)}& \\
@@ -614,6 +668,7 @@ If $\Gamma \vdash_{0} \neg\neg A$ then $\Gamma \vdash_{0} A$.
 
 \begin{proof}
  \emph{Proof.}
+\vspace{-2mm}
 \begin{flalign*}
 \quad 1.\quad & \Gamma,A \vdash_{0} B && \text{(Assumption)}& \\
 \quad 2.\quad & \Gamma,A \vdash_{0} \neg B && \text{(Assumption)}& \\
@@ -672,22 +727,22 @@ since it determines the same relation $\vdash_{0}$,
 \end{exercise}
 
 \begin{exercise}
-  Show, by first expanding the definition of $\land$:
-  \vspace{-2pt}
-  \begin{enumerate*}
-    \item[(a)] $\text{If }\Gamma \vdash_{0} A\text{ and }\Gamma \vdash_{0} B\text{ then }\Gamma \vdash_{0} A \land B$
-    \item[(b)] $\text{If }\Gamma \vdash_{0} A \land B\text{ then }\Gamma \vdash_{0} A\text{ and }\Gamma \vdash_{0} B$
+  Show, by first expanding the definition of $\land$, that $\Gamma \vdash_{0} A \land B$ iff both $\Gamma \vdash_{0} A$ and $\Gamma \vdash_{0} B$.
+  % \vspace{-2pt}
+  % \begin{enumerate*}
+  %   \item[(a)] $\text{If }\Gamma \vdash_{0} A\text{ and }\Gamma \vdash_{0} B\text{ then }\Gamma \vdash_{0} A \land B$
+  %   \item[(b)] $\text{If }\Gamma \vdash_{0} A \land B\text{ then }\Gamma \vdash_{0} A\text{ and }\Gamma \vdash_{0} B$
     % $\lor$I & $\text{If }\Gamma \vdash_{0} A\text{ or }$\Gamma \vdash_{0} B$\text{ then }\Gamma \vdash_{0} A \lor B$\\
     % $\lor$E & $\text{If }\Gamma \vdash_{0} A \lor B\text{ and }\Gamma, A \vdash_{0} C\text{ and }\Gamma, B \vdash_{0} C\text{ then }\Gamma \vdash_{0} C$
- \end{enumerate*}
+ % \end{enumerate*}
 \end{exercise}
 
-We can also design different types of proof systems
+We can also design different \emph{types} of proof systems
 that are equivalent to the propositional calculus.
 For example,
-you will have noticed that
+you may have noticed that
 our metalinguistic proofs, using Id, Mon, Cut, MP, DT, etc.,
-are generally much simpler than
+are generally simpler than
 proofs in our official calculus.
 We can turn these proofs into their own calculus.
 Each line of a proof, in this calculus, is a \textit{sequent} $\Gamma \vdash_{0} A$.
@@ -697,7 +752,7 @@ we have the rules Id, Mon, Cut, MP, etc. to operate on sequents.
 To show that $A$ follows from $\Gamma$,
 one tries to derive the sequent $\Gamma \vdash_{0} A$.
 
-I've introduced `$\Gamma \vdash_{0} A$' to mean
+Now, I've introduced `$\Gamma \vdash_{0} A$' to mean
 `there is a deduction of $A$ from $\Gamma$ in the propositional calculus'.
 We don't want the lines in our new calculus to refer to deductions in another calculus.
 So we should replace `$\vdash_{0}$' by a different symbol.
@@ -758,9 +813,10 @@ If so,
 you may want to write down a natural-deduction proof of the above entailment
 and compare it with the sequent-calculus proof.
 (Can you see how the two are related?)
+
 You may also have come across \textit{tableau calculi} or \emph{tree proof} calculi.
 These are, in effect,
-upside-down sequent proofs in which
+upside-down sequent proofs (of a slightly different type) in which
 all sentences are pushed to the left of the arrow.
 
 % For examples,
@@ -792,15 +848,14 @@ All these calculi are much easier to use than our propositional calculus.
 On the flip side,
 proofs in the propositional calculus are easier to \emph{describe} than
 proofs in the other calculi:
-a proof is simply a list of $\L_{0}$-sentences,
+a proof in our calculus is simply a list of $\L_{0}$-sentences,
 each of which is either an instance of A1--A3 or follows from earlier sentences by MP.
 This makes it easier to prove metatheorems about what is or is not provable in the calculus.
 Since all the calculi are equivalent,
 and we're mostly interested in metatheorems,
 we'll take the propositional calculus to be the official calculus of classical propositional logic.
 
-In this course,
-we'll focus on classical logic.
+We'll focus on classical logic in this course.
 But it is worth mentioning that
 there are also \textit{non-classical} logics for $\L_{0}$.
 These always drop one or more of the principles Id, Mon, Cut, MP, DT, EFQ, DNE, and RAA,
@@ -841,8 +896,8 @@ that can't already be proved without them.
 % ...
 
 \begin{exercise}
-  Give a sequent calculus proof of \emph{Peirce's Law}: $p \to ((p \to q) \to p)$.
-  The proof requires DNE, although the sentence doesn't contain any negation.
+  Give a sequent calculus proof of \emph{Peirce's Law}: $((p \to q) \to p) \to p$.
+  The proof requires DNE, although the sentence doesn't contain any negation symbol.
 \end{exercise}
 
 
@@ -868,7 +923,7 @@ This approach to meaning is sometimes called
 \textit{inferential role semantics}.
 (\textit{Semantics} is the study of meaning.)
 
-The kind of theory we're going to study instead belongs to the tradition of \textit{truth-conditional semantics}.
+The kind of theory we're about to develop instead belongs to the tradition of \textit{truth-conditional semantics}.
 The guiding idea of truth-conditional semantics is that
 the meaning of a sentence can be given by
 stating what (typically non-linguistic) conditions
@@ -998,7 +1053,7 @@ which sentence letters are true and which are false in $S$ under $I$.
 This means that instead of quantifying over scenarios and interpretations,
 we can simply quantify over assignments of truth-values to the sentence letters.
 Such assignments are often called `interpretations',
-but this jargon is misleading.
+but I find this misleading.
 We'll call them `models'.
 
 \begin{definition}{Model}{model}
@@ -1014,8 +1069,8 @@ We use standard function notation here, using
 and `$\sigma(p) = F$' to express that $\sigma$ assigns $F$ to $p$.
 
 Next,
-we explain how
-an assignment of truth-values to sentence letters determines
+we specify how
+an assignment of truth-values to the sentence letters determines
 an assignment of truth-values to all sentences of $\L_0$,
 in accordance with our above interpretation rules for '$\neg$' and '$\to$'.
 We write `$\sigma \satisfies A$'
@@ -1027,11 +1082,11 @@ The satisfaction relation $\satisfies$ is defined as follows:
 \begin{definition}{}{satisfaction0}
   Let $\sigma$ be a model for $\L_0$.
   For any sentence letter $p$ and sentences $A$ and $B$:
-  \begin{enumerate*}
+  \begin{cenumerate}
     \item[(i)] $\sigma \satisfies p$ iff $\sigma(p) = T$.
     \item[(ii)] $\sigma \satisfies \neg A$ iff $\sigma \not\satisfies A$.
     \item[(iii)] $\sigma \satisfies A \to B$ iff $\sigma \not\satisfies A$ or $\sigma \satisfies B$.
-  \end{enumerate*}
+  \end{cenumerate}
 \end{definition}
 
 For example,
@@ -1076,17 +1131,13 @@ I'll drop `logically' when talking about validity and entailment from now on.
 \end{definition}
 
 \begin{exercise}
-  Explain why, if $\Gamma \models A$ by definition~\ref{def:entailment0},
-  then $\Gamma$ entails $A$ according to the earlier, informal definition.
+  Explain why $\Gamma$ entails $A$ according to the earlier, informal definition
+  iff $\Gamma \models A$ (as defined by definition~\ref{def:entailment0}).
 \end{exercise}
 
 \begin{exercise}
-  Show that $A$ is valid iff $A$ is entailed by $\emptyset$.
+  Which of these claims are true? (a) $\models \top$, (b) $\models \bot$, (c) $\top \models \bot$, (d) $\bot \models \top$.
 \end{exercise}
-
-% \begin{exercise}
-%   Which of these claims are true? (a) $\models \top$, (b) $\models \bot$, (c) $\top \models \bot$, (d) $\bot \models \top$.
-% \end{exercise}
 
 % \begin{exercise}
 %   Show that $A,\neg B \models \bot$ iff $A \models B$.
@@ -1097,7 +1148,7 @@ I'll drop `logically' when talking about validity and entailment from now on.
 \end{exercise}
 
 \begin{exercise}
-  We have now introduced five arrow-like symbols:
+  I have introduced five arrow-like symbols:
   $\to$, $\vdash_{0}$, $\Rightarrow$, $\satisfies$, and $\entails$.
   Explain what each of them means and to which language it belongs.
   (For the record: we will never use $\Rightarrow$ again.)
@@ -1137,8 +1188,9 @@ I'll drop `logically' when talking about validity and entailment from now on.
 % ** Proof theory and model theory
 
 We have explored two perspectives on logic.
-The first was \textit{proof-theoretic}.
-We studied proofs and deductions as arrangements of symbols conforming to certain rules,
+The first was \textit{proof-theoretic}:
+we studied proofs and deductions,
+defined as arrangements of symbols conforming to certain rules,
 without any extrinsic concern for what the symbols might mean.
 We then turned to a \textit{model-theoretic} perspective,
 defining notions of validity and entailment in purely semantic terms.
@@ -1181,7 +1233,7 @@ The soundness proof is straightforward.
   either an axiom, a member of $\Gamma$, or follows from previous sentences by MP.
   We show by strong induction on $k$ that
   $\Gamma \entails A_k$.
-  The theorem then follows by taking $k = n$.
+  The theorem follows by taking $k = n$.
 
   \textit{Case 1.} $A_{k}$ is an axiom.
   Then $\Gamma \entails A_{k}$ by exercise \ref{ex:axioms-valid}.

@@ -298,6 +298,12 @@
     \smallskip
 }
 
+
+\usepackage{booktabs}
+\usepackage{array}
+\newcolumntype{C}{>{$}c<{$}}   % math-mode centered column
+\renewcommand{\arraystretch}{1.15} % a bit more row height
+
 \usepackage{adjustbox}
 
 \usepackage{mathtools} % coloneq

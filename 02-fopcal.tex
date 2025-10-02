@@ -369,9 +369,9 @@ for every axiomatic calculus.
 So we have
 %
 \begin{axioms}
-Id & $A \vdash A$\\
-Mon & $\text{If }\Gamma \vdash A\text{ then }\Gamma, B \vdash A$\\
-Cut & $\text{If }\Gamma \vdash A\text{ and }\Delta,A \vdash B\text{ then }\Gamma,\Delta \vdash B$
+Id & $A \vdash A$.\\
+Mon & $\text{If }\Gamma \vdash A\text{ then }\Gamma, B \vdash A$.\\
+Cut & $\text{If }\Gamma \vdash A\text{ and }\Delta,A \vdash B\text{ then }\Gamma,\Delta \vdash B$.
 \end{axioms}
 %
 \noindent%
@@ -380,7 +380,7 @@ we generally omit set brackets on the left-hand side of `$\vdash$',
 and write a comma to indicate unions:
 `$\Gamma, B \vdash A$' is shorthand for `$\Gamma \cup \{ B \}\vdash A$'.)
 
-The Deduction Theorem also still holds:
+The Deduction Theorem also still holds, but this isn't automatic.
 
 \begin{theorem}{The Deduction Theorem (DT)}{deduction-theorem1}
   If $\Gamma,A \vdash B$ then $\Gamma \vdash A \to B$.
@@ -486,7 +486,7 @@ and so is $\neg\neg \forall x Fx \to \forall x Fx$.
   \emph{Proof.}
   Consider the propositional language $\L_0$ whose ``sentence letters'' are
   the atomic sentences of the first-order language.
-  By theorem \ref{thm:completeness0},
+  By theorem \ref{thm:completeness0}
   (the completeness theorem for propositional logic),
   every sentence in this language that is true on every truth-value assignment
   is provable from A1--A3 and MP.
@@ -507,8 +507,8 @@ and so is $\neg\neg \forall x Fx \to \forall x Fx$.
 % \end{axioms}
 
 As in the case of propositional logic,
-we could use the facts that we have established about $\vdash$:
-Id, Mon, Cut, DT, UI, Taut, together with MP and Gen,
+we could use the facts that we have established about $\vdash$
+(Id, Mon, Cut, DT, UI, Taut, together with MP and Gen)
 to define a sequent calculus.
 From this,
 we could derive the kind of natural deduction or tableau calculus
@@ -704,7 +704,7 @@ just as most stars and most real numbers don't have a name in English.
 What we'll say instead is that
 $\forall x A(x)$ is true in a model $\Mod{M}$ iff
 $A(c)$ is true in every model
-that differs from $\Mod{M}$ at most in the object it assigns to $c$,
+that is exactly like $\Mod{M}$ in every respect other than the interpretation of $c$,
 where $c$ is some individual constant that doesn't already occur in $A(x)$.
 For example,
 `$\forall x Rax$' is true in $\Mod{M}$
@@ -841,8 +841,8 @@ in every model,
 `=' is interpreted as the identity relation (on the model's domain).
 We'll also introduce new rules for reasoning with `='.
 Before we get to these changes,
-I want to introduce another addition to our definition of first-order languages
-that allows forming complex terms like `$1+2$'.
+I want to introduce the second addition to our definition of first-order languages.
+It allows forming complex terms like `$1+2$'.
 
 Let's think about how such terms work.
 The expression `$1+2$' denotes a number:
@@ -896,7 +896,7 @@ even if there is no recipe for determining the output.
 Since functions are just mappings from inputs to outputs,
 they are fully determined by their values for each input.
 Consider, for example, the function $g$ on the natural numbers that
-takes a number $x$ and as input and returns
+takes a number $x$ as input and returns
 $x^{2}$ if Goldbach's conjecture is true
 and $0$ if Goldbach's conjecture is false.
 Goldbach's conjecture says that
@@ -929,10 +929,10 @@ So we need a recursive definition.
 
 \begin{definition}{}{terms}
   A \emph{(singular) term} of a first-order language $\L_{1}^{=}$ with functions and identity is a finite string conforming to the following formation rules.
-  \begin{itemize}
-    \item Every variable and every individual constant is a singular term.
-    \item If $f$ is an $n$-ary function symbol ($n>0$) and $t_1,\ldots,t_n$ are singular terms then $f(t_1,\ldots,t_n)$ is a singular term.
-  \end{itemize}
+  \begin{enumerate*}
+    \item[(i)] Every variable and every individual constant is a singular term.
+    \item[(ii)] If $f$ is an $n$-ary function symbol and $t_1,\ldots,t_n$ are singular terms then $f(t_1,\ldots,t_n)$ is a singular term.
+  \end{enumerate*}
 \end{definition}
 %
 A singular term is \emph{closed} if it contains no variables.
@@ -990,7 +990,7 @@ we generalize A4 to allow for closed terms $t$ where we previously had individua
 `$(x/t)$' is the obvious extension of the substitution notation to closed terms.
 
 We don't need any new axioms or rules for function symbols.
-But we introduce two new axiom schemas for identity:
+But we have two new axiom schemas for identity:
 
 \begin{axioms}
 A6 & $t_1=t_1$\\
@@ -1042,7 +1042,7 @@ We assume that all function symbols denote total functions on the model's domain
 
 As before,
 we write $\llbracket s \rrbracket^{\Mod{M}}$ for the denotation of a non-logical symbol $s$ in a model $\Mod{M}$.
-We extend this notation to all singular terms:
+It is defined as follows.
 
 \begin{definition}{}{denotation}
     Let $\Mod{M}$ be a model of a first-order language $\L_{1}^{=}$ and $I$ the interpretation function of $\Mod{M}$.
@@ -1086,7 +1086,7 @@ I'll only give the definition of satisfaction:
 
 Two final comments.
 
-One,
+First,
 it would be nice if we could allow for partial functions and empty domains.
 The problem is that
 we would then have to deal with ``empty'' terms that don't pick out anything.
@@ -1094,13 +1094,14 @@ we would then have to deal with ``empty'' terms that don't pick out anything.
 every term is empty;
 if $f$ denotes a partial function, $f(a)$ may be empty.)
 If $t$ is empty,
-should we say that $t=t$ be true?
+should we say that $t=t$ is true?
 What about its negation, $t\not=t$?
 These questions can be answered in different ways,
 leading to different versions of \emph{free logic}.
 A free logic is simply a logic in which terms can be empty.
+We dodge the questions by banning empty terms.
 
-Two.
+Second comment.
 I've stipulated at the very start of this chapter that
 a first-order language must have infinitely many individual constants.
 This,
@@ -1126,11 +1127,11 @@ three for $\forall x \forall y \forall z A$,
 and so on.
 But these constants are only used in the internal semantic machinery.
 Their original denotation in the model is irrelevant:
-it plays no role in clause (v).
+it plays no role in clause (v) of definition~\ref{def:satisfaction=}.
 A similar point applies to the other reason why we need an unending supply of constants.
 In our first-order calculus,
-deriving $\forall x B(x)$ from $\forall x A(x)$
-often requires instantiation $\forall x A(x)$ to $A(c)$,
+deriving a universal statement $\forall x B(x)$ from another universal statement $\forall x A(x)$
+often requires instantiating $\forall x A(x)$ to $A(c)$,
 deriving $B(c)$,
 and then applying Gen.
 Here we also need an unending supply of constants
@@ -1139,10 +1140,10 @@ But here, too, the meaning of these constants is irrelevant:
 they are used to denote ``arbitrary'' objects.
 
 So we need a large supply of constants
-to play certain internal roles in our proof system and semantics.
+to play certain internal roles in the handling of quantifiers in our proof system and semantics.
 Conceptually,
-these constants resemble variables:
-they are sometimes called \emph{eigenvariables}.
+the constants we need resemble variables.
+They are sometimes called \emph{eigenvariables}.
 We might have decided to classify them as logical.
 In later chapters,
 when I speak of the non-logical expressions of, say, formalized set theory,
