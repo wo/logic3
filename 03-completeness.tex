@@ -3,10 +3,12 @@
 In this chapter,
 we're going to meet some important results about the powers and limitations of first-order logic.
 Our starting point is the completeness theorem,
-which shows that there is a mechanical way to check for first-order entailment.
+which shows that
+whenever a first-order sentence is entailed by some premises
+then it is derivable from these premises in the first-order calculus.
 We'll see that this positive result is tightly connected to some negative results:
 the compactness theorem and the Löwenheim-Skolem theorems.
-These results concern the \emph{size} of models,
+These theorems concern the \emph{size} of models,
 by which we mean the size of their domain.
 To fully appreciate their implications,
 I'll begin with some background about the sizes of sets,
@@ -14,19 +16,19 @@ which will be needed in later chapters anyway.
 
 \section{Cardinalities}\label{sec:cardinalities}
 
-$\{$ Athens $\}$ is a set with a one member:
+$\{$ Athens $\}$ is a set with one member:
 the city Athens.
 We say that $\{$ Athens $\}$ has size 1.
 $\{$ Athens, Berlin $\}$ has size 2.
 $\{$ Athens, Berlin, Cairo $\}$ has size 3.
 And so on.
 It seems straightforward.
-But now consider the set $\mathbb{N}$ of natural numbers 0, 1, 2, 3, \ldots.
+But now consider the set $\mathbb{N} = \{ 0, 1, 2, 3, \ldots \}$ of natural numbers.
 What is its size?
 
-The official set-theoretic term for the size of a set is \textit{cardinality}.
+The official set-theoretic word for the size of a set is \textit{cardinality}.
 So $\{$ Athens, Berlin, Cairo $\}$ has cardinality 3.
-Finite sets have a finite cardinalities, which are natural numbers.
+Finite sets have finite cardinalities, which are natural numbers.
 But infinite sets also have a cardinality.
 These aren't natural numbers,
 but numbers of a more general sort,
@@ -55,10 +57,10 @@ To make this precise, we define the notion of a one-to-one correspondence, or bi
 \begin{definition}{}{bijection}
   A function $f$ from a set $A$ to a set $B$ is a \emph{bijection}
   if it satisfies the following two conditions.
-  \begin{enumerate*}
+  \begin{cenumerate}
     \item[(i)] For every $x, y \in A$, if $f(x) = f(y)$ then $x = y$. (Injectivity)
-    \item[(ii)] For every $b \in B$ there is some $a \in A$ such that $f(a) = b$. (Surjectivity)
-  \end{enumerate*}
+    \item[(ii)] For every $y \in B$ there is some $x \in A$ such that $f(x) = y$. (Surjectivity)
+  \end{cenumerate}
 \end{definition}
 
 Intuitively, a bijection pairs up each element of $A$ with exactly one element of $B$,
@@ -133,7 +135,7 @@ assigns the counter 0 to 1, 1 to 3, 2 to 5, and so on.
 % each item of which has as ``index'' a natural number.
 
 Are there any \emph{uncountable} sets?
-We might suspect that the set of \emph{pairs} of natural numbers is uncountable.
+One might suspect that the set of \emph{pairs} of natural numbers is uncountable.
 But not so.
 Cantor's \emph{zig-zag method} shows that
 there is a bijection between $\mathbb{N}$ and the set of pairs of natural numbers.
@@ -150,23 +152,23 @@ starting with $\t{0,0}$,
 followed by $\t{0,1}$, $\t{1,0}$, $\t{2,0}$, $\t{1,1}$, $\t{0,2}$, and so on.
 The enumeration amounts to a lists of all the pairs.
 We get a bijection to $\mathbb{N}$ by assigning to each pair
-its position in the list \t{starting with position 0}.
-Thus $\t{0,0}$ is mapped to 0,
+its position in the list, starting with position 0.
+So $\t{0,0}$ is mapped to 0,
 $\t{0,1}$ to 1,
 $\t{1,0}$ to 2,
 and so forth.
 
 (We can find a formula for this bijection.
 As we follow the arrow,
-the pairs \emph{before} any given pair $(x,y)$ comprise
-all the pairs on the left-to-top diagonals before $(x,y)$,
+the pairs \emph{before} any given pair $\t{x,y}$ comprise
+all the pairs on the left-to-top diagonals before $\t{x,y}$,
 which have 1, 2, 3, etc. pairs,
-plus the $y$ pairs on the diagonal containing $(x,y)$ itself.
-The total number of pairs preceding $(x,y)$ is therefore
+plus the $y$ pairs on the diagonal containing $\t{x,y}$ itself.
+The total number of pairs preceding $\t{x,y}$ is therefore
 $(1 + 2 + \ldots + (x+y)) + y$.
 In exercise \ref{ex:gauss-sum},
 you showed that $1+2+ \ldots + (x+y) = (x + y)(x + y + 1)/2$.
-So the position of any pair $(x,y)$ in the enumeration is
+So the position of any pair $\t{x,y}$ in the enumeration is
 $(x+y)(x+y+1)/2 + y$.)
 
 % Since each rational number can be expressed as a pair of natural numbers (the numerator and denominator),
@@ -174,7 +176,7 @@ $(x+y)(x+y+1)/2 + y$.)
 
 \begin{exercise}
   Show that the set of ordered triples of natural numbers is countably infinite.
-  % Can zig zag the cube. But easier: zig zag a 2D grid in which the rows are the pairs $(x,y)$ of natural numbers and the columns are natural numbers. We know that the pairs can be numerated.
+  % Can zig zag the cube. But easier: zig zag a 2D grid in which the rows are the pairs $(x,y)$ of natural numbers and the columns are natural numbers. We know that the pairs can be enumerated.
 \end{exercise}
 
 % Example: the set of formulas of $L_A$ is enumerable.
@@ -190,8 +192,9 @@ Cantor established this with another powerful technique:
 \begin{proof}
   \emph{Proof}.
   Assume for reductio that the set of all sets of natural numbers is countable.
-  This means that we can list them as $S_0, S_1, S_2, \ldots$.
-  Now consider the set $D = \{ n \in \mathbb{N} : n \notin S_n \}$.
+  This means there is a list $S_0, S_1, S_2, \ldots$ of all these sets.
+  Now consider the set $D = \{ n \in \mathbb{N} : n \notin S_n \}$
+  of all natural numbers $n$ that are not in the $n$-th set $S_n$ of the list.
   This is a set of natural numbers,
   so it must be somewhere in the list.
   That is,
@@ -204,11 +207,11 @@ Cantor established this with another powerful technique:
   If $k$ is not in $D$,
   then by definition of $D$,
   $k$ is in $S_k$.
-  Again, this is impossible.
+  This is impossible, as $D = S_k$.
   \qed
 \end{proof}
 
-We can again picture this method with a two-dimensional grid.
+We can again picture this technique with a two-dimensional grid.
 
 \begin{center}
   \input{figures/diagonal.tex}
@@ -219,7 +222,7 @@ Each column stands for a number.
 A checkmark indicates that the number is in the set,
 a cross that it is not.
 (So $0$ is in $S_0$, $1$ is not in $S_0$, 2 is not in $S_{0}$, and so on.)
-Cantor's method now looks at the diagonal, in bold.
+Cantor's method now looks at the shaded diagonal.
 It defines the new set $D$ by \emph{inverting} the diagonal,
 swapping crosses and checkmarks.
 In the picture,
@@ -230,12 +233,12 @@ does not contain 2 and 3,
 does contain 4,
 and so on.
 The so-defined set $D$ is called the \emph{antidiagonal} of the grid.
-It can't be anywhere in the list.
-And so there can be no list of all sets of natural numbers.
+It can't be anywhere in the list $S_0, S_1, S_2, \ldots$.
+So there can be no list of all sets of natural numbers.
 
 Theorem \ref{thm:cantor} can be strengthened:
 
-\begin{theorem}{Cantor's Theorem (general version)}{cantor}
+\begin{theorem}{Cantor's Theorem (general version)}{cantor2}
   For any set $A$,
   the set of subsets of $A$ has strictly greater cardinality than $A$.
 \end{theorem}
@@ -243,7 +246,7 @@ Theorem \ref{thm:cantor} can be strengthened:
 \begin{proof}
   \emph{Proof}.
   The proof proceeds essentially as before.
-  Suppose for reductio that there is a bijection $f: A \to \mathcal{P}(A)$,
+  Suppose for reductio that there is a bijection $f$ from  $A$ to $\mathcal{P}(A)$,
   where $\mathcal{P}(A)$ (called the \emph{power set} of $A$)
   is the set of all subsets of $A$.
   Define the antidiagonal set $D$ as
@@ -301,9 +304,17 @@ There are infinitely many infinite cardinals.
 % \end{exercise}
 
 \begin{exercise}
-  Show that if a first-order language has countably many non-logical symbols,
+  Show that if a first-order language has countably many primitive symbols,
   then the set of all sentences of the language is countably infinite.
 \end{exercise}
+
+\begin{exercise}
+  Show that the set of real numbers is uncountable.
+  (Hint: use the diagonalization method,
+  assuming, for reductio, that there is a list of all
+  decimal representations of real numbers between 0 and 1.)
+\end{exercise}
+
 
 \section{Planning the completeness proof}
 
@@ -338,20 +349,20 @@ In first-order logic,
 the situation is very different.
 A first-order model consists of an arbitrary set $D$
 together with an interpretation of the non-logical vocabulary,
-where, for example, every subset of $D$ is a possible interpretation of any monadic predicate.
+where every subset of $D$ is a possible interpretation of any monadic predicate.
 Even if $D$ itself is countable,
 this means that there are usually uncountably many models with that domain.
 And $D$ doesn't have to be countable.
 It can have any cardinality whatsoever.
 The space of first-order models is enormous.
-Their number is vastly greater than $\aleph_0$.
+The number of first-order models is vastly greater than $\aleph_0$.
 There is, in fact, no aleph big enough to measure the number of first-order models.
 It is therefore astonishing that
 there is a finitary, mechanical method
 -- a proof system --
 by which one can find every sentence
 that is true across the realm of all first-order models.
-Astonishing, but true,
+Astonishing, but true --
 as Kurt Gödel showed in 1929.
 
 Gödel's completeness theorem
@@ -359,10 +370,10 @@ Gödel's completeness theorem
 that we'll discuss in later chapters)
 is noteworthy for other reasons as well.
 For example,
-it supports the conjecture
+it supports the hypothesis
 that all intuitively valid mathematical arguments can be formalized
 as deductions in the first-order calculus.
-Let's take for granted, for the sake of the argument, that
+Let's grant, for the sake of the argument, that
 every mathematical statement can be expressed in a first-order language.
 Now suppose some mathematical argument \emph{can't} be replicated in the first-order calculus.
 By the completeness theorem,
@@ -474,7 +485,7 @@ if $\Gamma$ contains $Fa \lor Gb$,
 it's not obvious if
 our model should satisfy $Fa$ or $Gb$ or both.
 $\Gamma^{+}$ will directly contain $Fa$ or $Gb$ or both,
-so it answer this question.
+so it will answer this question.
 
 Suppose we have $Fa$ in $\Gamma^{+}$.
 Our model $\Mod{M}$ must then contain an object $\llbracket a\rrbracket^{\Mod{M}}$ denoted by $a$ that falls in the extension $\llbracket F \rrbracket^{\Mod{M}}$ of $F$.
@@ -488,9 +499,9 @@ But nothing in the definition of a first-order model prevents us from doing this
 
 Unfortunately,
 there are some complications.
-Suppose $\Gamma$ contains $\exists x Fx$.
-(Which is short for $\neg \forall x \neg Fx$.)
-We want this sentence to be true in our model $\Mod{M}$.
+Suppose $\Gamma$ contains $\exists x Fx$
+(which is short for $\neg \forall x \neg Fx$).
+We want all sentences in $\Gamma$ to be true in our model $\Mod{M}$.
 So there must be some object in $\llbracket F \rrbracket^{\Mod{M}}$.
 But if $\llbracket F \rrbracket^{\Mod{M}}$ is defined as the set of individual constants $c$ for which $Fc \in \Gamma^{+}$,
 there might be no such object,
@@ -500,8 +511,8 @@ That is,
 we need to ensure that
 for each existential sentence $\exists x Fx$ in $\Gamma^{+}$,
 there is a ``witnessing'' sentence $Fc$ in $\Gamma^{+}$.
-The problem is that
-$\Gamma$ may already contain $\neg Fc$ for every individual constant $c$.
+But what if
+$\Gamma$ already contains $\neg Fc$ for every individual constant $c$?
 Then we can't add the required witness without making $\Gamma$ inconsistent.
 
 To get around this problem,
@@ -614,9 +625,9 @@ then it contains $A(x/c)$ for some $c$.
 \end{exercise}
 
 \begin{exercise}\label{ex:henkin-quantifiers-prf}
-  Show that if $\Gamma$ is a Henkin set then
+  Show that if $\Gamma$ is a Henkin set in some language $\L$ then
   $\Gamma$ contains $\forall x A$ iff
-  $\Gamma$ contains $A(x/c)$ for every individual constant $c$.
+  $\Gamma$ contains $A(x/c)$ for every individual constant $c$ in $\L$.
 \end{exercise}
 
 \begin{lemma}{}{henkin-extension}
@@ -789,6 +800,15 @@ the relevant equivalence relation is the one defined in lemma \ref{lem:=equivale
 In what follows,
 `$[t]$' therefore denotes the set of all terms $s$ for which $t=s \in \Gamma$.
 
+\begin{exercise}
+  Which of these are equivalence relations on the set of natural numbers?
+  (a) $x R_1 y$ iff $x > y$;
+  \, (b) $x R_2 y$ iff $x > y$ or $y > x$;
+  \, (c) $x R_3 y$ iff there are natural numbers $m,n$ such that $x \times 2^m = y \times 2^n$.
+
+  Describe the equivalence classes of the relations that are equivalence relations.
+\end{exercise}
+
 The model $\Mod{M}$ that we'll construct from a Henkin set $\Gamma$ will have as its domain
 the set of all equivalence classes $[t]$,
 where $t$ is a closed term in the language of $\Gamma$.
@@ -849,19 +869,20 @@ The following lemma shows that neither problem can arise.
 
 \begin{proof}
   \emph{Proof.}
-  Assume $[s_{i}] = [t_{i}]$, for $i=1,2,\ldots,n$.
-  So $\Gamma$ contains $s_{i}\!=\!t_{i}$, for each $i=1,2,\ldots,n$.
+  Assume $[s_{i}] = [t_{i}]$ for each $i=1,2,\ldots,n$.
+  That is,
+  $\Gamma$ contains $s_{i}\!=\!t_{i}$, for each $i=1,2,\ldots,n$.
 
   (i).
   By A6 (and exercise~\ref{ex:henkin-closure}),
   $f(s_{1},\ldots,s_{n})=f(s_{1},\ldots,s_{n})$ is in $\Gamma$.
-  By $n$ instances of A7 and MP,
+  By $n$ instances of A7 and MP (and exercise~\ref{ex:henkin-closure}),
   it follows that $f(s_{1},\ldots,s_{n})=f(t_{1},\ldots,t_{n})$ is in $\Gamma$,
   which entails that $[f(s_1,\ldots,s_n)] = [f(t_{1},\ldots,t_{n})]$.
 
   (ii). Assume $P(s_{1},\ldots,s_{n})$ is in $\Gamma$.
-  By $n$ instances of A7 and MP,
-  $P(t_{1},\ldots,t_{n})$ is in $\Gamma$ as well.
+  By $n$ instances of A7 and MP (and exercise~\ref{ex:henkin-closure}),
+  $P(t_{1},\ldots,t_{n})$ is in $\Gamma$.
   The converse holds by the same reasoning.
   \qed
 \end{proof}
@@ -872,14 +893,16 @@ Lemma \ref{lem:congruence} ensures that the following definition is legitimate.
   If $\Gamma$ be a Henkin set in a language $\L$
   then the \emph{Henkin model} $\Mod{M}_{\Gamma}$ of $\Gamma$ is defined as follows.
 
-  The domain $D$ of $\Mod{M}_{\Gamma}$ is the set
-  of all $[c]$ where $c$ is an individual constant of $\L$.
+  \smallskip
+  The domain $D$ of $\Mod{M}_{\Gamma}$ is the set $\{ [c] \,:\, c \text{ is an individual constant of } \L \}$.
+
+  \newpage
 
   The interpretation function $I$ of $\Mod{M}_{\Gamma}$ maps
   \begin{cenumerate}
     \item[(i)] each individual constant $c$ to $[c]$,
     \item[(ii)] each $n$-ary function symbol $f$ to the function on $D$ that maps
-         any $n$ objects $[t_1],\ldots,[t_n]$ to $[f(t_1,\ldots,t_n)]$,
+         any $n$ objects $[t_1],\ldots,[t_n]$ in $D$ to $[f(t_1,\ldots,t_n)]$,
     \item[(iii)] each (non-logical) $n$-ary predicate symbol $P$ to
          the set of all $n$-tuples $\t{[t_1],\ldots,[t_n]}$ such that $P(t_1,\ldots,t_n) \in \Gamma$.
   \end{cenumerate}
@@ -912,7 +935,7 @@ We'll need the following two facts.
   \begin{align*}
     \llbracket f(t_{1},\ldots,t_{n})\rrbracket^{\Mod{M}} &= \llbracket f\rrbracket^{\Mod{M}}(\llbracket t_{1}\rrbracket^{\Mod{M}},\ldots,\llbracket t_{n}\rrbracket^{\Mod{M}}) &&\text{ by def.\ \ref{def:satisfaction=}}\\
                                &= \llbracket f\rrbracket^{\Mod{M}}([t_{1}],\ldots,[t_{n}]) &&\text{ by ind.\ hyp.}\\
-                               &= [f(t_{1},\ldots,t_{n})] &&\text{ by def.~\ref{def:henkin-model}.} \qed
+                               &= [f(t_{1},\ldots,t_{n})] &&\text{ by def.~\ref{def:henkin-model}.(iii)} \qed
   \end{align*}
 \end{proof}
 
@@ -949,7 +972,7 @@ We'll need the following two facts.
   where $d$ is the alphabetically first constant that does not occur in $A$.
   Since each such $\Mod{M}'$ has the same domain as $\Mod{M}$,
   the set of such $\Mod{M}'$ is precisely the set of
-  variants $\Mod{M}^{d:[c]}$ of $\Mod{M}$,
+  variants $\Mod{M}^{d:[c]}$ of $\Mod{M}$.
   So $\Mod{M} \satisfies \forall x A$ iff
   $\Mod{M}^{d:[c]} \satisfies A(x/d)$ for every constant $c$,
   which, by (1), is the case iff
@@ -976,7 +999,7 @@ We'll need the following two facts.
   by definition \ref{def:satisfaction=},
   iff $[s] = [t]$
   by lemma~\ref{lem:henkin-terms},
-  iff $s=t \in \Gamma$,
+  iff $s=t \in \Gamma$
   by definition of the equivalence classes.
 
   Assume next that $A$ is an atomic sentence $P(t_{1},\ldots,t_{n})$,
@@ -1253,7 +1276,7 @@ includes junk elements that clearly aren't natural numbers.
 Compactness thus reveals a deep expressive limitation of first-order logic:
 the structure of the natural numbers can't be captured in a first-order language.
 
-Here is a simpler example.
+Here is a simpler example of this kind of limitation.
 For each $n>0$,
 it is easy to find a first-order sentence $S_n$ that is true in all and only
 the models with exactly $n$ elements.
@@ -1305,7 +1328,7 @@ or even to fall in any non-trivial range of infinite cardinalities.
   Its domain consists of equivalence classes of closed terms in the language of $\Gamma^{+}$.
   If the language of $\Gamma$ is countable,
   then so is the language of $\Gamma^{+}$.
-  So it has only countably many closed terms.
+  So the domain of the Henkin model is countable.
   \qed
 \end{proof}
 
@@ -1363,11 +1386,6 @@ that $\mathrm{Th}(\Mod{A})$ has non-standard models of every infinite cardinalit
 \end{exercise}
 
 \begin{exercise}
-  Explain why every satisfiable set of first-order sentences has a model whose
-  domain is a set of natural numbers.
-\end{exercise}
-
-\begin{exercise}
   Consider a first-order language with a binary predicate symbol `$P$' for the ``parent'' relation,
   so that $Pxy$ means (on its intended interpretation) that $x$ is a parent of $y$.
   We can then define the ``grandparent'' relation $P^2(x,y)$ as $\exists z_1 (Pxz_1 \land Pz_1y)$,
@@ -1388,6 +1406,11 @@ that $\mathrm{Th}(\Mod{A})$ has non-standard models of every infinite cardinalit
   and so on.
   Is $\Mod{A}^{c}$ a model of $\mathrm{Th}(\Mod{A})$?
   In what way is it less interesting than the non-standard models of theorem~\ref{thm:non-standard-arithmetic}?
+\end{exercise}
+
+\begin{exercise}
+  Explain why every satisfiable set of first-order sentences has a model whose
+  domain is a set of natural numbers.
 \end{exercise}
 
 % This model satisfies all sentences in $\mathrm{Th}(\Mod{A})$,

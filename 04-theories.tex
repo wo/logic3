@@ -2,10 +2,10 @@
 \chapter{Theories}
 
 In this chapter,
-we look at first-order theories:
+we take a look at first-order theories:
 sets of sentences in a formal, first-order language that are
 assumed to describe a particular domain of objects.
-Such a theory could describe the behaviour of physical systems
+A theory might describe the behaviour of physical systems
 or moral norms,
 but we'll focus on mathematical theories
 -- specifically, arithmetic and set theory.
@@ -23,16 +23,17 @@ were simply taken for granted.
 In the 19th and early 20th century,
 mathematics was put on a more rigorous footing.
 Cauchy, Weierstrass, Dedekind, and others gave
-precise definitions of mathematical concepts such as limits and continuity,
-and formalized the exact assumptions that
+precise definitions of mathematical concepts (such as limits and continuity).
+They also formalized the exact assumptions that
 were needed to derive well-known results.
+These assumptions were collected into \emph{axioms} for the relevant area of maths.
 % It now became possible to show
 % that the techniques mathematicians had been using were indeed valid.
 
 At the same time,
 more powerful mathematical theories were developed,
 such as the set theory of Cantor
-(formalized by Zermelo, Fraenkel, and others),
+(formalized by Zermelo, Fraenkel, and others)
 or the type theory of Russell and Whitehead.
 All known branches of maths,
 it seemed,
@@ -94,7 +95,7 @@ is to capture all such truths,
 showing exactly which assumptions (or axioms) are needed to derive which results.
 
 An important part of the axiomatic project is to reduce the number of primitive concepts.
-In section~\ref{sec:unintended},
+In Section~\ref{sec:unintended},
 I already mentioned that
 we don't need separate individual constants for each number:
 we can instead use a single constant `0' for the number 0
@@ -111,7 +112,7 @@ If `1', `2', and `3' were primitive symbols,
 it is hard to see how `$1 + 2 = 3$' could be derived
 from more basic principles.
 
-In section~\ref{sec:unintended},
+In Section~\ref{sec:unintended},
 I suggested that a first-order theory of arithmetic
 might use primitive symbols for 0,
 the successor function,
@@ -194,7 +195,7 @@ we need to postulate that
 no two numbers have the same successor.
 
 \begin{axioms}
-  Q1 & $\forall x\forall y\, (s(x)\!=\!s(y) \,\to\, x\!=\!y)$ \\
+  Q1 & $\forall x\forall y\, (s(x)\!=\!s(y) \,\to\, x\!=\!y)$
 \end{axioms}
 
 We also know that 0 is not the successor of any number:
@@ -242,7 +243,7 @@ the successor relation must still be injective,
 but it can go in a loop,
 or it can form a second infinite chain
 $a, s(a), s(s(a)), \ldots$.
-The following axiom to rule out such chains,
+The following axiom rules out such additional chains,
 by stipulating that there is no object other than 0 that is not a successor.
 
 \begin{axioms}
@@ -251,8 +252,7 @@ by stipulating that there is no object other than 0 that is not a successor.
 
 This doesn't help with the looping case,
 however.
-Intuitively,
-we'd like to have a postulate saying that
+We'd like to have an axiom saying that
 every number can eventually be reached from 0 by repeated application of $s$.
 But there's no way to express this in first-order logic
 (as we proved in section~\ref{sec:unintended}).
@@ -262,7 +262,7 @@ by adding the following axiom schema,
 called the \emph{induction schema}:
 
 \begin{axioms}
-  Ind & $(A(0) \land \forall x\; (A(x) \rightarrow A(s(x))) \to \forall x\; A(x))$
+  Ind & $(A(0) \land \forall x\; (A(x) \rightarrow A(s(x)))) \to \forall x\; A(x)$
 \end{axioms}
 
 Here, $A(x)$ is any formula with one free variable.
@@ -323,15 +323,15 @@ We can see this from the fact that it entails Q3:
     note that the consequent of $A(s(x))$ is $\exists y (s(x) = s(y))$,
     which is trivial;
     so $A(s(x))$ can never be false;
-    it follows that $A(x) \to A(s(x))$ also holds for all $x$.
+    so $A(x) \to A(s(x))$ is always true.
     \qed
 \end{proof}
 
 Let's turn to addition and multiplication.
 A common way to define a function on the natural numbers is to
 describe how it applies to 0
-and then define their value for any successor number
-in terms of their value for the previous number.
+and then define its value for any successor number
+in terms of its value for the previous number.
 For example,
 the factorial function $n!$ that maps every number $n$ to
 the product $1 \times 2 \times \ldots \times n$ can be defined by
@@ -404,7 +404,7 @@ its axioms are Q1, Q2, Ind, and Q4--Q7.
 although Peano points out that
 essentially the same theory was proposed earlier by Dedekind).
 
-Are all truths in the language arithmetic entailed by the axioms of PA?
+Are all truths in the language of arithmetic entailed by the axioms of PA?
 For a while,
 this seemed plausible.
 Gödel's first \emph{incompleteness} theorem
@@ -424,15 +424,13 @@ there's a good sense in which it is \emph{incompletable}.
     %  Take u = 0 and use x + s(0) = s(x + 0) = s(x).
   (b) $\forall x \forall y (x < y \,\to\, 0 < y)$; \;
     % If x + s(u) = y, let v := x + u and note 0 + s(v) = s(v) = y.
-  (c) $\forall x (x \times s(0) = x)$.
+  (c) $\forall x \forall y(x + y = y + x)$.
+    % By induction on y. Base: x + 0 = x = 0 + x.
+    % Step: x + s(y) = s(x + y) = s(y + x) = s(y) + x.
 \end{exercise}
 
 % \begin{exercise}
 %   Prove Herbrand's axiom schema: ¬s...sx = x.
-% \end{exercise}
-
-% \begin{exercise}
-%   Prove x + y = y + x
 % \end{exercise}
 
 % You may note that Ind is a schema. We can't actually list all instances of it.
@@ -448,11 +446,12 @@ there's a good sense in which it is \emph{incompletable}.
   for some objects outside $0, s(0), s(s(0)), \ldots$.
   \begin{cenumerate}
     \item[(a)] Show that adding Q4--Q7 doesn't help:
-    there is a model $\Mod{M}$ of Q1--Q7 with two objects $a$ and $b$
+    define a model $\Mod{M}$ of Q1--Q7 with two objects $a$ and $b$
     that are successors of each other.
     \item[(b)] Using the definition of `<' from earlier in this section,
     determine whether $a<b$, $a<a$, and $0<a$ are true in your model $\Mod{M}$.
-    \item[(c)] Show that $\text{Q} \nvdash \forall x \forall y (x+y = y+x)$.
+    \item[(c)] Is $\forall x \forall y (x+y = y+x)$ true in your model $\Mod{M}$?
+    If yes, change the interpretation of $+$ to make it false while keeping Q1--Q7 true.
   \end{cenumerate}
 \end{exercise}
 
@@ -537,15 +536,15 @@ Consider the formula $x \not\in x$,
 saying that $x$ is not a member of itself.
 Assume that there is a set of all things to which this formula applies.
 Call this set $R$.
-Is $R$ is a member of itself?
+Is $R$ a member of itself?
 If it is, then by the definition of $R$,
 it is not a member of itself.
 If it isn't, then by the definition of $R$,
 it is a member of itself.
-Either way, we get a contradiction.
+This is a contradiction.
 So $x \not\in x$ is a formula for which there is no corresponding set $\{ x : x \not\in x \}$.
 
-There is something odd anyway about the idea that a set might contain itself.
+There is something odd about the idea that a set might contain itself.
 One imagines sets as abstract "containers",
 and a container can hardly contain itself.
 Ernst Zermelo,
@@ -571,8 +570,8 @@ with sets from the previous stage as elements.
 We continue in this manner.
 Whenever a set occurs at some stage,
 it can be used as an element of sets at later stages.
-As a consequence,
-a set first appears at a stage only after all its elements have appeared.
+But not otherwise:
+a set can only appear at a stage after all its elements have appeared.
 So we never get a set that contains itself.
 Nor do we get a set of all sets that don't contain themselves:
 this would be the set of all sets;
@@ -619,7 +618,7 @@ In the pure hierarchy,
 $V_{1} = \mathcal{P}(\emptyset) = \{ \emptyset \}$,
 $V_{2} = \mathcal{P}(\{\emptyset\}) = \{\emptyset, \{\emptyset\}\}$,
 and so on.
-We get an infinite sequence $V_0, V_1, V_2, \dots$ of ever-larger sets,
+This yields an infinite sequence $V_0, V_1, V_2, \dots$ of ever-larger sets,
 all ultimately built from the empty set.
 
 \begin{wrapfigure}{r}{0.42\textwidth}
@@ -655,7 +654,7 @@ there is another stage $V_{\omega + \omega}$, or $V_{\omega \cdot 2}$.
 It contains all sets that have appeared at any earlier stage:
 $V_{\omega \cdot 2} = \bigcup_{k < \omega} V_{\omega + k}$.
 From $V_{\omega \cdot 2}$,
-we construct $V_{\omega \cdot 2 + 1}$, $V_{\omega \cdot 2 + 2}$, \ldots by taking power sets.
+we construct $V_{\omega \cdot 2 + 1}$, $V_{\omega \cdot 2 + 2}$, etc.\ by taking power sets.
 Then we construct $V_{\omega \cdot 3}$ by taking the union of all earlier stages.
 And so on and on.
 
@@ -785,7 +784,7 @@ By the convention for $\subseteq$, this is in turn shorthand for
 \]
 
 The same trick is needed to talk about operations on sets.
-To define the union $\cup$ operation,
+To define the union operation $\cup$,
 for example,
 we need to find a formula that is true of sets $x,y$, and $z$
 iff $z$ is the union of sets $x$ and $y$.
@@ -1002,25 +1001,20 @@ the members of some set $v$ and some $y$s,
 there can be no more $y$s than there are members of $v$.
 The axiom of replacement, which is really an axiom schema, allows us to conclude that
 there is a set $w$ that contains all these $y$s:
-
 \begin{axioms}
     Z9 & $\forall v((\forall x(x \in v \to \exists!y A(x,y)) \to \exists w\forall x(x \in v \leftrightarrow \exists y(y \in w \land A(x,y)))))$
 \end{axioms}
 
-For applications of set theory,
-Replacement is rarely needed.
-But we need it to ensure that the cumulative hierarchy extends to $V_{\omega\!+\!\omega}$.
+Replacement is needed to ensure that
+the cumulative hierarchy extends beyond the finite stages $V_0, V_1, V_2, \ldots$.
 From Z1--Z8 (sometimes called \emph{Zermelo set theory} or Z),
-we get $V_0, V_1, V_2, \ldots, V_{\omega}, V_{\omega\!+\!1}, V_{\omega\!+\!2}, \ldots$,
-but we don't get to $V_{\omega\!+\!\omega}$.
+we get the finite stages,
+but we can't prove the existence of $V_{\omega}$.
 With Replacement,
-we can show that the set $\{ V_{\omega\!+\!n} : n \in \mathbb{N} \}$ exists.
-$V_{\omega\!+\!\omega}$ is the union of this set.
-To show that it exists,
-we use Replacement with formula $A(x,y)$ saying that
-$y$ is obtained from $V_{\omega}$
-by $x$ applications of the power set operation.
-
+we can show that there is a set $\{ V_{n} : n \in \mathbb{N} \}$ of all finite stages:
+the formula $A(x,y)$ in Z9 says that
+$y$ is obtained from $\emptyset$ by $x$ applications of the power set operation.
+$V_{\omega}$ is the union of $\{ V_{n} : n \in \mathbb{N} \}$.
 
 Finally,
 we have Zermelo's Axiom of Choice.
@@ -1042,7 +1036,8 @@ it is generally accepted,
 as many important mathematical results depend on it.
 
 \begin{exercise}
-  Prove from the axioms of ZFC that for any three things a,b,c, there is a set \{a,b,c\}.
+  The axioms of ZFC guarantee that for any three things a,b,c, there is a set \{a,b,c\}.
+  Explain how.
 \end{exercise}
 
 \begin{exercise}
@@ -1109,7 +1104,7 @@ Suppose we read
   \item `$t_{1} + t_{2}$' and `$t_{1} \times t_{2}$' as abbreviations of the corresponding operations on sets,
 \end{itemize*}
 and we restrict all quantifiers in PA to range over $\omega$,
-so that `$\forall x A$' becomes `$\forall x (x \in \omega \to A)$'
+so that `$\forall x A$' becomes `$\forall x ({x \in \omega} \to A)$'
 All axioms of PA are then provable in ZFC.
 We say that PA is \textit{interpretable} in ZFC.
 In general,
@@ -1137,6 +1132,7 @@ consider the second axiom of PA:
   Q2 & $\forall x \, 0\! \not= \!s(x)$
 \end{axioms}
 
+\noindent%
 Under the above translation scheme,
 this turns into $\forall x (x \in \omega  \to (\emptyset \ne x \cup \{ x \}))$.
 And that's easily provable in ZFC.
@@ -1426,7 +1422,7 @@ it follows that ZFC has a model.
 By the (downward) Löwenheim-Skolem theorem,
 it follows from this
 that ZFC has a \emph{countable} model.
-Call it $\Mod{M}$.
+Call that model $\Mod{M}$.
 The domain of $\Mod{M}$ contains only countably many objects.
 Yet all sentences in ZFC are true in $\Mod{M}$,
 including sentences saying that
@@ -1438,7 +1434,7 @@ It's not a real paradox.
 A set $x$ is countable if
 there is an injective function from  $x$ to $\omega$;
 $x$ is uncountable if there is no such function.
-ZFC proves that some $\mathcal{P}(\omega)$ is uncountable by proving that
+ZFC proves that $\mathcal{P}(\omega)$ is uncountable by proving that
 there is no injective function from $\mathcal{P}(\omega)$ to $\omega$.
 Remember that functions are represented as sets of ordered pairs.
 To say that there is an injective function from $x$ to $\omega$ is to say that
@@ -1470,9 +1466,9 @@ there isn't an outside perspective from which
 one can see that
 there only countably many of the things we call `sets'?
 
-\begin{exercise}
-  Explain why every model of ZFC has an infinite domain.
-\end{exercise}
+% \begin{exercise}
+%   Explain why every model of ZFC has an infinite domain.
+% \end{exercise}
 
 % Things don't look much clearer if we go second-order, as long as the
 % second-order quantifiers are interpreted as ranging over sets. A model still

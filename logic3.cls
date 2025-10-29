@@ -260,8 +260,35 @@
 \definecolor{rred}{RGB}{180,0,0}
 
 
-% Turing machines
+% Command to draw a Turing machine tape
+% Usage: \turingtape{content}{highlighted position (0-indexed)}
+% content is comma-separated
+\newcommand{\turingtape}[2]{%
+  \begin{tikzpicture}[baseline=-0.5ex]
+    \foreach \symbol [count=\i from 0] in #1 {
+      \ifnum\i=#2
+        \node[draw=gray!50, minimum size=0.6cm, inner sep=1pt, fill=gray!10] at (\i*0.6,0) {\symbol};
+      \else
+        \node[draw=gray!50, minimum size=0.6cm, inner sep=1pt] at (\i*0.6,0) {\symbol};
+      \fi
+    }
+  \end{tikzpicture}%
+}
 
+\newcommand{\inlineturingtape}[2]{%
+  \begin{tikzpicture}[baseline=-0.7ex]
+    \foreach \symbol [count=\i from 0] in #1 {
+      \ifnum\i=#2
+        \node[draw=gray!50, minimum size=0.4cm, inner sep=1pt, fill=gray!10] at (\i*0.4,0) {\symbol};
+      \else
+        \node[draw=gray!50, minimum size=0.4cm, inner sep=1pt] at (\i*0.4,0) {\symbol};
+      \fi
+    }
+  \end{tikzpicture}%
+}
+
+
+% Turing machines
 
 \usetikzlibrary{automata, arrows}
 \usetikzlibrary{matrix, positioning, shapes.geometric, calc}
@@ -275,7 +302,7 @@
 
 \usepackage{wrapfig}
 
-\newcommand{\num}[1]{\underline{#1}}
+\newcommand{\num}[1]{\overline{#1}}
 \newcommand{\gn}[1]{\ulcorner #1 \urcorner}
 
 \newcommand{\pconcat}{\raisebox{0.3ex}{%

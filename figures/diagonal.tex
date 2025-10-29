@@ -1,6 +1,6 @@
 \begin{tikzpicture}[
     every node/.style={font=\small,inner sep=0pt,outer sep=0pt},
-    cell/.style ={draw,line width=.4pt,minimum size=1cm,inner sep=0pt},
+    cell/.style ={draw,line width=.4pt,minimum size=8mm,inner sep=0pt},
     tick/.style ={font=\normalsize,green!50!black},
     cross/.style={font=\normalsize,red!70!black}
 ]
@@ -10,11 +10,16 @@
 
 \pgfmathsetseed{15345}         % <- change to get a different random pattern
 
+% ---------------- diagonal box shading (drawn first) ----------------
+\foreach \k in {0,...,\N}{
+   \fill[black!6] (0.8*\k-0.4,-0.8*\k-0.4) rectangle (0.8*\k+0.4,-0.8*\k+0.4);
+}
+
 % ---------------- grid, labels, membership marks ----------------
 \foreach \row in {0,...,\NN}{
   \foreach \col in {0,...,\NN}{
 
-      \coordinate (p) at (\col,-\row);
+      \coordinate (p) at (\col*0.8,-\row*0.8);
 
       % node name c<row>_<col>
       \node[cell] (c\row_\col) at (p) {};
@@ -50,7 +55,7 @@
 
 % bold diagonal boxes
 \foreach \k in {0,...,\N}{
-   \draw[ultra thick]
+   \draw[thick]
          (c\k_\k.north west) rectangle (c\k_\k.south east);
 }
 

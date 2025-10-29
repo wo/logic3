@@ -155,17 +155,18 @@ $\forall x(Fx \to Gy)$.
 An occurrence of a variable in a formula is \emph{bound}
 if it lies in the scope of an occurrence of a quantifier that binds it.
 An occurrence of a variable that isn't bound is \emph{free}.
-A formula in which some variable occurs free is \emph{open}.
+A variable is \emph{free in} a formula if it has at least one free occurrence in it.
+A formula in which some variable is free is \emph{open}.
 A formula that isn't open is \emph{closed}.
 A \emph{sentence} is a closed formula.
 
 \begin{exercise}
-  Why do I say that "occurrences" of a variable in a formula are free or bound?
-  Why not simply say that a variable is free or bound in a formula?
+  Given an example of a formula in which the variable $x$ is free even though
+  not all occurrences of $x$ in the formula are free.
 \end{exercise}
 
 \begin{exercise}
-  Assume that `$F$' is a 1-ary (= \emph{monadic}) predicate, `$a$' is a constant, and `$y$' a variable.
+  Assume that `$F$' is a 1-ary (= \emph{monadic}) predicate symbol, `$a$' is a constant, and `$x$' a variable.
   Which of the following are formulas?
   Which are sentences?
   Mark the scope of each quantifier.
@@ -227,7 +228,7 @@ rather than the nonsensical `$\forall a Fa$'.
 In informal contexts,
 I'll often write `$A(x)$' to indicate that
 $A$ is a formula in which the variable $x$ occurs freely;
-`$A(t)$' is then shorthand for `$A(x/t)$'.
+`$A(c)$' is then shorthand for `$A(x/c)$'.
 
 \begin{exercise}
   Let $A$ be $\forall x (Fx \to Gy) \to  \forall y Fy$. What is $A(y/b)$?
@@ -437,19 +438,24 @@ that $x$ is not free in $A$.
 Let $c$ be a constant that doesn't occur in $A$ or $B$.
 Then:
 
+\begingroup
+\allowdisplaybreaks
+
 \vspace{-\baselineskip}
 \begin{flalign*}
   \quad 1.\quad & \forall x (A \to B), A \vdash \forall x (A \to B) && \text{(Id, Mon)} & \\
   \quad 2.\quad & \vdash \forall x (A \to B) \to (A \to B(x/c)) && \text{(A4, $x$ not free in $A$)} & \\
   \quad 3.\quad & \forall x (A \to B), A \vdash A \to B(x/c) && \text{(MP, 1, 2)} & \\
-  \quad 4.\quad & \forall x (A \to B), A \vdash A && \text{(Id)} & \\
+  \quad 4.\quad & \forall x (A \to B), A \vdash A && \text{(Id, Mon)} & \\
   \quad 5.\quad & \forall x (A \to B), A \vdash B(x/c) && \text{(MP, 3, 4)} & \\
   \quad 6.\quad & \forall x (A \to B), A \vdash \forall x B && \text{(Gen, 5, $B(x/c)(c/x) = B$)} & \\
   \quad 7.\quad & \forall x (A \to B) \vdash A \to \forall x B && \text{(DT, 6)} & \\
   \quad 8.\quad & \vdash \forall x (A \to B) \to (A \to \forall x B) && \text{(DT, 7)} &
 \end{flalign*}
 
-From A4 and DT, we get the rule of universal instantiation:
+\endgroup
+
+From A4 and MP, we get the rule of universal instantiation:
 
 \begin{theorem}{Universal Instantiation (UI)}{ui}
   If $\Gamma \vdash \forall x A$ then $\Gamma \vdash A(x/c)$.
@@ -464,7 +470,7 @@ From A4 and DT, we get the rule of universal instantiation:
   \qed
 \end{proof}
 
-From this (and DT),
+From this and DT,
 we can derive any instance of A4.
 So we won't need to invoke A4 any more.
 
@@ -542,7 +548,7 @@ We won't pause to explore these matters.
 \section{Semantics}\label{sec:semantics1}
 
 I've already explained informally how first-order languages are interpreted:
-individual constants are assumed to pick out objects in the intended domain of discourse;
+individual constants pick out objects in the intended domain of discourse;
 predicate symbols express properties or relations among these objects.
 We'll now make this more precise.
 
@@ -613,7 +619,7 @@ or what the scenario is like.
     \item[(i)] a non-empty set $D$, called the \emph{domain} or \emph{universe} of $\Mod{M}$, and
     \item[(ii)] an \emph{interpretation function} $I$ that assigns
       to each individual constant of $\L_{1}$ a member of $D$, and
-      to each $n$-ary predicate of $\L_{1}$ a set of $n$-tuples from $D$.
+      to each $n$-ary predicate symbol of $\L_{1}$ a set of $n$-tuples from $D$.
   \end{cenumerate}
 \end{definition}
 
@@ -622,7 +628,7 @@ A 1-tuple is simply an object.
 So a ``set of 1-tuples from $D$'' is a set of members of $D$
 a ``set of 2-tuples from $D$'' is a set of pairs of members of $D$,
 and so on.
-The set assigned to a predicate is called the \emph{extension} of the predicate.
+The set assigned to a predicate symbol is called the \emph{extension} of the predicate symbol.
 
 % The set of objects that have a property is called the property's \emph{extension};
 % similarly, a relation's extension is
@@ -658,7 +664,7 @@ It is useful to have an expression for the denotation of a non-logical symbol $s
 I'll use `$\llbracket s \rrbracket^{\Mod{M}}$'.
 That is,
 if $\Mod{M}$ is a model with interpretation function $I$,
-$c$ is an individual constant and $P$ a predicate,
+$c$ is an individual constant and $P$ a predicate symbol,
 then $\llbracket c \rrbracket^{\Mod{M}}$ is $I(c)$
 and $\llbracket P \rrbracket^{\Mod{M}}$ is $I(P)$.
 
@@ -748,8 +754,8 @@ I use Mates' because it requires slightly less machinery.
 %
 \noindent%
 If $A$ is true in $\Mod{M}$,
-we also say that $\Mod{M}$ is a model of $A$,
-or that $\Mod{M}$ satisfies $A$,
+we also say that $\Mod{M}$ is \emph{a model of} $A$,
+or that $\Mod{M}$ \emph{satisfies} $A$.
 A model satisfies a set of sentences if it satisfies each sentence in the set.
 
 Entailment and validity are defined in terms of satisfaction,
@@ -823,7 +829,7 @@ It obscures the structure of the original sentence,
 which states an identity between $1+2$ and $3$.
 
 As a first step to remedy this situation,
-let's introduce a predicate for identity.
+let's introduce a predicate symbol for identity.
 We'll use `='.
 So `$=\!ab$' states that $a$ equals $b$,
 in the sense that $a$ and $b$ are the very same object.
@@ -833,7 +839,7 @@ We'll also write `$a\not= b$' for `$\neg =\!ab$'.
 
 Of course,
 nothing in our earlier definition of first-order languages
-prevented us from having a predicate `='.
+prevented us from having a predicate symbol `='.
 The real novelty is that
 we now classify `=' as a logical expression.
 This means that its interpretation is held fixed:
@@ -911,7 +917,8 @@ So we know that $g$ is trivial to compute,
 even though we don't know its value for 1!
 
 \begin{exercise}
-  Give an example of a function with 3 arguments.
+  Give an example of a function with three arguments.
+  (That is, the function takes three objects as input.)
 \end{exercise}
 
 Let's now add function symbols to our first-order languages.
@@ -929,10 +936,10 @@ So we need a recursive definition.
 
 \begin{definition}{}{terms}
   A \emph{(singular) term} of a first-order language $\L_{1}^{=}$ with functions and identity is a finite string conforming to the following formation rules.
-  \begin{enumerate*}
+  \begin{cenumerate}
     \item[(i)] Every variable and every individual constant is a singular term.
     \item[(ii)] If $f$ is an $n$-ary function symbol and $t_1,\ldots,t_n$ are singular terms then $f(t_1,\ldots,t_n)$ is a singular term.
-  \end{enumerate*}
+  \end{cenumerate}
 \end{definition}
 %
 A singular term is \emph{closed} if it contains no variables.
@@ -1035,7 +1042,7 @@ We assume that all function symbols denote total functions on the model's domain
     \begin{itemize*}
       \item to each individual constant of $\L_{1}^{=}$ a member of $D$,
       \item to each $n$-ary function symbol of $\L_{1}^{=}$ an $n$-ary total function on $D$, and
-      \item to each non-logical $n$-ary predicate of $\L_{1}^=$ a set of $n$-tuples from $D$.
+      \item to each non-logical $n$-ary predicate symbol of $\L_{1}^=$ a set of $n$-tuples from $D$.
     \end{itemize*}
   \end{cenumerate}
 \end{definition}
@@ -1081,7 +1088,8 @@ I'll only give the definition of satisfaction:
 \end{exercise}
 
 \begin{exercise}\label{ex:domain-size}
-  Construct a sentence with `=' as the only predicate symbol that is true in a model $\Mod{M}$ iff the domain of $\Mod{M}$ has (a) at least two members, (b) at most two members, (c) exactly two members.
+  Construct three sentences $A_{1}, A_{2}, A_{3}$ with `=' as the only predicate symbol
+  such that (a) $A_1$ is true in a model $\Mod{M}$ iff the domain of $\Mod{M}$ has at least two members, (b) $A_2$ is true in $\Mod{M}$ iff the domain of $\Mod{M}$ has at most two members, (c) $A_3$ is true in $\Mod{M}$ iff the domain of $\Mod{M}$ has exactly two members.
 \end{exercise}
 
 Two final comments.
@@ -1329,10 +1337,10 @@ We'll need the following lemmas.
   Let $\Mod{M}^{ed}$ be like $\Mod{M}^d$ except that
   $\dn{e}^{\Mod{M}^{ed}} = \dn{d}^{\Mod{M}^d}$.
   Since $e$ doesn't occur in $B(x/t_2)(y/d)$,
-  $\Mod{M}^{ed}$ and $\Mod{M}^d$ agree on all symbols in $B(x/y_2)(y/d)$.
+  $\Mod{M}^{ed}$ and $\Mod{M}^d$ agree on all symbols in $B(x/t_2)(y/d)$.
   So by the coincidence lemma,
   \begin{equation}\tag{8}
-    \Mod{M}^d \satisfies B(x/t_2)(y/d) \text{ iff } \Mod{M}^{ed} \satisfies B(x/y_2)(y/d).
+    \Mod{M}^d \satisfies B(x/t_2)(y/d) \text{ iff } \Mod{M}^{ed} \satisfies B(x/t_2)(y/d).
   \end{equation}
   By induction hypothesis,
   \begin{equation}\tag{9}

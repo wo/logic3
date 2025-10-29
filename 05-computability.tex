@@ -1,8 +1,8 @@
 \setcounter{chapter}{4}
-\chapter{Computability}
+\chapter{Computability}\label{ch:computability}
 
 In the next three chapters,
-we'll survey computability theory:
+we take a look at computability theory:
 the study of what can and what can't be computed by a mechanical algorithm.
 This will allow us to show that
 there is no algorithm for deciding whether a first-order sentence is valid.
@@ -11,8 +11,7 @@ It will also provide a basis for proving Gödel's incompleteness theorems.
 \section{The Entscheidungsproblem}\label{sec:entscheidungsproblem}
 
 Suppose you wonder whether a certain first-order sentence is (logically) valid.
-To this end,
-you might try to construct a proof of the sentence in the first-order calculus.
+You might try to construct a proof of the sentence in the first-order calculus.
 By the soundness of the calculus,
 such a proof would establish that the sentence is valid.
 By the completeness of the calculus,
@@ -31,8 +30,8 @@ one by one,
 until we find a proof of the target sentence.
 
 Let me spell out this algorithm in more detail.
-I'll assume that we're dealing with a countable first-order language
-(although the algorithm can easily be adapted to uncountable languages).
+I assume that we're dealing with a countable first-order language
+(although this isn't essential for the algorithm).
 % Even if the language is uncountable,
 % we can restrict the proof search for a given sentence
 % to proofs whose language contains only the symbols that occur in the sentence
@@ -41,8 +40,9 @@ I'll assume that we're dealing with a countable first-order language
 We begin by assigning to each symbol in the language a natural number
 that represents its position in some fixed ``alphabetical'' order.
 I'll call this the \emph{code number} of the symbol.
+
 For each natural number $n$,
-there are then only finitely many strings with length up to $n$,
+there are only finitely many strings with length $n$,
 made up of symbols whose code number is at most $n$.
 The algorithm goes through all these strings,
 for increasing values of $n$.
@@ -52,25 +52,26 @@ we generate all strings of length 1 made of symbols whose code number is at most
 In the second stage,
 we generate all strings of length 2 made of symbols whose code number is at most 2.
 And so on.
+
 Whenever we have generated a string,
 we check if it is a proof of the target sentence.
 That is,
 we check if
-the string divides into sentences
+the generated string divides into sentences
 (separated by, say, a comma)
 in such a way that
-(1) each sentence is either an instance of an axiom schema (A1--A7)
+(i) each sentence is either an instance of A1--A7
 or follows from previous sentences by MP or Gen,
-and (2) the last sentence is the target sentence.
+and (ii) the last sentence is the target sentence.
 This is a simple, mechanical task.
-Whenever a sentence has a proof,
-this algorithm will eventually find it.
 
+If a sentence has a proof,
+this algorithm will eventually find it.
 (Needless to say,
 the algorithm is terribly inefficient.
-There are much more efficient algorithms.
+There are much better algorithms.
 I've implemented one that runs in your web browser:
-see \href{https://www.umsu.de/trees/}{umsu.de/trees/}.
+see \href{https://www.umsu.de/trees/}{www.umsu.de/trees/}.
 But efficiency is not our current concern.)
 
 What if a sentence doesn't have a proof, because it isn't valid?
@@ -80,28 +81,28 @@ and never find a proof.
 
 So we don't yet have an algorithm for deciding whether a sentence is valid.
 We have, in effect,
-an algorithm that outputs 'yes' whenever the sentence to which it is applied is valid;
-but it doesn't output 'no' when the sentence is invalid.
+an algorithm that outputs `yes' whenever the sentence to which it is applied is valid;
+but it doesn't output `no' when the sentence is invalid.
 Instead, the algorithm then runs forever.
 Can we do better?
 Can we find an algorithm that
-always outputs either 'yes' or 'no',
+always outputs either `yes' or `no',
 depending on whether the input sentence is valid or not?
 This is David Hilbert's \emph{Entscheidungsproblem}
 (``decision problem''),
 raised in Hilbert and Ackermann's monograph \emph{Grundzüge der Theoretischen Logik} in 1928.
 
 Suppose, for a moment, that we had such an algorithm.
-We would then also have an algorithm for
-deciding whether any given sentence is entailed by some axioms
-(assuming that one can mechanically recognize whether a sentence is among the axioms).
+More generally,
+suppose we had an algorithm for deciding whether
+a first-order sentence is entailed by a given set of axioms.
 If we then had a complete axiomatization of some mathematical area,
 all questions in that area could be answered mechanically.
 In 1928,
 it seemed plausible that
 all areas of mathematics could be completely axiomatized,
 so that all truths about them could be derived from the relevant axioms.
-With an algorithm for deciding validity,
+With an algorithm for deciding validity and entailment,
 we would then have a mechanical algorithm for answering all mathematical questions.
 In principle,
 although perhaps not in practice,
@@ -113,7 +114,7 @@ it seemed within reach.
 
 So,
 is there an algorithm for deciding whether any given first-order sentence is valid?
-Alonzo Church and Alan Turing found the answer in 1936: no.
+The answer was established by Alonzo Church and Alan Turing in 1936: no.
 First-order logic is, as we say, \emph{undecidable}.
 
 How could one prove this?
@@ -124,20 +125,14 @@ Hilbert's Entscheidungsproblem thereby led to the development of computability t
 the study of what can and what can't be computed by a mechanical algorithm.
 
 \begin{exercise}
-  Explain why an algorithm for deciding whether a sentence is valid
-  would also decide whether a sentence is entailed by a given set of axioms,
-  assuming that one can mechanically recognize whether a sentence is among the axioms.
-\end{exercise}
-
-\begin{exercise}
   Explain why the following problems are all equivalent:
   (a) decide whether a first-order sentence is valid,
   (b) decide whether a sentence is provable in the first-order calculus,
-  (c) decide whether a sentence is satisfiable (true in some model),
-  (d) decide whether a sentence is consistent (one can't derive a contradiction from it).
-  % All equivalent. (a) and DP are equivalent by soundness and completeness; (b)
-  % and (c) are equivalent by soundness and completeness; both test the
-  % complement of DP because A is valid iff ¬A is not satisfiable.
+  (c) decide whether a first-order sentence is satisfiable (true in some model),
+  (d) decide whether a first-order sentence is consistent (one can't derive a contradiction from it in the first-order calculus).
+  % All equivalent. (a) and (b) are equivalent by soundness and completeness; (c)
+  % and (d) are equivalent by soundness and completeness; both test the
+  % complement of (a) because A is valid iff ¬A is not satisfiable.
 \end{exercise}
 
 \begin{exercise}
@@ -150,7 +145,7 @@ the study of what can and what can't be computed by a mechanical algorithm.
   by going through the recursive definition of truth in a model.)
 \end{exercise}
 
-\section{Computable functions}
+\section{Computable functions}\label{sec:computable-functions}
 
 Let's try to get clearer about what we mean by an algorithm.
 In a sense,
@@ -161,12 +156,14 @@ Here is an algorithm for answering $Q$:
 write down $A$.
 For example,
 if $Q$ is `134 times 97?',
-the algorithm for answering $Q$ is to write down `12998'.
+the algorithm for answering $Q$ is to write down `12,998'.
 No calculation required.
 
 But that's not really what we mean by an algorithm.
 An algorithm doesn't just provide the answer to a single question.
-An algorithm is an instruction to find the answer to every question of a certain type, which typically has infinitely many instances.
+An algorithm is an instruction for finding the answer to every question of a certain type.
+Typically,
+there are infinitely many questions of that type.
 An algorithm for multiplication,
 for example,
 is an instruction by which one can find the answer to every `$x$ times $y$?' question. 
@@ -178,33 +175,39 @@ So we'll understand an algorithm as a recipe or instruction for computing a func
 The task of developing a precise notion of an algorithm
 turns into the task of developing a precise notion of \emph{computable functions}:
 functions for which there is a recipe by which one can
-compute the function value for any input.
+compute the function's value for any input.
 
-The recipe must be of a certain kind.
+The recipe must meet certain conditions.
 It must be precise and determinate,
 so that it can be followed mechanically,
 without relying on human judgement or insight.
 It must be specified in a finite way
 that is fixed in advance,
 without depending on the input.
-It must not invoke outside sources of information
-or randomization.
+It must not invoke outside sources of information.
 
-We are interested in computability in principle,
-setting aside limitations of time, paper, patience, and pencils.
-The multiplication function,
-for example,
-is computable:
-there are mechanical algorithms for multiplying numbers, even though,
-in practice,
-nobody (no human and no computer) can multiply arbitrarily large numbers.
+In school,
+you learned such algorithms for addition and multiplication.
+These functions are computable.
+But note that
+neither you nor any computer is actually able to
+add or multiply arbitrarily large numbers.
+At some point,
+you'd run out of paper and energy; the computer would run out of memory.
+The concept of computability that
+we're trying to capture is \emph{in principle computability},
+setting aside practical limitations of memory, time, paper, patience, and pencils.
 
-We can allow for algorithms that may run forever,
-like the algorithm for finding proofs that I described above.
-Such an algorithm computes a partial function:
+In the previous section,
+I described an algorithm for finding proofs.
+When given a valid sentence,
+the algorithm returns a proof.
+When given an invalid sentence,
+it runs forever.
+The algorithm therefore computes a partial function:
 it doesn't return an output for every input.
 Let's stipulate that
-this is the correct way for computing partial functions:
+this is the correct way of computing partial functions:
 if a function is undefined for a certain input,
 an algorithm for computing the function must run forever when given that input.
 (In practice,
@@ -213,7 +216,7 @@ when asked to divide a number by zero,
 you wouldn't spend the rest of your life trying to compute the answer,
 which you know doesn't exist.
 Strictly speaking,
-we would say that you are not computing the division function,
+you are not computing the division function,
 which is partial,
 but a modified total function that returns 'undefined' for division by zero.)
 
@@ -249,52 +252,54 @@ Alonzo Church suggested that
 the computable functions (on the natural numbers, at least)
 are precisely the functions that are definable in his lambda-calculus.
 Stephen Kleene, drawing on work by Gödel and Herbrand, suggested that
-the computable functions can be specified by
-defining some obviously computable base functions
-and operations for obtaining new functions from old functions that preserve computability
-(see chapter~\ref{ch:mu-recursive}).
+the computable functions are those that
+can be defined by a certain recursive process
+that we'll study in chapter~\ref{ch:recursive}.
 More convincingly,
 Alan Turing suggested that
-a function is computable iff it is computed by a ``Turing machine'',
-an abstract model of a mechanical computing device (see chapter~\ref{ch:turing-machines}).
-These suggestions were immediately recognized as equivalent,
-in the sense that they define the same class of functions.
-The same is true for later attempts to define computability
+a function is computable iff it is computed by a certain
+abstract model of a mechanical computing device,
+now known as a ``Turing machine''.
+We'll look at Turing machines in chapter~\ref{ch:turing}.
+
+These suggestions turned out to be equivalent,
+in the sense that they define the very same class of functions.
+Later attempts to define computability
 in terms of register machines,
 Post systems,
 Markov algorithms,
-combinatorial definability,
-and so on:
-all such definitions turn out to define the same class of functions.
+or combinatory definability also led to the same class of functions.
 Moreover,
 nobody has ever presented a function that is computable
 by the informal definition I gave above
-but not by one of these formal definitions,
-and there are plausible arguments that no such function exists.
+but not by one of these formal definitions.
+There are strong reasons to think that no such function exists.
 
 We thus have a remarkable case where
 a seemingly vague concept turns out not to be vague at all.
 The concept of a ``mechanically computable'' function seems to pick out
 precisely the functions that are, say, computable by a Turing machine
 or definable in the lambda calculus.
+
 The hypothesis that our informal concept of mechanical computability
 coincides with these formal definitions
 is known as \emph{Church's Thesis},
 or as the \emph{Church-Turing Thesis}.
 It is a ``Thesis'' rather than a theorem
-because it does not allow for a mathematical proof.
+because it does not admit a mathematical proof.
 (A rigorous proof would first require a mathematically precise definition of
 `mechanically computable'.)
 
 If we want to prove that
 there is no algorithm for computing a certain function,
-we need to invoke the Church-Turing Thesis.
+we generally need to invoke the Church-Turing Thesis.
 Consider, for example,
 the function that returns `yes' for every valid first-order sentence
 and `no' for every invalid one.
 An algorithm for computing this function
 would solve the Entscheidungsproblem.
-We'll show that there is no such algorithm.
+In chapters \ref{ch:turing} and \ref{ch:incompleteness},
+we'll prove that there is no such algorithm.
 But all we can actually prove is that
 the function isn't computable in any of the formal senses mentioned above.
 We can prove,
@@ -308,23 +313,24 @@ that there is no algorithm for solving the Entscheidungsproblem.
   We could avoid having to appeal to the Church-Turing Thesis by
   \emph{defining} `mechanically computable' as, say, `definable in the lambda calculus'.
   Why would this be a bad idea?
+  (You don't need to know anything about the lambda calculus to answer the question.)
 \end{exercise}
 
 Besides these \textit{unavoidable} appeals to the Church-Turing Thesis,
-we will also make \textit{avoidable} or \textit{lazy} appeals to the Thesis.
+we will also occasionally make \textit{avoidable} or \textit{lazy} appeals to the Thesis.
 If a particular function is obviously computable,
 we sometimes won't bother proving that
 it is computable in any of the formal senses.
 For example,
 we might say that ``by the Church-Turing Thesis'',
-the multiplication function,
-which is obviously computable,
+the multiplication function
+(which is obviously computable)
 is computable by a Turing machine.
 This appeal to the Church-Turing Thesis is avoidable
 because we could actually prove that
 there is a Turing machine that computes the function.
-(I will, incidentally, display such a machine in chapter~\ref{ch:turing-machines}.)
-But it would often be tedious to do so,
+(I will, incidentally, display such a machine in chapter~\ref{ch:turing}.)
+But this would be tedious,
 and we can save the effort
 by relying on the overwhelming evidence in favour of the Church-Turing Thesis.
 
@@ -340,7 +346,7 @@ by relying on the overwhelming evidence in favour of the Church-Turing Thesis.
 I've mentioned -- so far without proof -- that
 the function that
 takes a first-order sentence as input
-and returns 'yes' or 'no'
+and returns `yes' or `no'
 depending on whether the sentence is valid or not
 is uncomputable.
 Are there other uncomputable functions?
@@ -375,7 +381,7 @@ So there are also uncountably many functions from $\mathbb{N}$ to $\{0,1\}$.
 (One can also show that
 there is a bijection between the functions from $\mathbb{N}$ to $\{0,1\}$
 and the functions from $\mathbb{N}$ to $\mathbb{N}$.
-So the set of functions from $\mathbb{N}$ to $\mathbb{N}$ has the cardinality of the continuum.
+So the set of functions from $\mathbb{N}$ to $\mathbb{N}$ has the cardinality of $\mathcal{P}(\mathbb{N})$.
 But what matters is that it is uncountable.)
 
 % Similarly,
@@ -384,7 +390,7 @@ But what matters is that it is uncountable.)
 % There are uncountably many such sets,
 % but only countably many algorithms.
 
-The set of algorithms that operate on $\mathbb{N}$,
+The set of algorithms for functions on $\mathbb{N}$,
 on the other hand,
 is countable.
 I've said that an algorithm must be specifiable in a finite way.
@@ -394,7 +400,7 @@ we don't need uncountably many primitive symbols to define
 an algorithm for manipulating numbers.
 Since there are only countably many finite strings of symbols
 in a countable language,
-it follows that there are only countably many algorithms operating on $\mathbb{N}$.
+it follows that there are only countably many algorithms for functions on $\mathbb{N}$.
 
 If the set of functions from $\mathbb{N}$ to $\mathbb{N}$ is uncountable
 and the set of algorithms is countable,
@@ -411,38 +417,41 @@ If we can't even ask a question,
 we probably shouldn't worry if there is no algorithm for finding the answer.
 
 \begin{exercise}
-  We've only considered functions on the natural numbers.
-  How does the picture change if we also consider functions on the real numbers,
-  or from arbitrary sets to arbitrary sets in the cumulative hierarchy?
+  Explain why most functions from $\mathbb{N}$ to $\mathbb{N}$ can't be defined in the language $\L_A$ of first-order arithmetic.
 \end{exercise}
 
-% But we can give actual examples of uncomputable functions.
+The finite specifiability of algorithms creates a puzzle that
+will lead us to a key result in computability theory,
+and also to a concrete example of an uncomputable function.
 
-The finite specifiability of algorithms leads to a puzzle.
-For every computable function on the natural numbers,
-there is an algorithm that computes it.
-This algorithm can be written down as a finite string of symbols,
-in some fixed language.
-This means that we can mechanically go through all computable functions on $\mathbb{N}$
-just as we can go through all proofs in the first-order calculus:
-we can define an algorithm for
-enumerating all finite strings in the language,
+Let's still focus on algorithms for computing functions on $\mathbb{N}$.
+(We'll see in section~\ref{sec:coding} why this is not a serious restriction.)
+Any such algorithm can be written down as a finite string of symbols,
+in some suitable language.
+That language may be a restricted part of English,
+or a programming language like Python or JavaScript,
+or a special language for defining Turing machines,
+as will be explained in chapter~\ref{ch:turing}.
+Any of them will do.
+For any sensible choice of such a language,
+there will be a mechanical way of checking whether
+a given string of symbols (in the language) specifies an algorithm.
+It follows that we can mechanically go through all algorithms,
 one by one,
-and checking for each of them
-whether it specifies an algorithm.
+just as we can go through all proofs in the first-order calculus.
 
 Now consider the following algorithm -- I'll call it the \emph{antidiagonal algorithm}.
 For any input number $n$,
 the antidiagonal algorithm generates
-the list of all algorithms (for functions on $\mathbb{N}$) up to the $n$-th one:
+the list of all algorithms (for functions on $\mathbb{N}$) up to the $n$-th entry:
 $A_1, A_2, \ldots, A_n$.
 It then runs the $n$-th algorithm $A_n$ with input $n$
-and returns the output $A_n(n)$ plus 1.
+and returns the output plus 1.
 
 Think of the algorithms and their outputs arranged in a table:
 
 \begin{center}
-  \begin{tabular}{l *{4}{C} C}
+  \begin{tabular}{c *{4}{C} C}
     \toprule
     Algorithm & 0 & 1 & 2 & 3 & \cdots \\
     \midrule
@@ -463,18 +472,24 @@ goes to the $n$-th row,
 then computes the value $x_{n,n}$ in the $n$-th column of that row,
 and returns this value plus 1.
 
-The antidiagonal algorithm takes numbers as input
-and returns a number as output:
-it computes a function on $\mathbb{N}$.
-So it must be somewhere in the list of algorithms for those functions.
-Suppose it is in row $n$, for some $n$.
-By definition,
-$x_{n,n}$ is the output of the algorithm for input $n$.
-But the algorithm is defined so that it returns $x_{n,n} + 1$ for input $n$.
-This is a contradiction:
-an algorithm can't return two different values for the same input.
+This algorithm evidently computes a function on $\mathbb{N}$:
+it takes a number as input
+and returns a number as output.
+So it must be somewhere on the list of algorithms $A_1,A_2,A_3,\ldots$.
+Suppose it is the $n$-th algorithm on the list, for some $n$.
+What is the output of the algorithm for input $n$?
+By construction,
+the algorithm returns the output of the $n$-th algorithm for input $n$ plus 1.
+But it \emph{is} the $n$-th algorithm.
+So the output of the antidiagonal algorithm for input $n$ is
+the output of the antidiagonal algorithm for input $n$ plus 1.
+This is a contradiction.
 
-The argument closely resembles Cantor's proof that
+What went wrong?
+The argument is a reductio,
+but what does it refute?
+You will have noticed that
+the argument closely resembles Cantor's proof that
 the set of sets of natural numbers is uncountable.
 Does it show that
 the set of algorithms (for functions on $\mathbb{N}$) is uncountable after all?
@@ -485,13 +500,13 @@ But it's true that the antidiagonal algorithm can't be on the list of algorithms
 It's not on the list because it isn't a well-defined algorithm.
 Can you see why?
 
-The key is that
+The problem is that
 we've allowed for algorithms that may run forever on certain inputs.
-Suppose that the $n$-th algorithm $A_n$ runs forever on input $n$.
-Then we can't add 1 to the output of $A_n$ on input $n$,
+Suppose some algorithm $A_n$ on the list of algorithms runs forever when given input $n$.
+Then we can't add 1 to the output of $A_n$ for input $n$,
 because there is no such output:
 $x_{n,n}$ is undefined.
-My definition of the antidiagonal algorithm assumes that
+My definition of the antidiagonal algorithm assumed that
 each algorithm $A_n$ returns an output for input $n$,
 which need not be the case.
 
@@ -502,10 +517,10 @@ we run the $n$-th algorithm on input $n$,
 as before.
 \emph{If that algorithm returns an output $x_{n,n}$},
 we return $x_{n,n} + 1$.
-But if the $n$-th algorithm doesn't return anything on input $n$,
+But if the $n$-th algorithm doesn't return anything for input $n$,
 we return 0.
 
-The revised antidiagonal algorithm
+This \emph{revised antidiagonal algorithm}
 doesn't assume that
 algorithms always return an output.
 But the above argument still goes through:
@@ -527,28 +542,29 @@ To implement the revised antidiagonal algorithm,
 we therefore need to implement a subroutine to check
 whether a given algorithm halts on a given input.
 If such a subroutine exists,
-we can use it to check if
-the $n$-th algorithm halts on input $n$
-and output 0 if the answer is negative.
-If the subroutine says `yes',
-we run the algorithm until it returns an output,
-and return that output plus 1.
+we can implement the revised antidiagonal algorithm:
+when given input $n$,
+we can use the subroutine to check if
+the $n$-th algorithm halts on input $n$;
+if no, we output 0;
+if yes,
+we run the $n$-th algorithm until it returns an output,
+then we return that output plus 1.
 
 It's not obvious,
 however,
 whether we can find an algorithm for checking whether
 a given algorithm halts on a given input.
 In fact, there is no such algorithm.
-We know this because otherwise
-the revised antidiagonal algorithm could be implemented:
+We know this \emph{because otherwise
+the revised antidiagonal algorithm could be implemented}:
 it would be a genuine algorithm.
-So it would be on the list of algorithms,
-at some row $n$.
-And we know that it can't be on that list.
+It would be on the list of algorithms.
+And we know that this leads to a contradiction.
 
 By this curious line of reasoning,
-we've established an important result:
-\emph{There is no algorithm for checking whether
+we've established the following key result in computability theory:
+\emph{There is no general algorithm for checking whether
 a given algorithm halts on a given input.}
 
 % Here's a slightly shorter path to the same result.
@@ -561,28 +577,29 @@ a given algorithm halts on a given input.}
 % and otherwise goes in an infinite loop.
 % Now what happens if we feed $D$ as an argument into $D$?
 
-We also get a concrete example of an uncomputable function on $\mathbb{N}$.
+As promised above,
+we also get a concrete example of an uncomputable function on $\mathbb{N}$.
 Fix some ``alphabetical'' order on the algorithms for functions on $\mathbb{N}$.
-Given any such ordering $A_1, A_2, A_3, \ldots$,
-we can define the antidiagonal function $d$ by
-\begin{equation}
-  d(n) = \begin{cases}0 & \text{ if $A_n$ runs forever on input $n$}\\
+Given any such ordering $A_1, A_2, \ldots$,
+we can define an antidiagonal function $d$ by
+\begin{equation*}
+  d(n) = \begin{cases} 0 & \text{ if $A_n$ runs forever on input $n$}\\
     x + 1 &\text{ if $A_n$ returns $x$ on input $n$.}
   \end{cases}
-\end{equation}
+\end{equation*}
 This is the function that
 the revised antidiagonal algorithm was supposed to compute.
 The \emph{function} exists,
 but the algorithm doesn't:
-the function is uncomputable.
+the function $d$ is uncomputable.
 
 % More specifically,
 % we've found an effectively unsolvable decision problem:
 % the problem of determining whether a given algorithm halts on a given input.
 
-% \begin{exercise}
-%   Explain why there is no mechanical way to enumerate the \emph{total} functions on $\mathbb{N}$.
-% \end{exercise}
+\begin{exercise}
+  Explain why there is no mechanical way to enumerate the \emph{total} functions on $\mathbb{N}$.
+\end{exercise}
 
 \begin{exercise}
   Show that every total non-increasing function on $\mathbb{N}$ is computable.
@@ -594,14 +611,14 @@ the function is uncomputable.
 
 Hilbert's Entscheidungsproblem is the problem of deciding,
 for any first-order sentence,
-whether it is valid.
+whether it is valid or not.
 We can generalize this concept.
 In contemporary terminology,
-a \emph{decision problem} is the problem of deciding,
+a \emph{decision problem} is a task of deciding,
 for any object of a certain type,
 whether it has or lacks a certain property.
 In the case of the Entscheidungsproblem,
-the objects are $\L$-sentences
+the objects are first-order sentences
 and the property of interest is validity.
 Another decision problem is to decide
 for any natural number
@@ -610,26 +627,32 @@ or for any graph
 whether it can be coloured with three colours.
 There are infinitely many decision problems.
 
-A solution to a decision problem is an algorithm that
+A \emph{solution} to a decision problem is an algorithm that
 takes an object of the relevant type as input
-and returns either 'yes' or 'no',
+and returns either `yes' or `no',
 depending on whether the object has the property or not.
 
+We have to clarify what, exactly, this means.
 Consider the property of being a spouse of Julius Caesar.
 Is there an algorithm for deciding whether a given person has this property?
-In a sense, no.
-In another sense, yes.
+In one sense, yes, in another, no.
 I said that an algorithm must not invoke outside sources of information.
 One needs empirical information to
 decide whether a given person is a spouse of Julius Caesar.
+In this sense,
+there is no algorithm for deciding the property.
 On the other hand,
 consider the algorithm that
-returns 'yes' for Cornelia, Pompeia, and Calpurnia,
+returns `yes' for Cornelia, Pompeia, and Calpurnia,
 who were, in fact, Caesar's spouses,
-and 'no' for everyone else.
-This algorithm correctly classifies every person as a spouse of Caesar or not.
-But it does so only contingently,
-in worlds like ours where Caesar had exactly these three spouses.
+and `no' for everyone else.
+This algorithm correctly decides for any given person
+whether they are a
+spouse of Caesar,
+without invoking outside sources of information.
+But the algorithm only works contingently:
+it only works in worlds like ours,
+where Caesar had exactly these three spouses.
 
 Let's say that an algorithm decides a property \emph{extensionally} if
 it correctly classifies every object in the actual world,
@@ -637,21 +660,28 @@ even if it misclassifies objects in other possible worlds.
 To decide a property extensionally is really to decide
 whether an object belongs to a certain set:
 to the property's extension.
-In computability,
-it is common to speak directly of \emph{deciding sets}.
-An algorithm decides a set if
-it returns 'yes' for every object in the set
-and 'no' for every other object.
+Henceforth,
+when I talk about deciding properties,
+I always mean deciding them extensionally
+(although the present complication won't often arise,
+because we'll mostly be concerned with mathematical properties
+whose extension doesn't vary from world to world).
+
+In computability theory,
+it is common to speak directly of deciding sets.
+An algorithm \emph{decides a set} if
+it returns `yes' for every object in the set
+and `no' for every other object.
 A set is \emph{decidable} if there is an algorithm that decides it.
 
 Decidability is closely related to computability.
 An algorithm for deciding a set
-computes a function that takes objects of the relevant type as input
-and outputs 'yes' for objects in the set
-and 'no' for objects not in the set.
+computes a function that takes objects of a relevant type as input
+and outputs `yes' for objects in the set
+and `no' for objects not in the set.
 This function is called the \emph{characteristic function} of the set.
 Officially,
-the outputs are often taken to be 1 and 0 rather than 'yes' and 'no'.
+the outputs are often taken to be 1 and 0 rather than `yes' and `no'.
 That is,
 the characteristic function $f_S$ of a set $S$ is defined by
 \begin{equation*}
@@ -668,29 +698,8 @@ a set is decidable iff its characteristic function is computable.
 \end{exercise}
 
 \begin{exercise}
-  Are there undecidable sets? Explain your answer.
+  Are there undecidable sets? Explain briefly.
 \end{exercise}
-
-We can generalize the concept of decidability to relations.
-An $n$-ary relation $R$ is (extensionally) decidable if
-there is an algorithm that
-outputs 'yes' for every $n$-tuple of objects that stand in the relation
-and 'no' for every $n$-tuple of objects that don't.
-
-An important example of a decidable relation is the relation that holds
-between a sequence $\Sigma$ (``sigma'') of first-order sentences and a first-order sentence $A$
-iff $\Sigma$ is a proof of $A$ in the first-order calculus.
-I relied on the decidability of this relation
-when I described the algorithm for finding proofs in section~\ref{sec:entscheidungsproblem}:
-I noted that
-there is a mechanical algorithm for deciding whether
-a given string of symbols is a proof in the first-order calculus.
-This is a critical property of proof systems in general.
-In any acceptable proof system,
-there should be a mechanical procedure by which,
-say, a student or computer can check (or \emph{verify})
-that a purported proof is really a proof of the target sentence.
-No brilliance or ingenuity should be required for this task.
 
 \begin{exercise}
   Show that if a set $S$ of natural numbers is decidable,
@@ -698,69 +707,88 @@ No brilliance or ingenuity should be required for this task.
   i.e., the set of natural numbers not in $S$.
 \end{exercise}
 
+We can generalize the concept of decidability to relations.
+An $n$-ary relation $R$ is (extensionally) decidable if
+there is an algorithm that
+outputs `yes' for every $n$-tuple of objects that stand in the relation
+and `no' for every $n$-tuple of objects that don't.
+
+An important example of a decidable relation is the relation that holds
+between a sequence $A_1,\ldots,A_n$ of first-order sentences and a first-order sentence $B$
+iff $A_1,\ldots,A_n$ is a proof of $B$ in the first-order calculus.
+I relied on the decidability of this relation
+when I described the algorithm for finding proofs in section~\ref{sec:entscheidungsproblem}:
+I noted that
+there is a mechanical algorithm for checking whether
+a given sequence of sentences $A_1,\ldots,A_n$ is a proof of a sentence $B$ in the first-order calculus.
+We only need to check that
+each sentence in $A_1,\ldots,A_n$ is either an axiom or follows from previous sentences by MP or Gen,
+and that the last sentence $A_n$ is the target sentence $B$.
+The decidability of the proof relation is not an accidental feature of our calculus.
+It is a critical property of proof systems in general.
+In any acceptable proof system,
+there should be a mechanical procedure by which,
+say, a student or computer can check (or \emph{verify})
+that a purported proof is really a proof of the target sentence.
+No brilliance or ingenuity should be required for this task.
+
 Consider now the \emph{halting relation} that
 holds between an algorithm and an input (say, a number) iff
 the algorithm halts when given that input.
 We know that this relation is not decidable:
 there is no algorithm for deciding whether
 a given algorithm halts on a given input.
-
-The set of algorithms,
-on the other hand,
-is decidable.
-On any precise definition of algorithms,
-there is a mechanical procedure for checking
-whether something is an algorithm.
-This means that we can define a mechanical procedure for
-listing all algorithms,
-one by one,
-just as we can list all proofs in the first-order calculus.
-
-From the procedure for listing all algorithms,
-we can define another procedure for
-listing all algorithms that halt on a given input $n$.
-It goes as follows.
-At step 1,
-we start with the first algorithm.
-We apply it to input $n$,
-but only for 1 step.
-At step 2,
-we take the first two algorithms
-and let them both run for 2 steps on input $n$.
-And so on.
-At each stage,
-we let the first $k$ algorithms run for $k$ steps on input $n$.
-If any of these algorithms returns an output,
+On the other hand,
+there is an algorithm for listing all algorithms that halt on a given input $n$.
+We know that we can mechanically enumerate all algorithms,
+in some order $A_1, A_2, A_3, \ldots$.
+For each number $i = 1, 2, 3, \ldots$,
+we can therefore take the first $i$ algorithms $A_1, \ldots, A_i$
+and apply them to input $n$,
+letting them run for $i$ steps.
+(Every algorithm can be divided into steps;
+it doesn't matter how exactly these are defined.)
+That is,
+we start by running $A_1$ on $n$ for a single step.
+Then we run $A_1$ and $A_2$ on $n$ for two steps
+(after one another, say).
+Then we run $A_1$, $A_2$, and $A_3$ on $n$ for three steps,
+and so on.
+Whenever an algorithm returns an output,
 we add it to the list of algorithms that halt on input $n$.
-Every algorithm that halts on input $n$
+This way,
+every algorithm that halts on input $n$
 will eventually be listed.
 
-So even though
+So, even though
 there is no algorithm for deciding whether an arbitrary algorithm halts on input $n$,
 there is an algorithm for listing all and only the algorithms that do halt on input $n$.
 The property of halting on input $n$ is not decidable,
-but it is \emph{semidecidable}, or \emph{computably enumerable}.
-(People also often say \emph{recursively enumerable}, or just \emph{r.e.}.)
+but it is \emph{semidecidable}.
 
 In general,
-a property is (extensionally) \emph{computably enumerable} if
+a property is (extensionally) \emph{semidecidable} if
 there is a mechanical procedure for listing all objects that have the property.
 Equivalently,
 there is an algorithm that
-outputs 'yes' for every object that has the property
-and never outputs 'yes' for an object that doesn't have the property.
+outputs `yes' for every object that has the property
+and never outputs `yes' for an object that doesn't have the property.
+
+Semidecidable properties are also called \emph{computably enumerable},
+or \emph{recursively enumerable}, or just \emph{r.e}.
+I'll mostly use the term `computably enumerable'.
 
 As with decidability,
-the concept of semidecidability can be generalized to relations and to sets.
-A set is semidecidable (or computably enumerable) if
+the concept of semidecidability, or computable enumerability, can be generalized to relations and to sets.
+A set is computably enumerable if
 there is an algorithm for listing all its elements.
 
 \begin{exercise}
-  Explain why the set of valid first-order sentences is semidecidable.
+  Explain why the set of valid first-order sentences is computably enumerable.
 \end{exercise}
 
 \begin{exercise}
-  Explain why every decidable set is semidecidable.
+  Explain why every decidable set is computably enumerable.
 \end{exercise}
 
 % We can enumerate the computable (partial) functions of a fixed number of arguments.
@@ -770,15 +798,14 @@ there is an algorithm for listing all its elements.
 % This function is partial, but still computable.
 
 The following propositions state some easy connections between
-decidability and semidecidability.
+decidability and computable enumerability.
 
 \begin{proposition}{(Kleene's Theorem)}{kleenes-theorem}
-   If a set and its complement are both semidecidable then the set is decidable.
+   If a set and its complement are both computably enumerable then the set is decidable.
 \end{proposition}
 \begin{proof}
   \emph{Proof.}
-  Let $S$ be a set such that both $S$ and its complement $\bar{S}$ are semidecidable.
-  That is,
+  Let $S$ be a set such that both $S$ and its complement $\bar{S}$ are computably enumerable:
   there are mechanical procedures for listing the elements of $S$ and of $\bar{S}$.
   We can use these to define an algorithm for deciding $S$:
   Given any object $x$,
@@ -788,16 +815,16 @@ decidability and semidecidability.
   At some stage,
   we must find $x$ in either of the two lists.
   If it shows up in the list of elements of $S$,
-  we return 'yes'.
+  we return `yes'.
   If it shows up in the list of elements of $\bar{S}$,
-  we return 'no'.
+  we return `no'.
   \qed
 \end{proof}
 
 \begin{proposition}{}{re-existential}
   If $R$ is a decidable (binary) relation on $\mathbb{N}$,
   then the set of all $y$
-  such that $\exists x R(x,y)$ is semidecidable.
+  such that $\exists x R(x,y)$ is computably enumerable.
 \end{proposition}
 
 \noindent%
@@ -820,12 +847,12 @@ when it is convenient.)
   output $y$.
   This algorithm will eventually list every $y$ such that $\exists x R(x,y)$.
   (It will list some $y$ more than once.
-  That's allowed.
-  It could be easily avoided by keeping track of which $y$ have already been listed.)
+  That's allowed;
+  we could avoid it by keeping track of which $y$ have already been listed.)
   \qed
 \end{proof}
 
-This proposition also has a converse:
+Proposition~\ref{prop:re-existential} has a converse:
 
 \begin{proposition}{}{decidable-from-re}
   If a set $S$ is computably enumerable then
@@ -834,22 +861,28 @@ This proposition also has a converse:
 
 \begin{proof}
   \emph{Proof.}
-  Assume that $S$ is computably enumerable.
-  So there is an algorithm that lists all and only the elements of $S$.
+  Assume that $S$ is computably enumerable:
+  there is an algorithm that lists all and only the elements of $S$.
   Let $R$ be the relation that holds between $x$ and $y$ iff
   the algorithm has produced $x$ among the first $y$ items.
   Then $x \in S$ iff $\exists y R(x,y)$.
   Moreover, $R$ is computable:
   given any $x$ and $y$,
   simply run the enumerate-$S$ algorithm for $y$ steps;
-  if $x$ shows up in the list, return 'yes',
-  otherwise return 'no'.
+  if $x$ shows up in the list, return `yes',
+  otherwise return `no'.
   \qed
 \end{proof}
 
 \begin{exercise}
-  Show that if two relations $R$ and $S$ are computably enumerable then so is their intersection, i.e..
+  Show that if two relations $R$ and $S$ are computably enumerable then so is their conjunction, i.e.,
   the relation that holds between $x$ and $y$ iff both $R(x,y)$ and $S(x,y)$.
+\end{exercise}
+
+\begin{exercise}
+  Let $K$ be the set of algorithms that halt when given themselves as input.
+  Is this set decidable? Is it computably enumerable?
+  % Decidable no. Semidecidable yes. We simply wait and see if $A(A)$ halts.
 \end{exercise}
 
 \begin{exercise}
@@ -858,19 +891,13 @@ This proposition also has a converse:
   % No: we can't recognize its members.
 \end{exercise}
 
-\begin{exercise}
-  Let $K$ be the complement of the set $N$ from the previous exercise.
-  That is, $K$ is the set of algorithms that halt on themselves.
-  Is this set decidable? Is it computably enumerable?
-  % Decidable no. Semidecidable yes. We simply wait and see if $A(A)$ halts.
-\end{exercise}
-
-\begin{exercise}
-  Is the set of total one-place computable functions computably enumerable?
-  % No: Enderton p.88
-\end{exercise}
+% \begin{exercise}
+%   Is the set of total one-place computable functions computably enumerable?
+%   % No: Enderton p.88
+% \end{exercise}
 
 Let's connect these concepts to the study of first-order theories from the previous chapter.
+
 Remember that a formal theory is a (deductively closed) set of sentences.
 Typically,
 a theory is presented by giving a set of axioms.
@@ -879,15 +906,14 @@ a theory $T$ is \emph{(computably) axiomatizable} if
 there is a decidable set of axioms
 that generates the theory,
 so that $T$ contains all and only the sentences that are provable from those axioms.
-To say that the set of axioms is decidable means that
-there is an algorithm for deciding whether a given sentence is among the axioms.
-For theories like Q, PA, or ZFC, this is obviously the case.
+For theories like Q and PA and ZFC,
+this is obviously the case:
+there is an algorithm for checking whether any given sentence is among the axioms of these theories.
 
-Since theories are sets,
-we can also apply the concept of decidability to theories:
-a \emph{theory} is decidable if
+We can also directly apply the concept of decidability to theories:
+a theory is decidable if
 there is an algorithm by which one can check,
-for any sentence in the language
+for any sentence,
 whether it is in the theory or not.
 
 Every decidable theory is computably axiomatizable:
@@ -896,7 +922,8 @@ The converse doesn't hold:
 a computably axiomatizable theory need not be decidable.
 It will,
 however,
-always be computably enumerable:
+always be semidecidable,
+as the following proposition shows.
 
 \begin{proposition}{}{re-theory}
   Every computably axiomatizable first-order theory is computably enumerable.
@@ -909,16 +936,24 @@ always be computably enumerable:
   we can go through all strings in the language of $T$,
   one by one,
   and check for each if
-  it is a deduction from $\Gamma$.
-  If yes,
-  we output the last sentence in the deduction.
+  it is a deduction from $\Gamma$ in the first-order calculus.
+  This is possible because membership in $\Gamma$ is decidable.
+  If we find that a string is a deduction from $\Gamma$
+  we output the last sentence in that deduction.
   Every sentence in $T$ will eventually be listed.
   \qed
 \end{proof}
 
-A theory is \emph{complete} if
+Ideally,
+we'd like a theory of, say, arithmetic to be complete,
+in the sense that it contains all truths about its intended model.
+Since every sentence $A$ is either true or false in the intended model,
+the theory would then contain either $A$ or $\neg A$,
+for every sentence $A$ in its language.
+This is how completeness of theories is usually defined:
+a theory is \emph{complete} if,
 for every sentence $A$ in its language,
-it contains either $A$ or $\neg A$.
+the theory contains either $A$ or $\neg A$.
 
 \begin{proposition}{}{complete-decidable}
   Every computably axiomatizable and complete first-order theory is decidable.
@@ -927,16 +962,19 @@ it contains either $A$ or $\neg A$.
   \emph{Proof.}
   Let $T$ be a computably axiomatizable and complete first-order theory,
   generated by a decidable set of axioms $\Gamma$.
+  If $T$ is inconsistent,
+  it is trivially decidable: every sentence is in $T$.
+  Assume that $T$ is consistent.
   To decide whether a sentence $A$ is in $T$,
   we go through all strings in the language of $T$,
   and check for each if
   it is a deduction of either $A$ or $\neg A$ from $\Gamma$.
   Since the theory is complete,
-  we must eventually find a match.
+  we must eventually find one or the other.
   If we find a deduction of $A$,
-  we return 'yes';
+  we return `yes';
   if we find a deduction of $\neg A$,
-  we return 'no'.
+  we return `no'.
   \qed
 \end{proof}
 
@@ -945,22 +983,23 @@ we are closing in on Gödel's incompleteness theorem.
 Let $T$ be a first-order theory
 that can prove elementary facts about computability.
 Specifically,
-the language of $T$ contains terms for algorithms and natural numbers,
+assume the language of $T$ contains terms for algorithms and natural numbers,
 and allows constructing a formula $H(x,y)$ so that
 $T$ can prove $H(a,n)$ iff the algorithm denoted by $a$ halts on input $n$.
 If $T$ were decidable,
 we could decide the halting relation:
-we could check whether an algorithm $a$ halts on input $n$
+we could check whether an algorithm $a$ halts on input $n$,
 by checking whether $H(a,n)$ is in $T$.
 Since the halting relation is undecidable,
 $T$ must be undecidable.
 By proposition~\ref{prop:complete-decidable},
 it follows that any computably axiomatizable theory
-that can prove elementary facts about computability is incomplete.
+that ``knows'' elementary facts about computability is incomplete.
 
 \begin{exercise}
-  Given the undecidability of first-order logic,
-  is the theory axiomatized by the empty set (a) computably axiomatizable? (b) decidable? (c) complete?
+  Let $T$ be the theory axiomatized by the empty set.
+  Given the undecidability of first-order logic (which we still haven't proved),
+  is $T$ (a) computably axiomatizable? (b) decidable? (c) complete?
 \end{exercise}
 
 \begin{exercise}
@@ -970,7 +1009,7 @@ that can prove elementary facts about computability is incomplete.
 \end{exercise}
 
 
-\section{Coding}
+\section{Coding}\label{sec:coding}
 
 Think of how you might compute 134 times 97,
 using pen and paper.
@@ -979,12 +1018,12 @@ What thereby appears on the paper are not the numbers themselves,
 but strings of symbols that represent the numbers.
 `134' denotes the number 134 in decimal notation.
 The same number is denoted by `CXXXIV' in Roman numerals,
-or by `10000110' in binary.
+or by `10000110' in binary
 An algorithm for multiplication operates on the chosen representation.
 The algorithms for addition and multiplication that you learned in school
 assume that the inputs are given in decimal notation.
 
-We'll assume that,
+We may assume that,
 in general,
 an algorithm operates on strings of symbols.
 If we want to
@@ -997,7 +1036,7 @@ Since an algorithm must be finitely specifiable,
 it can only make use of finitely many differences in the input.
 It follows that
 the possible inputs to an algorithm must be representable as
-finite strings of symbols from a countable (and plausibly finite) alphabet.
+finite strings of symbols from a finite (or at most countable) alphabet.
 For example,
 the decimal representation of any number
 is a finite string of symbols from the alphabet `0', `1', `2', `3', `4', `5', `6', `7', `8', `9'.
@@ -1018,7 +1057,6 @@ We can then assign 1 to the first symbol,
 2 to the second,
 and so on.
 Let $\#s$ be the number assigned to symbol $s$.
-As above,
 I'll call $\#s$ the \emph{symbol code} of $s$.
 
 % (As BBJ say, the most important aspect of coding strings is that the concatenation function that takes two code numbers and returns the code number of their concatenation is recursive.)
@@ -1026,18 +1064,19 @@ I'll call $\#s$ the \emph{symbol code} of $s$.
 With symbol codes in hand,
 the task of coding sequences of symbols reduces to the task
 of coding sequences of natural numbers as single numbers.
-Here is one way of achieving this,
+I'll describe a standard way of doing this,
 due to Gödel.
-It exploits the fact that
+
+Gödel's coding scheme exploits the fact that
 every natural number greater than 1 has a unique prime factorization.
 Recall that a prime number is a number greater than 1
 that only divides by 1 and itself.
 Every natural number greater than 1 can be uniquely decomposed into a product of prime numbers,
 called its \emph{prime factors}.
-For example, 53 decomposes into $2 \times 3 \times 3 \times 3$, or $2^1 \times 3^3$.
-We can therefore code sequences of numbers by prime exponents:
-since the exponents in the prime factorization of 53 are 1 and 3,
-it codes the sequence $\t{1,3}$.
+For example, 54 decomposes into $2 \times 3 \times 3 \times 3$, or $2^1 \times 3^3$.
+We can therefore code sequences of numbers (greater than 0) by prime exponents:
+since the exponents in the prime factorization of 54 are 1 and 3,
+the number 54 codes the sequence $\t{1,3}$.
 In general,
 a sequence of $n$ numbers is coded
 as the product of the first $n$ primes raised to the power of those numbers:
@@ -1050,33 +1089,40 @@ Suppose we want to code the string `cabb',
 from an alphabet that has the symbols `a', `b', `c', and possibly others.
 We first assign code numbers to `a', `b', and `c'.
 Let's use 1, 2, and 3, respectively.
-the string `cabb' thereby turns into the sequence $3,1,2,2$.
+The string `cabb' thereby turns into the sequence $\t{3,1,2,2}$.
 This is coded as
 \[
-  2^3 \times 3^1 \times 5^2 \times 7^2 = 29,400.
+  2^3 \times 3^1 \times 5^2 \times 7^2 = 29,400,
 \]
+\noindent%
+using 3 as the exponent of the first prime,
+1 as the exponent of the second,
+and 2 as the exponent of the third and fourth.
 
 To \emph{decode} a number back into a string of symbols,
-we factor the number into primes:
-from 29,400,
-we retrieve $2^3 \times 3^1 \times 5^2 \times 7^2$,
-which tells us that the first character in the coded string has symbol code 3,
+we use some algorithm for prime factorization.
+Given the input 29,400,
+such an algorithm would return the prime factorization
+$2^3 \times 3^1 \times 5^2 \times 7^2$.
+This tells us that the first character in the coded string has symbol code 3,
 the second has symbol code 1,
-and the third and forth have symbol code 2.
+and the third and fourth have symbol code 2.
+Using the symbol codes,
+we reconstruct the original string: `cabb'.
 
-We've seen that
-(a) the inputs to any algorithm are
-finite strings of symbols from a countable alphabet,
-and
-(b) all such strings can be coded as natural numbers.
+Above,
+I suggested that the inputs to any algorithm are
+finite strings of symbols from a countable alphabet.
+We've now seen that all such strings can be coded as natural numbers.
 This means that
 there's a sense in which
-every algorithm computes a function on the natural numbers:
-the function that maps the code number of an input string
-and returns the code number of the output string.
+every algorithm computes a function on the natural numbers --
+viz., the function that maps the code number of any input string
+to the code number of the algorithm's output string.
 
 Since there is an algorithm for coding and decoding,
-no generality is lost by focusing on algorithms for functions on $\mathbb{N}$.
+this line of thought also shows that
+we lose no generality by focusing on algorithms for functions on $\mathbb{N}$.
 That's why,
 in computability theory,
 the computable functions and relations are usually defined as
@@ -1090,14 +1136,14 @@ feeding the code numbers into an algorithm for computing a function on $\mathbb{
 and decoding the output.
 
 \begin{exercise}
-  Consider an algorithm that takes a string of symbols from the alphabet \{ a', `b', `c' \} as input
+  Consider an algorithm that takes a string of symbols from the alphabet \{`a', `b', `c'\} as input
   and replaces the first character in the string by `a'
   (so that it returns `aabb' for `cabb').
-  Can you describe the function on $\mathbb{N}$ that this algorithm computes,
+  Can you describe the operation on $\mathbb{N}$ that this algorithm computes,
   using the prime number coding?
 \end{exercise}
 
-We can now sharpen the argument for incompleteness from the end of the previous section.
+We can now sharpen the proto-Gödelian argument for incompleteness from the end of the previous section.
 Consider the ternary relation $H^*$
 that holds between an algorithm $a$, an input $i$ for $a$, and a number $n$
 iff the algorithm $a$ halts on input $i$ within $n$ steps,
@@ -1108,32 +1154,38 @@ we can simply run $a$ on input $i$ for $n$ steps,
 and return `yes' if $a$ has halted by then,
 and `no' otherwise.
 Like every algorithm,
-this algorithm for computing $H^*$ effectively computes a function $f$ on $\mathbb{N}$:
-the function that maps the code numbers of the inputs $a,i,n$
+this algorithm for computing $H^*$ effectively computes a function $f$ on $\mathbb{N}$
+-- viz., the function that maps the code numbers of the inputs $a,i,n$
 to the code number of the output (`yes' or `no'),
 relative to some fixed coding scheme.
 Let $H^+$ be the set of triples $\t{x,y,z}$ of natural numbers that
 $f$ maps to the code number of `yes'.
 The algorithm for computing $H^*$ gives us an algorithm for deciding the set $H^+$.
 
-In chapter \ref{ch:representability},
-we'll see that the standard language of arithmetic, $\L_{A}$,
-allows us to construct an arithmetical expression $E(x,y,z)$
-so that $E(x,y,z)$ is true of numbers $x,y,z$ iff $\t{x,y,z} \in H^+$.
-We can therefore also express (in $\L_A$) a numerical analog of the halting relation $H$
-that holds between an algorithm $a$ and an input $i$ iff $a$ halts on $i$:
-$\exists z E(x,y,z)$ is true of $x$ and $y$ iff
+As I mentioned in section~\ref{sec:arithmetic},
+all computable functions and relations on the natural numbers
+can be defined in the language $\L_A$ of arithmetic.
+(We'll prove this in chapter~\ref{ch:representability}.)
+So there is an expression $A(x,y,z)$ in $\L_A$
+that holds of numbers $x,y,z$ iff $\t{x,y,z} \in H^+$.
+From this,
+we can create another expression $\exists z A(x,y,z)$
+by prefixing an existential quantifier.
+Can you see what this says?
+It expresses a numerical analog of the halting relation $H$:
+$\exists z A(x,y,z)$ is true of $x$ and $y$ iff
 $x$ codes an algorithm that halts on the input coded by $y$.
 
-We know that the halting relation $H$ is not decidable.
+Now,
+we know that the halting relation $H$ is not decidable.
 It follows that
-there can be no true, computably axiomatizable, and complete theory in $\L_A$.
-For suppose we had such a theory.
+\emph{there can be no true, computably axiomatizable, and complete theory in the language of arithmetic}.
+For suppose there was such a theory.
 By proposition~\ref{prop:complete-decidable},
 the theory would be decidable.
-Then we could decide the halting relation:
+And then we could decide the halting relation:
 to check whether an algorithm with code $n$ halts on input $m$,
-we would merely have to check whether $\exists z E(n,m,z)$ is in $T$.
+we would merely have to check whether $\exists z A(n,m,z)$ is in $T$.
 
 % Now here's an interesting thought.
 % There is an algorithm for verifying proofs.

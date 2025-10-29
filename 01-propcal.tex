@@ -157,8 +157,6 @@ For example, I might write $A \to B$ instead of `$(A \to B)$'.
 
 Suppose we want to show that every $\L_{0}$-sentence has some property.
 The standard method for doing this is called \emph{proof by induction on complexity}.
-(This sense of `induction' is only loosely related to
-the kind of ``inductive inference'' that is often contrasted with deduction.)
 
 Proofs by induction on complexity are based on the fact that
 every $\L_{0}$-sentence is built up from sentence letters
@@ -171,25 +169,16 @@ and so on.
 To show that every $\L_{0}$-sentence has some property,
 it suffices to show two things:
 %
-\begin{enumerate*}
+\begin{cenumerate}
   \item[(i)] Every sentence of complexity 0 has the property.
-  \item[(ii)] \emph{If} every sentence of complexity $n$ has the property \emph{then} so does every sentence of complexity $n+1$.
-\end{enumerate*}
+  \item[(ii)] \emph{If} every sentence of complexity below $n$ has the property \emph{then} so does every sentence of complexity $n$.
+\end{cenumerate}
 %
 Step (i) is called the \emph{base case} of the proof;
 step (ii) the \emph{inductive step}.
 The antecedent of (ii),
-that every sentence of complexity $n$ has the property,
+that every sentence of complexity below $n$ has the property,
 is called the \emph{induction hypothesis}.
-
-% ** Subformulae
-
-% Every formula is built up from sentence letters by finitely many applications of
-% the construction rules. Any formula that is formed in this construction process
-% is a \textit{subformula} of the resulting formula. The subformulae of a formula are the
-% parts of it that are themselves formulae.
-
-% ** Balanced parentheses proposition
 
 As an example, let's prove that
 every $\L_{0}$-sentence has an even number of parentheses.
@@ -467,36 +456,35 @@ until we get
 \]
 
 To prove the Deduction Theorem,
-we use a method called \emph{strong induction}.
-With strong induction,
-we would show that
-all natural numbers $0,1,2,3,\ldots$ have a certain property
-by showing that
-\emph{whenever all numbers smaller than a given number $n$ have the property,
-  then so does $n$ itself}.
-
-Why does this entail that
-all numbers have the property?
-Well, 0 must have the property:
-there are no natural numbers smaller than 0,
-so it is vacuously true that all numbers smaller than 0 have the property.
-Given that 0 has the property,
-1 must have it as well;
-given that 0 and 1 have it,
-2 must have it;
-and so on.
+we use induction on the lines in a proof.
+We assume that
+there is a deduction $B_{1}, B_{2}, \ldots, B_{n}$ of $B$ from $\Gamma \cup \{ A \}$.
+We then show that $\Gamma \vdash_{0} A \to B_{k}$ for each $k = 1, 2, \ldots, n$.
+Since $B_{n} = B$,
+this will show that $\Gamma \vdash_{0} A \to B$.
+To show that $\Gamma \vdash_{0} A \to B_{k}$ for each $k = 1, 2, \ldots, n$,
+it suffices to show that
+\begin{cenumerate}
+  \item[(i)] $\Gamma \vdash_{0} A \to B_{1}$, and
+  \item[(ii)] \emph{if} $\Gamma \vdash_{0} A \to B_{i}$ for all $0 < i < k$, \emph{then} $\Gamma \vdash_{0} A \to B_{k}$.
+\end{cenumerate}
+In fact,
+(ii) alone is sufficient.
+To see this,
+consider the case $k = 1$.
+Since there is no $i$ with $0 < i < 1$,
+the \emph{if}-part of (ii) is vacuously true.
+If we can show (ii),
+we can therefore also show that $\Gamma \vdash_{0} A \to B_{1}$.
 
 \begin{proof}
   \emph{Proof of the Deduction Theorem.}
 
   Let $B_{1}, B_{2}, \ldots, B_{n}$ be a deduction of $B$ from $\Gamma \cup \{ A \}$.
-  We shall prove by strong induction on $k$ that
-  $\Gamma \vdash_{0} A \to B_{k}$ for all $k = 1, 2, \ldots, n$.
-  Since $B_{n} = B$,
-  this will establish the theorem.
-
-  We need to show that
-  \emph{if} $\Gamma \vdash_{0} A \to B_{i}$ for all $i < k$,
+  We shall prove by induction on $k$ that
+  $\Gamma \vdash_{0} A \to B_{k}$ for all $k = 1, 2, \ldots, n$:
+  We will show that
+  \emph{if} $\Gamma \vdash_{0} A \to B_{i}$ for all $0 < i < k$,
   \emph{then} $\Gamma \vdash_{0} A \to B_{k}$.
   We distinguish three cases,
   corresponding to the ways in which $B_{k}$ can appear in the deduction,
@@ -622,6 +610,9 @@ all A1 instances are provable in
 
 Now for some facts about negation.
 
+\begingroup
+\allowdisplaybreaks % allow page breaks in flalign*
+
 \begin{theorem}{Ex Falso Quodlibet (EFQ)}{ex-falso}
    If $\Gamma \vdash_{0} A$ and $\Gamma \vdash_{0} \neg A$, then $\Gamma \vdash_{0} B$
 \end{theorem}
@@ -673,8 +664,6 @@ If $\Gamma \vdash_{0} \neg\neg A$ then $\Gamma \vdash_{0} A$.
 \quad 1.\quad & \Gamma,A \vdash_{0} B && \text{(Assumption)}& \\
 \quad 2.\quad & \Gamma,A \vdash_{0} \neg B && \text{(Assumption)}& \\
 \quad 3.\quad & \Gamma,A \vdash_{0} \neg A &&\text{(1, 2, EFQ)}& \\
-% \quad 4.\quad & \Gamma,A, \neg\neg A \vdash_{0} \neg A &&\text{(3, Mon)}& \\
-% \quad 4.\quad & \Gamma, \neg\neg A \vdash_{0} A \to \neg A &&\text{(3, DT)}& \\
 \quad 4.\quad & \Gamma, \neg\neg A \vdash_{0} \neg\neg A &&\text{(Id, Mon)}& \\
 \quad 5.\quad & \Gamma, \neg\neg A \vdash_{0} A &&\text{(4, DNE)}& \\
 \quad 6.\quad & \Gamma, \neg\neg A \vdash_{0} \neg A &&\text{(3, 5, Cut)}&\\
@@ -687,6 +676,8 @@ If $\Gamma \vdash_{0} \neg\neg A$ then $\Gamma \vdash_{0} A$.
 \quad 12.\quad & \Gamma \vdash_{0} \neg A &&\text{(7, 11, MP)}& \qed
 \end{flalign*}
 \end{proof}
+
+\endgroup
 
 % This is intuitionistically valid, so there should be a derivation without DNE,
 % but it's hard to find one.
@@ -1231,7 +1222,7 @@ The soundness proof is straightforward.
   there is a sequence $A_1, A_2, \ldots, A_n$ such that $A_n = A$ and
   each $A_k$ in the sequence is
   either an axiom, a member of $\Gamma$, or follows from previous sentences by MP.
-  We show by strong induction on $k$ that
+  We show by induction on $k$ that
   $\Gamma \entails A_k$.
   The theorem follows by taking $k = n$.
 
