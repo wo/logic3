@@ -303,7 +303,9 @@
 \usepackage{wrapfig}
 
 \newcommand{\num}[1]{\overline{#1}}
+% \newcommand{\num}[1]{\##1}
 \newcommand{\gn}[1]{\ulcorner #1 \urcorner}
+\newcommand{\gln}[1]{\#[#1]}
 
 \newcommand{\pconcat}{\raisebox{0.3ex}{%
     \ensuremath{\stackrel{\scriptscriptstyle p}{\frown}}}}
@@ -344,8 +346,26 @@
 \newcommand{\cmark}{\ding{51}}
 \newcommand{\xmark}{\ding{55}}
 
+\usetikzlibrary{decorations.pathmorphing}
+\newcommand{\transt}[1]{%
+  \mathchoice% handles different math styles
+  {\sqtaux{\displaystyle}{#1}}%
+  {\sqtaux{\textstyle}{#1}}%
+  {\sqtaux{\scriptstyle}{#1}}%
+  {\sqtaux{\scriptscriptstyle}{#1}}%
+}
+\newcommand{\sqtaux}[2]{%
+  \tikz[baseline=(X.base)]{
+    \node[inner sep=0pt] (X) {$#1#2$};
+    \draw[decorate, decoration={snake, amplitude=0.3mm, segment length=1mm}, gray] 
+      ([yshift=2pt]X.north west) -- ([yshift=2pt]X.north east) node[right, inner sep=1pt, black] {\tiny $t$};
+  }%
+}
+
 \usepackage{rotating}
 \usepackage{multirow}
+
+\usepackage{changepage}   % for the adjustwidth environment
 
 % Syntax:
 %

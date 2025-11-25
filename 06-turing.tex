@@ -326,7 +326,7 @@ if odd, the output is two strokes.
   by one stroke:
   when starting on the left-most stroke of a sequence of $n$ strokes
   on an otherwise blank tape,
-  the machine should eventually halts on an otherwise blank tape with
+  the machine eventually halts on an otherwise blank tape with
   a sequence of $n + 1$ strokes.
 \end{exercise}
 
@@ -395,8 +395,8 @@ we would start it on a tape that looks like this:
 \begin{exercise}
   Since blanks and strokes effectively give us two symbols,
   one might suggest that we could code numbers in binary,
-  so that 0 is coded as a blank ($\mathrm{B}$)
-  1 as a stroke ($1$)
+  so that 0 is coded as a blank ($\mathrm{B}$),
+  1 as a stroke ($1$),
   2 as $1\mathrm{B}$,
   3 as $11$,
   4 as $1\mathrm{B}\mathrm{B}$,
@@ -568,7 +568,7 @@ a wide range of arithmetical functions can be computed by Turing machines.
   that takes two numbers as input and returns the larger of the two.
 \end{exercise}
 
-\section{Universal Turing machines}
+\section{Universal Turing machines}\label{sec:universal-tm}
 
 % Turing machines are highly simplified models of computation,
 % stripped down to the bare essentials.
@@ -590,7 +590,7 @@ As Turing pointed out,
 one can also design a ``universal'' Turing machine that
 can compute \emph{any} computable function.
 Such a machine takes as input
-an algorithm for computing a function,
+an algorithm for computing a function
 as well as the arguments to that function.
 For example,
 if we supply the machine with an algorithm for addition and the numbers 2 and 3,
@@ -737,7 +737,7 @@ If there's no match,
 the simulation is finished.
 In this case,
 erase everything but the simulated tape area,
-as well as all the even-numbered squares in that area,
+shift the content of that area to omit all the even-numbered cells,
 and halt.
 If there is a match,
 continue to stage 4.
@@ -754,7 +754,7 @@ Copy the last element of the quintuple
 into the work area,
 erasing the previous content of the work area.
 Then move to the marked position in the simulated tape area,
-insert the remembered symbol
+write the remembered symbol
 into the cell before the marker stroke.
 Move the marker in the remembered direction
 by two steps
@@ -1063,7 +1063,7 @@ $2 \uparrow \uparrow 10$ is $2^{2^{\cdot^{2}}}$ with ten twos in the tower.
 This number is \emph{much} larger than, say, the number of atoms in the observable universe.
 $2 \uparrow\uparrow (2 \uparrow\uparrow 10)$ is a power tower of $2 \uparrow\uparrow 10$ twos.
 You couldn't write down all the twos in this tower even if you
-managed to write a '2' onto each atom in the universe.
+managed to write a `2' onto each atom in the universe.
 $2 \uparrow\uparrow (2 \uparrow\uparrow (2 \uparrow\uparrow 10))$ is a power tower of $2 \uparrow\uparrow (2 \uparrow\uparrow 10)$ twos.
 $\Sigma(7)$ is known to be at least $2\uparrow^{11}(2\uparrow^{11} 3)$,
 which I won't even try to explain.
@@ -1108,7 +1108,7 @@ I use a constant `$o$' (``origin'') for the square at which the machine starts,
 and two unary function symbols `$l$' and `$r$'
 that move one square to the left and right, respectively.
 So `$l(l(o))$', for example, denotes the square two to the left of the starting square.
-I'll also use a predicate `$Q_{i}$' for each state $q_{i}$ of $M$,
+I'll also introduce a predicate `$Q_{i}$' for each state $q_{i}$ of $M$,
 so that $Q_{i}(n)$ means that at step $n$ the machine is in state $q_{i}$.
 Finally,
 I'll use two binary predicates `$@$' and `$1$',

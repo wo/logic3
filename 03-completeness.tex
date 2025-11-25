@@ -1189,7 +1189,7 @@ We say that it has an \emph{intended interpretation},
 or an \emph{intended model}.
 
 The intended model of arithmetic,
-also known as the \emph{standard model} of arithmetic, or $\Mod{A}$,
+also known as the \emph{standard model} of arithmetic, or $\Mod{N}$,
 has as its domain
 the set of natural numbers $\mathbb{N}$;
 it interprets `0' as denoting 0,
@@ -1232,17 +1232,17 @@ then the above model (with Athens and Berlin) is no longer a model of the theory
 So we can rule out \emph{some} unintended models.
 The compactness theorem dashes any hope
 of ruling out \emph{all} unintended models.
-Let $\mathrm{Th}(\Mod{A})$ be the set of all sentences true in
-the standard model $\Mod{A}$.
-This is called the \emph{theory of $\Mod{A}$}.
+Let $\mathrm{Th}(\Mod{N})$ be the set of all sentences true in
+the standard model $\Mod{N}$.
+This is called the \emph{theory of $\Mod{N}$}.
 It contains all postulates we could possibly lay down,
 assuming that they should all be true in the standard model.
 By compactness,
-there is a model of $\mathrm{Th}(\Mod{A})$ whose domain
+there is a model of $\mathrm{Th}(\Mod{N})$ whose domain
 includes junk elements that clearly aren't natural numbers.
 
 \begin{theorem}{Non-standard Models of Arithmetic}{non-standard-arithmetic}
-  $\mathrm{Th}(\Mod{A})$ has models in which
+  $\mathrm{Th}(\Mod{N})$ has models in which
   some object is not reachable from 0
   by finitely many applications of the successor function.
   (Such models are called \emph{non-standard models} of arithmetic.)
@@ -1251,25 +1251,25 @@ includes junk elements that clearly aren't natural numbers.
   \emph{Proof.}
   Let $\L_A^+$ be the language of arithmetic
   with an added individual constant $c$.
-  Let $\mathrm{Th}(\Mod{A})^+$ be the set of sentences that
-  extends $\mathrm{Th}(\Mod{A})$ by
+  Let $\mathrm{Th}(\Mod{N})^+$ be the set of sentences that
+  extends $\mathrm{Th}(\Mod{N})$ by
   \[
     c \ne 0, \quad c \ne s(0), \quad c \ne s(s(0)), \quad c \ne s(s(s(0))), \quad\ldots.
   \]
-  So $\mathrm{Th}(\Mod{A})^+$ says that
+  So $\mathrm{Th}(\Mod{N})^+$ says that
   $c$ is different from 0, 1, 2, and so on, for all natural numbers.
-  Every finite subset of $\mathrm{Th}(\Mod{A})^+$ is obviously satisfiable:
-  it is true in the standard model $\Mod{A}$,
+  Every finite subset of $\mathrm{Th}(\Mod{N})^+$ is obviously satisfiable:
+  it is true in the standard model $\Mod{N}$,
   interpreting $c$ as a sufficiently large number.
   By the compactness theorem,
-  it follows that $\mathrm{Th}(\Mod{A})^+$ is satisfiable.
-  Any model of $\mathrm{Th}(\Mod{A})^+$
+  it follows that $\mathrm{Th}(\Mod{N})^+$ is satisfiable.
+  Any model of $\mathrm{Th}(\Mod{N})^+$
   must have an element (denoted by $c$) that
   is not identical to any natural number:
   it can't be reached from 0 by finitely many applications of the successor function.
   The reduct of any such model to the original language of arithmetic
   (discarding the interpretation of $c$)
-  is a model of $\mathrm{Th}(\Mod{A})$.
+  is a model of $\mathrm{Th}(\Mod{N})$.
   \qed
 \end{proof}
 
@@ -1377,7 +1377,7 @@ due to Alfred Tarski,
 requires compactness and could only be proved after 1929.
 It entails,
 among other things,
-that $\mathrm{Th}(\Mod{A})$ has non-standard models of every infinite cardinality.
+that $\mathrm{Th}(\Mod{N})$ has non-standard models of every infinite cardinality.
 
 \begin{exercise}
   (a) Can you find a first-order sentence that is only true in infinite models?
@@ -1398,13 +1398,13 @@ that $\mathrm{Th}(\Mod{A})$ has non-standard models of every infinite cardinalit
 \end{exercise}
 
 \begin{exercise}
-  Let $\Mod{A}^{c}$ be exactly like the standard model of arithmetic $\Mod{A}$,
+  Let $\Mod{N}^{c}$ be exactly like the standard model of arithmetic $\Mod{N}$,
   except that the number 2 is replaced by Julius Caesar:
-  the domain of $\Mod{A}^c$ is $\{ 0, 1, \text{Caesar}, 3, 4, \ldots \}$;
+  the domain of $\Mod{N}^c$ is $\{ 0, 1, \text{Caesar}, 3, 4, \ldots \}$;
   '$s$' denotes a function that maps 0 to 1, 1 to Caesar, Caesar to 3, \ldots;
   `$+$' denotes a function that maps 1 and 1 to Caesar, 1 and Caesar to 3,
   and so on.
-  Is $\Mod{A}^{c}$ a model of $\mathrm{Th}(\Mod{A})$?
+  Is $\Mod{N}^{c}$ a model of $\mathrm{Th}(\Mod{N})$?
   In what way is it less interesting than the non-standard models of theorem~\ref{thm:non-standard-arithmetic}?
 \end{exercise}
 
@@ -1413,7 +1413,7 @@ that $\mathrm{Th}(\Mod{A})$ has non-standard models of every infinite cardinalit
   domain is a set of natural numbers.
 \end{exercise}
 
-% This model satisfies all sentences in $\mathrm{Th}(\Mod{A})$,
+% This model satisfies all sentences in $\mathrm{Th}(\Mod{N})$,
 % and it isn't the intended model.
 % Unlike the non-standard models of theorem~\ref{thm:non-standard-arithmetic},
 % however,
@@ -1423,7 +1423,7 @@ that $\mathrm{Th}(\Mod{A})$ has non-standard models of every infinite cardinalit
 % there is a one-to-one correspondence between the objects in their domains
 % that preserves the operations and relations (in both directions).
 % Many mathematicians hold that mathematics is really the study of these more abstract structures:
-% the kind of structure that $\Mod{A}$ and $\Mod{M}^{jc}$ have in common.
+% the kind of structure that $\Mod{N}$ and $\Mod{M}^{jc}$ have in common.
 % (This is called \emph{structuralism} in the philosophy of mathematics.)
 
 % \begin{exercise}
@@ -1594,8 +1594,8 @@ Since compactness is a consequence of soundness and completeness,
 it follows that
 there can't be a sound and complete proof system for arithmetical validity.
 That is,
-there is no way to spell out axioms and rules of inference that define a proof relation $\proves_{\Mod{A}}$ so that
-$\Gamma \proves_{\Mod{A}} A$ iff $\Gamma$ arithmetically entails $A$
+there is no way to spell out axioms and rules of inference that define a proof relation $\proves_{\Mod{N}}$ so that
+$\Gamma \proves_{\Mod{N}} A$ iff $\Gamma$ arithmetically entails $A$
 -- as long as proofs remain finite.
 
 \begin{exercise}

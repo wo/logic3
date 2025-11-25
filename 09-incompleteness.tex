@@ -1,336 +1,1615 @@
+\setcounter{chapter}{8}
 \chapter{Incompleteness}\label{ch:incompleteness}
 
-In the previous chapter,
-we showed that all total recursive functions and relations on natural numbers
-are representable in every $\L_{A}$-theory that satisfies a few simple conditions.
-Call such theories robinsonian.
-Now we'll show that no consistent robinsonian theory can be complete.
+In this chapter,
+we're going to prove several versions of Gödel's First Incompleteness Theorem.
+We're also going to prove Tarski's Theorem on the undefinability of truth,
+and Church's Theorem on the undecidability of first-order logic.
 
-\section{Arithmetization}
+\section{Preview}\label{sec:incompleteness-preview}
 
-Hilbert saw that we can reason mathematically
-about provability in axiomatic theories like PA.
-Gödel saw that we carry out such reasoning within the theories themselves,
-allowing the theory to reason about what is or isn't provable in itself.
+In Chapter~\ref{ch:theories},
+we studied axiomatic theories.
+The aim of axiomatizing an area of mathematics (or other discipline)
+is to put it on a firm foundation:
+instead of relying on a hodgepodge of intuition and imperfectly understood techniques,
+all results in the area should be derivable by pure logic
+from a set of precise and explicitly stated assumptions: the axioms.
 
-Having gone through the work of the previous chapter,
-this is straightforward.
-We know that we can code $L_{A}$-sentences, and lists of $L_{A}$-sentences, as numbers.
-In this context,
-the code number of a sentence $A$ is called its \emph{Gödel number},
-and written $\gn{A}$.
+What should we expect of an axiomatic theory?
+Obviously,
+all the axioms should be true
+on their intended interpretation.
+Ideally,
+they should suffice to derive \emph{all} truths in the relevant area.
+These are semantic properties of theories,
+related to their intended interpretation.
+But they entail syntactic properties.
+If all axioms of a theory are true,
+the theory must be \emph{consistent}:
+it won't contain a sentence $A$ and its negation $\neg A$;
+equivalently,
+it won't contain $\bot$.
+If a theory contains all truths on its intended interpretation,
+it will be \emph{complete} in the sense that
+for every sentence $A$ in its language,
+it contains either $A$ or $\neg A$.
 
-Now consider the relation that
-holds between a list of sentences $A_{1},\ldots,A_{n}$ and a sentence $A$
-iff $A_{1},\ldots,A_{n}$ is a proof of $A$ in some computably axiomatized theory $T$.
-This relation is computable:
-there is a mechanical test for checking whether
-a given list of sentences is a $T$-proof of a given sentence.
-By Church's Thesis,
-it follows that
-the relation $\text{Proof}(x,y)$ that holds between numbers $x,y$
-iff $x$ is the code number of a $T$-proof of the sentence with code number $y$
-is recursive.
-By theorem \ref{thm:recrep},
-this relation is representable in any robinsonian theory.
-That is,
-if $T$ is a robinsonian theory then
-there is a formula $\text{Prf}(x,y)$ such that for all natural numbers $a,b$,
+Note that this is not the sense of `complete' in which
+the first-order calculus is complete.
+When we talk about completeness \emph{of a proof system},
+we mean that the system can prove every valid sentence.
+When we talk about completeness \emph{of a theory},
+we mean that the theory decides every sentence:
+it contains $A$ or $\neg A$,
+for every sentence $A$.
+(This notion of completeness is sometimes called \emph{negation-completeness}.)
 
-\begin{enumerate}[(i)]
-  \item if $\text{Proof}(a,b)$ then $\proves_{T}\text{Prf}(\num{a},\num{b})$; and
-  \item if not $\text{Proof}(a,b)$ then $\proves_{T}\neg\text{Prf}(\num{a},\num{b})$.
-\end{enumerate}
+Confusingly,
+`sound' also has two meanings.
+A proof system is sound if it can only prove valid sentences.
+A theory is called \emph{sound} if
+all sentences in the theory are true
+on their intended interpretation.
 
-It doesn't really matter how sentences and proofs are coded.
-Gödel used the powers of primes method.
+Consistency and completeness are defined syntactically,
+without reference to the meaning of the axioms.
+This makes them easier to study formally than semantic properties like soundness,
+which requires pinning down the intended interpretation independently of the proposed axioms,
+so that one can compare what the axioms say with the structure they are meant to describe.
 
-These numbers are called \emph{Gödel numbers}.
-We can then define
-Then we can define numerical relations that
-hold between code numbers iff
-the coded strings satisfy certain syntactic
-correspond to syntactic rel
+Consistency may seem trivial:
+surely nobody would propose an inconsistent set of axioms?
+But remember that this is exactly what happened to Frege.
+It also happened to others,
+especially when trying to develop powerful systems to unify diverse areas of mathematics.
+Many mathematicians were therefore wary of ZFC when it was first proposed.
+Couldn't it also turn out to be inconsistent?
 
-Let's begin with the task of
-coding $\L_{A}$-sentences and lists of $\L_{A}$-sentences as numbers.
-We've talked about coding strings in ch.6.
-There I suggested that we can code an
-$L_A$ string in two steps.
+David Hilbert saw how such fears could be put to rest.
+To check whether an axiomatic theory is consistent,
+we only need to check whether there is deduction of $\bot$ from its axioms.
+Even if the theory itself, like ZFC, talks about highly infinitary matters,
+any deduction from its axioms is finite.
+We should therefore be able to establish the consistency of ZFC
+in a much weaker, finitary branch of mathematics
+that doesn't study sets,
+but proofs and deductions.
+In the same way,
+Hilbert hoped that we could prove the completeness of axiomatic theories:
+we should be able to verify
+(as seemed plausible in the 1920s)
+that the axioms of, say, Peano Arithmetic or ZFC decide every sentence in their language.
 
-First, we assign a code number to each symbol of the language.
-For $\L_{A}$,
-this might look as follows:
+This project for establishing the consistency and completeness of axiomatic theories
+is known as \emph{Hilbert's program}.
+It was shattered by Gödel's incompleteness theorems.
+Gödel showed that
+sufficiently strong axiomatic theories can never be complete,
+unless they are inconsistent.
+He also showed that
+there is no hope of establishing the consistency of sufficiently strong theories
+from safe, finitary grounds.
+In the present chapter, we'll focus on the first of these results.
+We'll turn to the second in Chapter~\ref{ch:goedel2}.
 
+Gödel realized that
+we don't need a separate branch of mathematics to study proofs.
+Since sentences and deductions are finite strings of symbols,
+they can be coded as numbers.
+We can therefore use arithmetical theories to reason indirectly about proofs.
+We can,
+for example,
+construct an $\L_A$-formula $\smallcaps{Prov}_{\mathrm{PA}}(x)$
+so that $\smallcaps{Prov}_{\mathrm{PA}}(\num{n})$ is true (in the standard model of arithmetic $\Mod{N}$) iff
+there is a deduction of the sentence coded by $n$
+from the axioms of Peano Arithmetic.
+% (This is a slightly more liberal sense of the word than
+% the one introduced in Chapters~\ref{ch:propcal} and \ref{ch:fopcal}).
+% The code numbers of $\L_A$-formulas are called \emph{Gödel numbers}.
+% We'll use $\gn{A}$ to denote the $\L_A$-numeral of the Gödel number of an $\L_A$-formula $A$.
+% For example,
+% if `$0\!=\!0$' has Gödel number 2430,
+% then $\gn{0\!=\!0}$ is $\num{2430}$,
+% which is $s(s(\ldots s(0)\ldots))$ with 2430 occurrences of $s$.
+% Now let $A$ be any $\L_A$-sentence.
+% Informally,
+% $\smallcaps{Prov}(\gn{A})$ then says that $A$ is provable in PA:
+% it is true (in $\Mod{N}$) iff there is a proof of $A$ from the axioms of PA.
+ 
+Gödel then showed how to construct a sentence $G$, coded by some number $n$, such that
+$G \leftrightarrow \neg \smallcaps{Prov}_{\mathrm{PA}}(\num{n})$ is true in $\Mod{N}$.
+Informally,
+$G$ says of itself that it is not provable (in PA):
+it is true iff it is unprovable.
+It swiftly follows that
+PA can't decide $G$,
+assuming that PA is sound.
+To see this,
+note first that $G$ is true:
+if it were is false,
+it would be provable
+(because $G$ is true iff it is unprovable),
+and so PA would prove a falsehood,
+contradicting the assumption that PA is sound.
+So $G$ is true.
+And so $G$ can't be proved in PA
+(because $G$ is true iff it is unprovable).
+Its negation $\neg G$ can't be proved either,
+as otherwise PA would prove a falsehood.
+
+This argument assumes that PA is sound.
+For that reason,
+it is known as the ``semantic'' version of the First Incompleteness Theorem.
+Gödel's main result is a ``syntactic'' version of the theorem
+that doesn't require soundness.
+In its standard formulation,
+it shows that
+every consistent axiomatic theory that is at least as strong as Q is incomplete.
+
+The restriction to \emph{axiomatic} theories is crucial.
+Consider the theory $\mathrm{Th}(\Mod{N})$ consisting of
+all $\L_A$-sentences that are true in the standard model of arithmetic $\Mod{N}$.
+This theory is complete:
+every $\L_A$-sentence is either true or false in $\Mod{N}$;
+if true, it is in $\mathrm{Th}(\Mod{N})$;
+if false, its negation is in $\mathrm{Th}(\Mod{N})$.
+By definition, $\mathrm{Th}(\Mod{N})$ is also sound,
+and therefore consistent.
+But it is not an axiomatic theory:
+I haven't specified $\mathrm{Th}(\Mod{N})$ by giving a set of axioms,
+and the Incompleteness Theorem implies that I couldn't have done so.
+
+Officially,
+theories are just sets of sentences closed under first-order consequence.
+The same set of sentences can always be specified in many ways.
+Instead of speaking of \emph{axiomatic} theories,
+we should therefore speak of \emph{axiomatizable} theories.
+Recall that a theory is axiomatizable if
+there is a decidable set of axioms
+from which all and only the sentences in the theory can be deduced:
+a set of axioms for which
+there is a mechanical algorithm to check whether a given sentence is in it or not.
+
+In Section~\ref{sec:decidable},
+I introduced these concepts informally,
+using the pre-theoretical notions of computability and algorithms.
+We can now give more formal definitions.
+
+We say that
+a set of numbers is \emph{recursively decidable}
+if the property of being in the set is a recursive relation,
+as defined in Chapter~\ref{ch:recursive};
+a set of sentences is recursively decidable
+if the set of their code numbers is recursively decidable.
+A theory is \emph{recursively axiomatizable} if
+there is a recursively decidable set of axioms
+from which all and only the sentences in the theory can be deduced.
+By Theorem~\ref{thm:total-recursive-turing},
+this is equivalent to saying that
+there is a Turing machine that
+determines whether a given $\L_A$-sentence is among the axioms or not.
+
+The syntactic version of Gödel's First Incompleteness Theorem can now be stated as follows:
+\emph{every consistent and recursively axiomatizable theory of arithmetic that is at least as strong as Q is incomplete.}
+
+\begin{exercise}
+  Let $T_1$ be the set of all $\L_A$-sentences.
+  Is $T_1$ (a) a theory? (b) recursively axiomatizable? (c) complete? (d) consistent? (Explain.)
+\end{exercise}
+
+\begin{exercise}
+  Let $T_2$ be the set of $\L_A$-sentences that are valid in first-order logic.
+  Is $T_2$ (a) a theory? (b) recursively axiomatizable? (c) complete? (d) consistent?
+\end{exercise}
+
+\begin{exercise}
+  Can you find an $\L_A$-theory that is recursively axiomatizable, complete, and consistent?
+  (Hint: you only need one simple axiom.)
+  % Let $T_3$ be the $\L_A$-theory axiomatized by the single axiom $\forall x\, x=0$.
+  % Is $T_3$ complete? Is it consistent?
+\end{exercise}
+
+
+\section{Arithmetization of syntax}\label{sec:arithmetization}
+
+As I mentioned above,
+Gödel's proof draws on the insight that
+we can use arithmetical theories like PA to reason about their own syntax.
+After the work we've done in the previous chapter,
+this should not be surprising.
+We've shown in Theorem~\ref{thm:definability} that
+every computable property or relation is definable in $\L_A$.
+Syntactic properties like
+\emph{coding an $\L_A$-sentence} or \emph{coding a deduction from the axioms of PA}
+are clearly computable;
+so they are definable in $\L_A$:
+there is an $\L_A$-formula $\smallcaps{Prf}_{\mathrm{PA}}(x,y)$
+such that $\smallcaps{Prf}_{\mathrm{PA}}(\num{n},\num{m})$ is true (in $\Mod{N}$) iff
+$n$ codes a proof of the sentence coded by $m$ from the axioms of PA.
+This is all we need to run Gödel's argument.
+To fix ideas,
+I'll nonetheless fill in some more details.
+
+We want to talk about sentences and deductions in the language $\L_A$,
+whose non-logical symbols are $0$, $s$, $+$, and $\times$.
+To this end,
+we code $\L_A$-strings as numbers,
+so that we can indirectly refer an $\L_A$-string by the $\L_A$-numeral of its code.
+We'll use Gödel's own coding scheme,
+which I introduced in Section~\ref{sec:coding}.
+
+We first assign a \emph{symbol code} to each primitive symbol of $\L_A$,
+like so:
+
+\smallskip
 \begin{center}
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
-\hline
-Symbol & $\neg$ & $\to$ & $=$ & $\forall$ & $0$ & $s$ & $+$ & $\times$ & $($ & $)$ & $,$ & $x_{1}$ & $x_{2}$ & $\ldots$ \\
-\hline
-Code & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & $\ldots$ \\
-\hline
+\begin{tabular}{rcccccccccccccccc}
+\toprule
+Symbol: & $0$ & $s$ & $+$ & $\times$ & $=$ & $\neg$ & $\to$ & $\forall$ & $($ & $)$ & $,$ & $x_{1}$ & $c_{1}$ & $x_2$ & $c_2$ & $\ldots$ \\
+\midrule
+Code: & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 & 15 & $\ldots$ \\
+\bottomrule
 \end{tabular}
 \end{center}
+\smallskip
 
-Having coded each symbol by a number,
-the second step is to code sequences of numbers as single numbers.
-We can use the prime factor decomposition technique.
-Take the string '$0 = 0$'.
-This will be coded as $2^5 \times 3^3 \times 5^5$, which is 2345xxx.
-
-In general, let $p_{i}$ be the $i$-th prime. Then the gn of a string $a_{1} \ldots a_{n}$
-of symbols is
-
+Then we use the prime exponent method to code sequences of symbol codes,
+and thereby $\L_A$-strings.
+The string `$0 = 0$',
+for example,
+determines the sequence of symbol codes $\t{1, 5, 1}$,
+which is coded as $2^{1} \cdot 3^{5} \cdot 5^{1} = 2430$.
+The exponents of the primes are the symbol codes.
+In general,
+if $p_i$ is the $i$th prime number then
+the code number of an $\L_A$-string $A$ composed
+of symbols $s_1s_2\ldots s_n$ with symbol codes $c_1, c_2, \ldots, c_n$ is
 \[
- p_{1}^{a_{1}} \cdot p_{2}^{a_{2}} \cdots p_{n}^{a_{n}}.
+    \gln{A} = p_1^{c_1} \cdot p_2^{c_2} \cdot \ldots  \cdot p_n^{c_n}.
+\]
+From now on,
+we'll call $\gln{A}$ the \emph{Gödel number} of $A$.
+Note that
+individual symbols of $\L_A$ have both a Gödel number and a symbol code:
+`$\!\to\!$' has symbol code 7 and Gödel number $2^{7} = 128$.
+We won't talk about symbol codes any more.
+
+Since deductions are finite sequences of $\L_A$-sentences,
+we can use the prime exponent method again to code them:
+the Gödel number of a deduction $A_1, A_2, \ldots, A_n$ is
+\[
+  \gln{A_1, A_2, \ldots, A_n} = p_1^{\gln{A_1}} \cdot p_2^{\gln{A_2}} \cdot \ldots \cdot p_n^{\gln{A_n}}.
 \]
 
-(The empty sequence is coded by the empty product, 1.)
+The Gödel number function $\#$ converts
+any $\L_A$-string $A$ into a number $\gln{A}$.
+This number $\gln{A}$ is denoted in $\L_A$ by some numeral $\num{\gln{A}}$.
+So we can indirectly refer to any $\L_A$-string $A$ by the numeral $\num{\gln{A}}$
+of its Gödel number.
 
-Given these two methods, it is possible to code an arbitrary expression of the language by a single number: first, replace each symbol s by it symbol number \#(s). This way a sequence of symbols becomes a sequence of numbers. Second, using the above powers of primes coding, associate to this sequence of numbers a unique single number as its code.
+We'll abbreviate $\num{\gln{A}}$ as $\gn{A}$.
+For example,
+since $\gln{0\!=\!0} = 2430$,
+$\gn{0\!=\!0}$ is $\num{2430}$,
+which is $s(s(\ldots s(0)\ldots))$ with 2430 occurrences of $s$.
+In practice,
+you should treat the corner quotes as a special kind of quote marks:
+we use $\gn{0\!=\!0}$ to denote the string `$0\!=\!0$' via its Gödel number.
 
-The Gödel number of a formula (sentence, derivation) A is denoted by $\ulcorner A\urcorner$. E.g.
+\begin{exercise}
+  What are (a) $\gln{0}$? \, (b) $\num{\gln{0}}$?\, (c) $\gn{0}$?\, (d) $\gln{\gn{0}}$?
+\end{exercise}
 
+Now consider a simple syntactic property: being a variable.
+In our coding scheme,
+variables have Gödel numbers  $2^{12}, 2^{14}, 2^{16}, \ldots$.
+That is,
+a number $n$ codes a variable iff
+$n = 2^{12 + 2y}$, for some $y$.
+This is a purely arithmetical property that can be expressed in $\L_A$:
+there is an $\L_A$-formula $\smallcaps{Var}(x)$
+such that $\smallcaps{Var}(\num{n})$ is true (in $\Mod{N}$) iff $n$ codes a variable.
+In this sense,
+$\smallcaps{Var}(\num{n})$ ``says that'' $n$ codes a variable.
+But what it actually, explicitly says is simply
+that there is a number $y$ such that $n = 2^{12 + 2y}$.
+
+% Exponentiation is primitive recursive.
+% So we know from Theorem~\ref{thm:definability} that
+% there is an $\L_A$-formula $\smallcaps{exp}(x,y,z)$
+% such that $\smallcaps{exp}(\num{n},\num{m},\num{k})$ is true (in $\Mod{N}$) iff $n^m = k$.
+% We can therefore expressed the claim that $n$ codes a variable by the $\L_A$-sentence
+% \[
+%   \exists y \,\smallcaps{exp}(\num{2}, \num{12} + (\num{2} \times y), \num{n}).
+% \]
+% Let's abbreviate this as $\smallcaps{Var}(\num{n})$.
+
+% The example illustrates
+% how we can use $\L_A$-sentences to talk about $\L_A$-expressions,
+% without re-defining the interpretation of the non-logical symbols.
+
+In the terminology of the previous chapter,
+the formula $\smallcaps{Var}(x)$
+\emph{defines} the property of coding a variable.
+By Theorem~\ref{thm:definability},
+every recursive relation and function is definable in $L_A$.
+We can use this result 
+to show that a wide range of syntactic notions are definable in $L_A$.
+Since our coding scheme can be implemented mechanically,
+it maps every computable relation or function on $\L_A$-strings
+to a computable relation or function on $\mathbb{N}$.
+By the Church-Turing Thesis,
+that relation or function is recursive.
+By Theorem~\ref{thm:definability},
+it is definable in $L_A$.
+
+For example,
+there is a mechanical procedure for checking whether
+a given string is a well-formed sentence of $\L_A$.
+So there is also a mechanical procedure for checking whether
+a given number is the Gödel number of an $\L_A$-sentence.
+By the Church-Turing Thesis,
+it follows that
+the property (call it $\mathrm{Sent}$) of coding an $\L_A$-sentence is recursive.
+By Theorem~\ref{thm:definability},
+it follows that
+there is an $\L_A$-formula $\smallcaps{Sent}(x)$
+such that $\smallcaps{Sent}(\num{n})$ is true (in $\Mod{N}$) iff
+$n$ is the Gödel number of an $\L_A$-sentence.
+
+Similarly,
+if a theory $T$ is axiomatized by a decidable set of axioms then
+there is a mechanical procedure for checking whether
+a given sequence of $\L_A$-sentences is a deduction of a given target sentence from these axioms:
+we only need to check whether the last sentence in the sequence is the target sentence,
+and whether each sentence in the sequence is either
+an axiom of $T$,
+an instance of the logical axioms A1--A6, or
+follows from previous sentences by MP or Gen.
+All these checks can be performed mechanically.
+Let $\mathrm{Prf}_T$ be the relation that holds between numbers $n$ and $m$
+iff $n$ codes a deduction (informally, a ``proof'') of the sentence coded by $m$ from
+a set of axioms that generates $T$.
+If $T$ is computably axiomatizable,
+$\mathrm{Prf}_T$ is computable.
+By the Church-Turing Thesis,
+it is recursive.
+By Theorem~\ref{thm:definability},
+it follows that it is definable in $L_A$:
+there is an $\L_A$-formula $\smallcaps{Prf}_T(x,y)$
+such that $\smallcaps{Prf}_T(\num{n},\num{m})$ is true (in $\Mod{N}$) iff
+$n$ codes a proof of the sentence coded by $m$ from the axioms of $T$.
+
+For a final example,
+let's look at a function on $\L_A$-strings.
+Consider the \emph{concatenation} function that
+takes two $\L_A$-strings and returns the string consisting of the first followed by the second.
+This is clearly computable.
+By the Church-Turing Thesis,
+the corresponding function on Gödel numbers is recursive:
+there is a recursive function $*$ that maps
+the Gödel numbers of any two $\L_A$-strings to the Gödel number of the concatenation of these strings.
+By Theorem~\ref{thm:definability},
+it follows that
+there is an $\L_A$-formula $\smallcaps{Concat}(x,y,z)$
+that defines $*$ in $L_A$,
+so that
+$\smallcaps{Concat}(\num{n},\num{m},\num{k})$ is true (in $\Mod{N}$) iff
+$k$ codes the concatenation of the strings coded by $n$ and $m$.
+(I'll write this as $k = n * m$, rather than $k = *(n,m)$).
+
+\begin{exercise}
+  What is $\gln{0=} * \gln{0}$?
+\end{exercise}
+
+I've appealed to the Church-Turing Thesis to argue that $\mathrm{Sent}$, $\mathrm{Prf}_T$
+and $*$ are recursive,
+but we could have shown this directly:
+we could show that $\mathrm{Sent}$, $\mathrm{Prf}_T$ and $*$ can be constructed
+from zero, successor, and projection
+by composition, primitive recursion, and regular minimization.
+In fact,
+we don't need minimization:
+$\mathrm{Sent}$, $\mathrm{Prf}_T$ and $*$ are primitive recursive.
+I won't go through the details for each case.
+But let me illustrate what's involved
+with the concatenation function $*$
+(which will play an important role in the next section).
+
+Recall that $*$ maps two Gödel numbers $\gln{A}$ and $\gln{B}$
+to the Gödel number $\gln{AB}$ of the concatenation of $A$ and $B$.
+If $B$ is a single symbol,
+it is easy to define this operation arithmetically:
 \[
-\langle 0 = 0 \rangle = 2^{5} \cdot 3^{5} = 243.
+  \gln{A} * \gln{s} = \gln{A} \cdot \mathrm{pri}(\mathrm{len}(\gln{A}))^{\gln{s}},
 \]
+where $\mathrm{pri}(i)$ is the $i$th prime number and
+$\mathrm{len}(n)$ is the length of the string coded by $n$.
+In Section~\ref{sec:pr-examples},
+I showed that $\mathrm{pri}$ and $\mathrm{len}$ are primitive recursive.
+So the function
+\[
+  \mathrm{append}(x,y) = x \cdot \mathrm{pri}(\mathrm{len}(x))^{y}
+\]
+is also primitive recursive.
 
-% ** Syntactic categories are p.r.
+Next,
+we need the function $\mathrm{entry}$ that takes two numbers $n$ and $i$
+and returns the exponent of the $i$th prime in the prime factorization of $n$.
+I showed in Section~\ref{sec:pr-examples} that
+this function, too, is primitive recursive.
+Using $\mathrm{append}$ and $\mathrm{entry}$,
+we define (by primitive recursion)
+a function $\mathrm{conc}$ that
+takes three numbers $n$, $m$, and $i$
+and returns the code of the string consisting of the string coded by $n$ followed by the first $i$ symbols of the string coded by $m$:
+\begin{align*}
+  \mathrm{conc}(x, y, 0) & = x \\
+  \mathrm{conc}(x, y, s(i)) & = \mathrm{append}(\mathrm{conc}(x, y, i), \mathrm{entry}(y, s(i))).
+\end{align*}
+From this,
+we can define $x*y$ as $\mathrm{conc}(x,y,\mathrm{len}(y))$.
 
-Our mapping of $\L_{A}$-strings to numbers
-induces a mapping of syntactic properties and relations to properties and relations among numbers.
+
+% Our coding scheme also assigns a Gödel number to strings consisting of multiple $\L_A$-sentences separated by a comma.
+% For example,
+% `$0 = 0, \forall x \, x\!=\!x$'
+% is coded as
+% $2^1 \cdot 3^5 \cdot 5^1 \cdot 7^{11} \cdot 11^8 \cdot 13^{12} \cdot 17^{5} \cdot 19^{12}$.
+% We can interpret this as
+% representing the sequence of sentences
+% `$0 = 0$' and `$\forall x \, x\!=\!x$'.
+
+% This particular sequence
+% happens to be a \emph{proof} in the first-order calculus:
+% the first sentence is an instance of A6,
+% the second follows from the first by Gen.
+% Since there is a mechanical procedure for checking whether
+% a given string of sentences is a proof in the first-order calculus,
+% the relation that holds between numbers $x$ and $y$
+% iff $x$ codes a proof of the sentence coded by $y$
+% is recursive,
+% and therefore definable in $L_A$.
+% The same is true if
+% we consider deductions from the axioms of some axiomatizable theory $T$.
+% Since there is a mechanical procedure for checking whether
+% a given sentence is an axiom of such a theory,
+% there is also a mechanical procedure for checking whether
+% a given string of sentences is a deduction of a given target sentence from the axioms of $T$.
+% In other words:
+% if $T$ is axiomatizable
+% then $\vdash_T$ is computable.
+% By the Church-Turing Thesis,
+% it is recursive,
+% and therefore definable in $L_A$.
+% That is,
+% there is an $\L_A$-formula $\smallcaps{Prf}_T(x,y)$
+% such that
+% $\smallcaps{Prf}_T(\num{a},\num{b})$ is true in $\Mod{N}$ iff
+% the string coded by $a$ is a deduction of the sentence coded by $b$ from the axioms of $T$
+% (relative to some computable axiomatization).
+
+\section{The First Incompleteness Theorem}\label{sec:incompleteness}
+
+I'll now explain how Gödel managed to construct a sentence that
+is true iff it is unprovable.
+The construction is so perplexing that
+it may help to first give a version for English.
+I'll show how to construct an English sentence that
+is true iff it is unprovable.
+(Let's pretend we've specified what it means for an English sentence to be ``provable''.
+You'll see that nothing hangs on this.)
+
+In English,
+we can use quote marks to denote expressions of English.
 For example,
-there's a numerical property $sent(x)$ that applies to a number $x$
-iff $x$ codes an $L_A$-sentence.
-And there's a numerical relation $proof(x,y)$ that applies to numbers $x,y$
-iff $x$ codes the proof of $y$ in some computably axiomatized theory.
+\begin{quote}
+  `is English'
+\end{quote}
+is a noun that denotes an English predicate.
+We can combine nouns like this with predicates to form sentences:
+\begin{cenumerate}
+\item[(1)] `is English' is English.
+\item[(2)] `is made of stone' is made of stone.
+\item[(3)] `is made of stone' is English.
+\end{cenumerate}
+In (1) and (2), a predicate is applied to itself, using quote marks.
+Let's call a sentence that results by applying a predicate to itself in this manner the \textit{diagonalization} of that predicate.
+So (1) is the diagonalization of `is English'.
 
-By a lazy application of Church's Thesis,
-this relation is recursive.
-In the remainder of this section we're going to show that it is,
-in fact,
-primitive recursive.
-This will be a little tedious.
+Now consider the predicate `has a diagonalization that is not provable'.
+If we diagonalize \emph{this} predicate,
+we get
+\begin{cenumerate}
+  \item[(4)] `has a diagonalization that is not provable' has a diagonalization that is not provable.
+\end{cenumerate}
+This is a sentence.
+What does it say?
+Well,
+it says that the predicate it quotes has an unprovable diagonalization.
+Every predicate has a unique diagonalization.
+So (4) says that the diagonalization of the quoted predicate (`has a diagonalization that is not provable') is not provable.
+But (4) \textit{is} the diagonalization of that predicate.
+So (4) says of itself that it is not provable.
 
+This trick obviously generalizes.
+We can replace `is not provable' by any predicate $A$.
+The argument shows that
+for any English predicate $A$,
+there is a sentence $G$ that says of itself that it is $A$.
+To construct $G$,
+we first construct another predicate $F$: `has a diagonalization that is $A$'.
+$G$ is then the diagonalization of $F$.
+It is true iff it is $A$.
 
-
-
-We've actually shown this for some of them in the previous chapter, where we've
-shown that they are in fact p.r..
-
-
-
-
-There are also numerical functions that operate on code numbers.
+We'll now run this argument for $\L_A$.
+We use open formulas $A(x)$ as predicates,
+and Gödel numerals $\gn{A(x)}$ (instead of quote marks) to refer to these predicates.
 For example,
-there's a function $len(x)$ that returns
-the length of string coded by a code number $x$.
+if $\smallcaps{Var}(x)$ is the formula that defines the property of coding a variable,
+then $\smallcaps{Var}(\gn{\smallcaps{Var}(x)})$ is a sentence
+saying (falsely) that the code of $\smallcaps{Var}(x)$ codes a variable
+-- equivalently: that $\smallcaps{Var}(x)$ is a variable.
+We might call $\smallcaps{Var}(\gn{\smallcaps{Var}(x)})$
+the diagonalization of $\smallcaps{Var}(x)$.
+However,
+it proves convenient to use a slightly more roundabout definition.
 
-By a lazy application of Church's Thesis,
-all these functions are recursive.
-We've actually shown this for some of them in the previous chapter, where we've
-shown that they are in fact p.r..
+For any $\L_A$-formula $A$,
+we define the \emph{diagonalization} of $A$ as the formula
+\[
+  \exists x(x\!=\!\gn{A} \land A).
+\]
+\noindent%
+If $x$ is free in $A$,
+which is the only case we care about,
+this is logically equivalent to $A(\gn{A(x)})$.
 
-Key propositions about pr functions:
+With this definition,
+constructing the diagonalization of a formula is a trivial mechanical task.
+Let $\mathrm{diag}$ be the function that
+takes the Gödel number of a formula as input
+and returns the Gödel number of the formula's diagonalization.
+This function is recursive.
+In fact,
+it is primitive recursive,
+and easily definable with the concatenation function $*$:
+\[
+  \mathrm{diag}(y) = \gln{\exists x(x\!=\!\num{y} \land} * y * \gln{)}.
+\]
+% For example,
+% if $n = \gln{x\!=\!\num{7}}$
+% then $\mathrm{diag}(n) = \gln{\exists x(x\!=\!\gn{x\!=\!\num{7}}) \land} * \gln{x\!=\!\num{7}} * \gln{)}$,
+% which is the Gödel number of $\exists x(x\!=\!\gn{x\!=\!\num{7}} \land x\!=\!\num{7})$.
+% (If $a = 7$,
+% which is not the Gödel number of anything,
+% then $\mathrm{diag}(a) = \gln{\exists x(x\!=\!\gn{7} \land} * 7 * \gln{)}$,
+% which is a number, but not a Gödel number.)
 
-\begin{enumerate}
-\item Sent(x) is recursive. [BBJ 15.2]
-\item Prf(x,y) is recursive.  [BBJ 15.3]
-\end{enumerate}
+By Theorem~\ref{thm:definability},
+all recursive functions are definable in $\L_A$.
+So there is a formula $\smallcaps{diag}(x,y)$
+such that $\smallcaps{diag}(\num{n},\num{m})$ is true (in $\Mod{N}$) iff
+$m$ codes the diagonalization of the formula coded by $n$.
+We use this formula to construct,
+for any formula $A(x)$ a sentence that ``says of itself'' that it has the property expressed by $A(x)$.
 
-Proof sketch
+\begin{lemma}{The Semantic Diagonal Lemma}{diagonallemma}
+  For every $\L_A$-formula $A(x)$ there is a sentence $G$
+  such that $\Mod{N} \satisfies G$ iff $\Mod{N} \satisfies A(\gn{G})$.
+\end{lemma}
+\begin{proof}
+  \emph{Proof.}
+  Let $F(x)$ be the formula $\exists y(\smallcaps{diag}(x,y) \land A(y))$.
+  Let $G$ be the diagonalization of $F(x)$.
+  So $G$ is $\exists x(x\!=\!\gn{F(x)} \land F(x))$.
+  This is logically equivalent to $F(\gn{F(x)})$,
+  which expands to $\exists y(\smallcaps{diag}(\gn{F(x)},y) \land A(y))$.
+  Since $\smallcaps{diag}$ defines $\mathrm{diag}$,
+  $G$ is true in $\Mod{N}$ iff
+  there is a number $n$ that codes the diagonalization of $F(x)$ and for which
+  $A(\num{n})$ is true (in $\Mod{N}$).
+  The diagonalization of $F(x)$ is $G$.
+  So $G$ is true in $\Mod{N}$ iff
+  $A(\num{n})$ is true (in $\Mod{N}$) of the number $n$ that codes $G$.
+  In short $G$ is true in $\Mod{N}$ iff $A(\gn{G})$ is true in $\Mod{N}$.
+  (If this proof baffles you,
+  have another look at the English version above!)
+  \qed
+\end{proof}
+\noindent%
 
-Let's start slowly.
-For example,
-consider the property of being a variable.
-In our mapping,
-variables have Gödel numbers xxx.
-[Maybe define ``Gödel nubmer'' in terms of sequences,
-so that the gn of x is $2^{\#x}$.]
-So the property of being a variable
-is mapped to the property of xxx.
+Now we're ready to prove the semantic version of Gödel's First Incompleteness Theorem.
+Let $T$ be some recursively axiomatizable theory in $\L_A$,
+so that 
+there is a recursively decidable set of axioms $\Gamma$ from which all and only the members of $T$ can be deduced.
+I'll say that a sentence is \emph{provable in $T$} if it is deducible from some such set $\Gamma$.
+As above,
+let $\mathrm{Prf}_T$ be the relation that holds between numbers $n$ and $m$
+iff $n$ codes a deduction of the sentence coded by $m$ from $\Gamma$.
+As explained in the previous section,
+$\mathrm{Prf}_T$ is recursive;
+so there is an $\L_A$-formula $\smallcaps{Prf}_T(x,y)$ such that
+$\Mod{N} \satisfies \smallcaps{Prf}_T(\num{n},\num{m})$ iff
+$n$ codes a deduction from $\Gamma$ of the sentence coded by $m$.
+Let $\smallcaps{Prov}_T(x)$ abbreviate $\exists y \, \smallcaps{Prf}_T(y,x)$.
+By construction,
+$\smallcaps{Prov}_T(\gn{A})$ is true (in $\Mod{N}$) iff $A$ is provable in $T$.
+So $\neg \smallcaps{Prov}_T(\gn{A})$ is true iff $A$ is unprovable in $T$.
+By diagonalising $\neg \smallcaps{Prov}_T(x)$,
+we get a sentence $G$ that is true (in $\Mod{N}$) iff it is unprovable (in $T$).
 
-Note that this property is primitive recursive.
+\begin{theorem}{Gödel's First Incompleteness Theorem, semantic version}{goedel1}
+  Every sound and recursively axiomatizable $\L_A$-theory is incomplete.
+\end{theorem}
+\begin{proof}
+  \emph{Proof.}
+  Let $T$ be a recursively axiomatizable $\L_A$-theory.
+  As I've just explained,
+  there is then an $\L_A$-formula $\smallcaps{Prov}_T(x)$ such that
+  $\smallcaps{Prov}_T(\gn{A})$ is true in $\Mod{N}$ iff $A$ is provable in $T$.
+  By the Semantic Diagonal Lemma
+  (using $\neg \smallcaps{Prov}_T(x)$ for $A(x)$),
+  there is a sentence $G$ such that $\Mod{N} \satisfies G$ iff
+  $\Mod{N} \satisfies \neg \smallcaps{Prov}_T(\gn{G})$.
 
-Define:
+  Suppose $G$ is provable in $T$.
+  Then $\Mod{N} \satisfies \smallcaps{Prov}_T(\gn{G})$,
+  and so $\Mod{N} \not\satisfies G$,
+  contradicting our assumption that $T$ is sound.
+  So $G$ is not provable in $T$.
+  So $\Mod{N} \satisfies \neg \smallcaps{Prov}_T(\gn{G})$,
+  and so $\Mod{N} \satisfies G$.
+  It follows that $\neg G$ isn't provable in $T$ either,
+  as otherwise $T$ would prove a falsehood.
+  \qed
+\end{proof}
 
-\textit{Var(x)} for "x codes a variable symbol in $L_A$".
+This is a beautiful argument,
+although the conclusion isn't news to us:
+we've already derived it from the unsolvability of the Halting Problem in Section~\ref{sec:coding}
+(which, of course, wasn't known when Gödel published his result).
 
-Define:
+\begin{exercise}
+  Theorem~\ref{thm:goedel1} shows that
+  there is a true sentence $G$ that is not provable in a sound and recursively axiomatizable theory such as PA.
+  Suppose we add $G$ as a new axiom to PA.
+  Is the resulting theory complete? Is it sound?
+\end{exercise}
 
-\textit{Term(x)} for "x codes a term in $L_A$".
-
-
-
-This is p.r.: we need to check if x codes 0 or a variable of a sequence beginning with '$s($' followed by a term followed by '$)$'.
-
-\textit{Formula(x)} for "x codes a formula in $L_A$".
-
-This is directly definable by primitive recursion.
-
-% ** Substitution is p.r.
-
-Define the substitution function \textit{sub(x,v,t)} that takes a code number x of a
-formula and a code number v of a variable and t of a term, and returns the code
-number of the formula obtained by substituting the term for all occurrences of
-the variable in the formula.
-
-This is tedious but mechanical to construct.
-
-Algorithm: walk through the sequence coded by x; whenever you meet the
-single-symbol sequence v that is free (check the binding structure on the fly)
-splice in the code for t. All the operations "read symbol i", "write symbol",
-"concatenate" and "test bound/free" are p.r.
-
-% ** Prf is p.r.
-
-A mathematical proof consists of a sequence of formulas. So Gödel gave every sequence of formulas a unique Gödel number too. In this case, he starts with the list of prime numbers as before — 2, 3, 5 and so on. He then raises each prime to the Gödel number of the formula at the same position in the sequence ($2^{243,000,000} \times \ldots$, if $0 = 0$ comes first, for example) and multiplies everything together.
-
-We can now define a p.r. predicate Prf(x,y) that holds between x and y iff x codes a proof of the sentence coded by y from the axioms of Q.
-
-A finite sequence of $L_A$-strings is a proof if each item satisfies one of the following conditions:
-
-\begin{enumerate}[label=(\roman*)]
-\item it is an axiom of Q;
-\item it is a logical axiom;
-\item it follows from earlier items by MP
-\item it follows from earlier items by HG
-\end{enumerate}
-
-The corresponding predicate Pr(x) is p.r.
-
-(What if we replace Q by another theory? Doesn't matter if the theory is finitely axiomatizable. The proof also works for PA, which is p.r. axiomatized.)
-
-We can define Prf(x,y) as: Pr(x) and Last(x)=y.
-
-
-% ** Set of consequences from rec set of axioms is r.e.
-
-An interesting consequence: the set of sentences deducible from a rec set of axioms is r.e. (BBJ 15.4)
-
-
-xxxxxxxxxxxxxxx
+\begin{exercise}
+  Explain why there are infinitely many $\L_A$-sentences that PA can't decide
+  (assuming that PA is sound).
+  % (Hint: If G$_1$ is the Gödel sentence for PA
+  % then PA + G$_1$ is a sound and recursively axiomatizable theory.
+  % By the Incompleteness Theorem,
+  % there will be a Gödel sentence G$_2$ that it can't decide.)
+\end{exercise}
 
 
+As I mentioned in Section~\ref{sec:incompleteness-preview},
+Gödel also proved a syntactic version of the Incompleteness Theorem
+that doesn't require the relevant theory to be sound
+(true in $\Mod{N}$),
+but merely imposes some syntactic conditions on it.
 
+The idea is to run through the proof of Theorem~\ref{thm:goedel1}
+inside the theory $T$.
+Instead of relying on the equivalence of $G$ and $\neg \smallcaps{Prov}_T(\gn{G})$ in $\Mod{N}$,
+we'll use the fact that $T$ can \emph{prove} their equivalence:
+$\proves_T G \leftrightarrow \neg \smallcaps{Prov}_T(\gn{G})$.
+This requires a different version of the Diagonal Lemma,
+turning on the \emph{representability} of $\mathrm{diag}$ in $T$,
+rather than on its definability.
+Recall that a (one-place) function $f$ is representable in a theory $T$ iff
+there is a formula $A(x,y)$ such that for all $n$,
+\begin{cenumerate}
+    \item[(i)] $\proves_T A(\num{n},\num{f(n)})$, and
+    \item[(ii)] $\proves_T \forall y (A(\num{n},y) \rightarrow y = \num{f(n)})$.
+\end{cenumerate}
+Equivalently: $\proves_T \forall y (A(\num{n},y) \leftrightarrow y = \num{f(n)})$.
+  
+\begin{lemma}{The Syntactic Diagonal Lemma}{diagonallemma}
+  If $T$ is an $\L_A$-theory in which $\mathrm{diag}$ is representable,
+  then for every $\L_A$-formula $A(x)$ there is a sentence $G$
+  such that $\vdash_T G \leftrightarrow A(\gn{G})$.
+\end{lemma}
 
+\begin{proof}
+    \emph{Proof.}
+  Let $T$ be an $\L_A$-theory in which $\mathrm{diag}$ is representable.
+  Let $\smallcaps{diag}(x,y)$ be the formula that represents $\mathrm{diag}$ in $T$,
+  and let $F(x)$ be the formula $\exists y(\smallcaps{diag}(x,y) \land A(y))$.
+  Since $\smallcaps{diag}$ represents $\mathrm{diag}$ in $T$,
+  $T$ can prove
+  \begin{equation}\tag{1}
+    \forall y\, (\smallcaps{diag}(\gn{F(x)},y) \,\leftrightarrow\, y\!=\!\num{\mathrm{diag}(\gn{F(x)})}).
+  \end{equation}
+  Let $G$ be the diagonalization of $F(x)$.
+  So the following is logically true:
+  \begin{equation}\tag{2}
+    G \,\leftrightarrow\, \exists y(\smallcaps{diag}(\gn{F(x)},y) \land A(y)).
+  \end{equation}
+  From (1) and (2), first-order logic yields
+  \begin{equation*}
+    G \,\leftrightarrow\, \exists y\,(y = \num{\mathrm{diag}(\gn{F(x)})} \,\land\, A(y)).
+  \end{equation*}
+  Since $\num{\mathrm{diag}(\gn{F(x)})}$ is $\gn{G}$, this simplifies to
+  $G \,\leftrightarrow\, \exists y\,(y = \gn{G} \,\land\, A(y))$
+  and further to $G \,\leftrightarrow\, A(\gn{G})$. \qed
+\end{proof}
 
-See handout wk10.
+Now assume that $T$ is a recursively axiomatizable theory in which
+both $\mathrm{diag}$ and $\mathrm{Prf}_T$ are representable.
+As before,
+define $\smallcaps{Prov}_T(x)$ as $\exists y \, \smallcaps{Prf}_T(y,x)$.
+The Syntactic Diagonal Lemma gives us a sentence $G$
+(called the \emph{Gödel sentence} for $T$) such that
+\begin{equation}\tag{D}
+  \proves_T G \leftrightarrow \neg \smallcaps{Prov}_T(\gn{G}).
+\end{equation}
+Let's go through the reasoning in the proof of Theorem~\ref{thm:goedel1}
+to show that $T$ can't decide $G$.
 
-A theory is \emph{axiomatizable} if it is axiomatized by a decidable set of axioms.
+One of the two directions goes through smoothly:
+we can show that $G$ isn't provable in $T$,
+unless $T$ is inconsistent.
+For suppose $T$ can prove $T$.
+This means that there is a deduction of $G$ from a suitable set of axioms for $T$.
+Since $\smallcaps{Prf}_T(x,y)$ represents $\mathrm{Prf}_T$ in $T$,
+it follows that there is a number $n$ (the code of the deduction) such that
+$\vdash_T \smallcaps{Prf}_T(\num{n},\gn{G})$.
+Since $T$ is closed under first-order consequence,
+it follows that $\vdash_T \smallcaps{Prov}_T(\gn{G})$.
+By (D), we have $\vdash_T \neg G$,
+So $T$ proves both $G$ and $\neg G$.
 
-Robinson's Lemma. Every recursive function is numeralwise representable in Q.
+The other direction is trickier.
+Suppose $T$ can prove $\neg G$.
+By (D), $T$ can then prove $\smallcaps{Prov}_T(\gn{G})$,
+which is short for $\exists y \, \smallcaps{Prf}_T(y,\gn{G})$.
+If $T$ is consistent,
+there is no deduction of $G$ from $T$'s axioms.
+So $\mathrm{Prf}_T(n,\gn{G})$ is false for every number $n$.
+Since $\smallcaps{Prf}_T(x,y)$ represents $\mathrm{Prf}_T$ in $T$,
+it follows that $\proves_T \neg \smallcaps{Prf}_T(\num{n},\gn{G})$ for every number $n$.
 
-\section{The diagonal lemma}
+We now have the following situation:
+$T$ proves $\exists y \, \smallcaps{Prf}_T(y,\gn{G})$,
+but also $\neg \smallcaps{Prf}_T(\num{n},\gn{G})$ for every number $n$.
+The theory says that \emph{there is} a number of a certain kind,
+but also denies that any particular number 0,1,2,\ldots is of that kind.
+This isn't inconsistency,
+but it is almost as bad.
+Gödel called it ``$\omega$-inconsistency'':
+a theory is \emph{$\omega$-inconsistent} if
+there is a formula $A(x)$ such that
+\begin{cenumerate}
+    \item[(i)] $\vdash_T \exists x \, A(x)$, but
+    \item[(i)] for every number $n$, $\vdash_T \neg A(\num{n})$.
+\end{cenumerate}
+A theory is \emph{$\omega$-consistent} if it is not $\omega$-inconsistent.
 
-I began with an informal presentation of the diagonal lemma. If we find a sentence that says that it's not provable, we'll get incompleteness. But how can we find such a sentence?
+Clearly, no sound theory can be $\omega$-inconsistent.
+So $\omega$-consistency is another purely syntactic condition
+(besides consistency)
+that is entailed by soundness.
 
-Let's first try to do it in English, without using indexicals. We want to pick out the sentence by its syntactic properties.
+We've established the main result of Gödel's 1931 paper:
 
-Begin with the observation that predicates can be applied to predicates:
-\begin{itemize}
-\item 'is English' is English.
-\item 'is made of stone' is made of stone.
-\end{itemize}
+\begin{theorem}{Gödel's First Incompleteness Theorem}{goedel1b}
+  Every recursively axiomatizable and $\omega$-consistent theory in which
+  all recursive functions are representable is incomplete.
+\end{theorem}
+% \begin{proof}
+%   \emph{Proof.}
+%   I just went through the proof.
+%   To summarize:
+%   Let $T$ be an axiomatizable and $\omega$-consistent theory in which
+%   $\mathrm{diag}$ is representable.
+%   By the Diagonal Lemma,
+%   there is a sentence $G$ such that
+%   $vdash_T G \leftrightarrow \neg \exists y \, \smallcaps{Prf}_T(y,\gn{G})$.
+%   If $\vdash_T G$,
+%   there is a number $n$ such that $\vdash_T \smallcaps{Prf}_T(\num{n},\gn{G})$,
+%   and $T$ is inconsistent.
+%   If $\vdash_T \neg G$ then $\vdash \exists y \, \smallcaps{Prf}_T(y,\gn{G})$,
+%   so by $\omega$-consistency,
+%   there is a number $n$ such that $\vdash_T \smallcaps{Prf}_T(\num{n},\gn{G})$.
+%   Since $\smallcaps{Prf}_T(x,y)$ represents $\mathrm{Prf}_T$ in $T$,
+%   it follows that $\vdash_T G$.
+%   Again, $T$ is inconsistent.
+%   \qed
+% \end{proof}
 
-Call a predicate applied to itself the \textit{diagonalisation} of the predicate. In English, diagonalising a predicate simply means to write it twice next to each other, the first in quotes.
+I won't go through the details of the proof again,
+as we're going to prove a strictly stronger result in the next section,
+showing that mere consistency (as opposed to $\omega$-consistency) is enough.
+We will derive this from another important result,
+Tarski's Theorem.
+But I want to mention that there is also a way to establish it directly,
+following Gödel's line of reasoning.
+The trick,
+due to J.\ Barkley Rosser,
+is to make a slight change to the sentence $G$.
+Instead of using a sentence that says of itself that it is unprovable,
+Rosser uses a sentence saying that
+for every proof of it,
+there is a shorter proof of its negation.
+More formally,
+Rosser's version of the argument uses
+the diagonalization $R$ of the following formula in place of $G$:
+\[
+  \forall y(\smallcaps{Prf}_T(y,x) \,\to\, \exists z(z \!< \!y \,\land\, \forall v(\smallcaps{concat}(\gn{\neg},x,v) \to \smallcaps{Prf}_T(z,v))).
+\]
+One can show that
+if $\mathrm{Prf}_T$ and $\mathrm{diag}$ are representable in $T$,
+$T$ is consistent, and $T$ knows a few facts about arithmetic,
+then it can prove neither $R$ nor $\neg R$.
 
-Now consider this predicate:
-\begin{itemize}
-\item 'has a diagonalisation that is not provable'.
-\end{itemize}
+% If $T \proves R$
+% then this proof has some Gödel number $n$.
+% By what $R$ asserts,
+% $T$ proves that there is a shorter proof of $\neg R$.
+% So there must be such a proof. [Why?]
+% So $T$ is inconsistent.
+% If, on the other hand, $T \proves \neg R$,
+% then by what $R$ says,
+% $T$ proves that there is a proof of $R$ with no smaller proof of $\neg R$.
+% Since we have a proof of $\neg R$,
+% there must be an even shorter proof of $R$.
+% So $T$ is again inconsistent.
 
-Let's diagonalise it:
-\begin{itemize}
-\item 'has a diagonalisation that is not provable' has a diagonalisation that is not provable.
-\end{itemize}
+\begin{exercise}
+  Let $G$ be the Gödel sentence for PA.
+  We know that $G$ is not provable in PA.
+  How about $\smallcaps{Prov}_{\mathrm{PA}}(\gn{G})$?
+  How about $\neg \smallcaps{Prov}_{\mathrm{PA}}(\gn{G})$?
+    %  \[
+    %   \vdash_T G \leftrightarrow \neg \smallcaps{Prov}_T(\gn{G}).
+    % \]
+    % So $\smallcaps{Prov}_T(\gn{G})$ is also undecidable.
+\end{exercise}
 
-What does this say? It says that the predicate has a diagonalisation. Well every predicate has exactly one. What else does it say about that diagonalisation? That it's not provable. So it says of the diagonalisation of 'has...' that it's not provable. But it \textit{is} that diagonalisation!
+\begin{exercise}\label{ex:prov-not-rep}
+  Explain why $\smallcaps{Prov}_{\mathrm{PA}}(x)$ doesn't represent provability in PA.
+  (Hint: use the previous exercise.)
+    %  \[
+    %   \vdash_T G \leftrightarrow \neg \smallcaps{Prov}_T(\gn{G}).
+    % \]
+    % It follows that $\not\vdash_T \neg \smallcaps{Prov}_T(\gn{G})$.
+    % We have a counterexample to (ii):
+    % $\smallcaps{Prov}_T(x)$ does not represent membership in $T$.
+\end{exercise}
 
-Now we do this in the language of arithmetic, using numerals of gns instead of quoted predicates.
+\begin{exercise}
+  Show that every $\omega$-consistent theory is consistent.
+\end{exercise}
 
-We can for example construct a sentence that says of itself that it is a sentence, or that it is an axiom of PA. The first is true, the second false (in arithmetic!).
-
-xxx first define the semantic lemma, then show semantic incompleteness.
-
+\begin{exercise}
+  Let $T$ be an $\omega$-inconsistent, but consistent theory.
+  By the completeness of first-order logic,
+  $T$ has a model.
+  Can you describe what such a model might look like?
+\end{exercise}
 
 \section{Tarski's Theorem}
 
-A proof of Tarski's Theorem that does not mention formal systems at all can
-be obtained if we replace this step by a use of a semantic form of the Fixed
-Point Theorem, to wit: for every formula F (y) of L there is a formula H such
-that F (H) $\equiv$ H is true. Given this, for every formula T (y) of L there will be
-a sentence H such that $\neg$T (H) $\equiv$ H is true, and so T (y) fails to be a truth
-predicate.
+Recall that a formula $A(x)$ represents a property $P$ in a theory $T$ iff
+for every $\L_A$-sentence $B$,
+\begin{cenumerate}
+    \item[(i)] if $P(B)$, then $\vdash_T A(\gn{B})$, and
+    \item[(ii)] if $\neg P(B)$, then $\vdash_T \neg A(\gn{B})$.
+\end{cenumerate}
+In exercise~\ref{ex:prov-not-rep},
+you showed that $\smallcaps{Prov}_{\mathrm{PA}}(x)$ does not represent provability in PA.
+Officially,
+PA is just the set of all sentences that are provable in PA.
+You therefore showed that $\smallcaps{Prov}_{\mathrm{PA}}(x)$ does not represent membership in PA.
 
-To prove the semantic Fixed Point Theorem, we introduce the notion of
-definability in L. A formula F ($v_1, \ldots, v_m$) of L defines an m-place
-relation R just in case, for all $n_1, \ldots, n_m$, F ($n_1, \ldots, n_m$) is true iff
-R($n_1, \ldots, n_m$). A relation is definable in L iff there exists a formula of
-L that defines it.
+% Let $T$ be a sound and recursively axiomatizable $\L_A$-theory in which
+% all recursive functions are representable:
+% a theory like Q or PA.
+% As in the previous section,
+% let $\mathrm{Prf}_T$ be the relation that holds between numbers $n$ and $m$
+% iff $n$ codes a deduction from $T$'s axioms of the sentence coded by $m$.
+% Since this relation is recursive,
+% it is definable in $\L_A$,
+% by Theorem~\ref{thm:definability}:
+% there is an $\L_A$-formula $\smallcaps{Prf}_T(x,y)$ such that
+% $\Mod{N} \satisfies \smallcaps{Prf}_T(\num{n},\num{m})$ iff
+% $n$ codes a deduction from $T$'s axioms of the sentence coded by $m$.
+% By Theorem~\ref{thm:representability},
+% $\mathrm{Prf}_T$ is also representable in $T$:
+% there is an $\L_A$-formula $\smallcaps{Prf}_T(x,y)$ such that
+% if $\mathrm{Prf}_T(n,m)$
+% then $\vdash_T \smallcaps{Prf}_T(\num{n},\num{m})$,
+% and if $\neg \mathrm{Prf}_T(n,m)$
+% then $\vdash_T \neg \smallcaps{Prf}_T(\num{n},\num{m})$.
+% In fact,
+% since $T$ is sound,
+% the formula $\smallcaps{Prf}_T(x,y)$ that represents $\mathrm{Prf}_T$ in $T$
+% also defines it.
 
-Definability is a semantic correlate of numeralwise representability. Indeed, if
-F ($v_1, \ldots, v_m$) numeralwise represents R in a formal system that is sound for the
-intended interpretation of L, then F ($v_1, \ldots, v_m$) defines R in L.
+% From $\smallcaps{Prf}_T(x,y)$,
+% we've defined $\smallcaps{Prov}_T(x)$ as $\exists y \, \smallcaps{Prf}_T(y,x)$.
+% It's easy to see that $\smallcaps{Prov}_T(x)$ defines membership in $T$:
+% $\Mod{N} \satisfies \smallcaps{Prov}_T(\gn{A})$ iff $\vdash_T A$.
 
-The proof of the semantic FPT is just like the proof of the syntactic FPT except
-that we assume that diag defines, rather than numeralwise represents,
-diagonalisation. Note that the only properties of L needed are these: the
-function diag is definable in L; and L contains the usual logical signs
+% [exercise: show that Prov defines provability in T]
 
-Tarski's theorem shows that incompleteness holds not just if T is computably axiomatizable.
-It holds even if the axioms are merely arithmetically definable.
-This is much stronger.
-I.e., we can't arithmetically describe the complete truth of arithmetic.
+% But does $\smallcaps{Prov}_T(x)$ \emph{represent} membership in $T$?
+% This would mean that
+% \begin{cenumerate}
+%     \item[(i)] if $\vdash_{T} A$, then $\vdash_{T} \smallcaps{Prov}_T(\gn{A})$, and
+%     \item[(ii)] if $\not\vdash_{T} A$, then $\vdash_{T} \neg \smallcaps{Prov}_T(\gn{A})$.
+% \end{cenumerate}
+% And (ii) fails.
+% We can see this using the Gödel sentence $G$ constructed in the previous section.
+% By the easy direction of the syntactic incompleteness theorem,
+% $\not\vdash_T G$.
+% By the Diagonal Lemma,
+% \[
+%   \vdash_T G \leftrightarrow \neg \smallcaps{Prov}_T(\gn{G}).
+% \]
+% It follows that $\not\vdash_T \neg \smallcaps{Prov}_T(\gn{G})$.
+% We have a counterexample to (ii):
+% $\smallcaps{Prov}_T(x)$ does not represent membership in $T$.
 
-In a way, this is the more profound result than Gödel's first theorem.
-And it doesn't require detailed arithmetization of the proof system.
+This result can be strengthened.
+The following theorem,
+due to Alfred Tarski (1933),
+shows that 
+no $\L_A$-formula represents membership in PA.
+Indeed,
+no formula represents membership in any consistent theory in which $\mathrm{diag}$ is representable.
+
+\begin{theorem}{Tarski's Theorem}{tarski}
+  If $T$ is consistent and $\mathrm{diag}$ is representable in $T$,
+  then membership in $T$ is not representable in $T$.
+\end{theorem}
+\begin{proof}
+  \setcounter{equation}{0}
+  \emph{Proof.}
+  Suppose $T(x)$ represents membership in $T$.
+  By the Diagonal Lemma, there is a sentence $G$ such that
+  \begin{equation}\tag{1}
+    \vdash_{T} G \leftrightarrow \neg T(\gn{G})
+  \end{equation}
+  Since $T(x)$ represents membership in $T$,
+  we have
+  \begin{align}
+    \text{if $\vdash_{T} G$,} &\text{ then } \vdash_{T} T(\gn{G}) \tag{2}\\
+    \text{if $\not\vdash_{T} G$,} &\text{ then } \vdash_{T} \neg T(\gn{G})\tag{3}
+  \end{align}
+  Either $\vdash_T G$ or $\not\vdash_T G$.
+  Suppose $\vdash_T G$.
+  Then $\vdash_{T} \neg T(\gn{G})$ by (1),
+  and $\vdash_{T} T(\gn{G})$ by (2);
+  so $T$ is inconsistent.
+  Alternatively, suppose $\not\vdash_{T} G$.
+  Then $\vdash_{T} T(\gn{G})$ by (1),
+  and $\vdash_{T} \neg T(\gn{G})$ by (3);
+  again, $T$ is inconsistent.
+  \qed
+\end{proof}
+
+Note that Tarski's Theorem isn't restricted to axiomatizable theories.
+It even holds for $\mathrm{Th}(\Mod{N})$.
+Since representability in $\mathrm{Th}(\Mod{N})$ implies definability in $\L_A$,
+it follows that no $\L_A$-formula defines membership in $\mathrm{Th}(\Mod{N})$:
+
+\begin{theorem}{}{tarski2}
+  Arithmetical truth is not definable in $\L_A$:
+  there is no $\L_A$-formula $T(x)$ such that
+  $\Mod{N} \satisfies T(\gn{A})$ iff $\Mod{N} \satisfies A$.
+\end{theorem}
+\begin{proof}
+  \emph{Proof.}
+  $\mathrm{Th}(\Mod{N})$ is consistent extension of Q.
+  By Theorem~\ref{thm:Q-rep}, it follows that 
+  $\mathrm{diag}$ is representable in $\mathrm{Th}(\Mod{N})$.
+  By Theorem~\ref{thm:tarski}, it follows that
+  membership in $\mathrm{Th}(\Mod{N})$ is not representable in $\mathrm{Th}(\Mod{N})$:
+  there is no $\L_A$-formula $T(x)$ such that
+  \begin{cenumerate}
+    \item[(i)] if $\Mod{N} \satisfies A$ then $\Mod{N} \satisfies T(\gn{A})$, and
+    \item[(ii)] if $\Mod{N} \not\satisfies A$ then $\Mod{N} \satisfies \neg T(\gn{A})$.
+  \end{cenumerate}
+  So there is no $\L_A$-formula that defines truth in $\Mod{N}$. 
+  \qed
+\end{proof}
+
+\begin{exercise}
+  Use the Semantic Diagonal Lemma to prove Theorem~\ref{thm:tarski2},
+  without invoking Theorem~\ref{thm:tarski}.
+\end{exercise}
+
+Tarski's Theorem shows that while
+$\L_A$ can formalize its own syntax
+(we can define $\L_A$-properties like being a variable or being a sentence),
+it can't express the most basic concept of its own semantics.
+This isn't just true for $\L_A$.
+Loosely speaking,
+no sufficiently powerful language that can express its own syntax
+can express its own semantics.
+
+We can bring this out a little more clearly by considering the concept of a truth predicate.
+As Tarski pointed out,
+the central feature of the predicate `is true' in English is that
+when it is applied to a sentence,
+the result is equivalent to that sentence:
+\begin{cenumerate}
+  \item[(1)] `Snow is white' is true iff snow is white.
+  \item[(2)] `2+2=4' is true iff 2+2=4.
+\end{cenumerate}
+Sentences like (1) and (2) are called \emph{Tarski biconditionals}.
+A theory that can reason about truth
+should be able to prove all Tarski biconditionals for its language.
+Thus a formula $W(x)$ is called a \emph{truth predicate for a theory} $T$
+iff $\proves_T W(\gn{A}) \leftrightarrow A$
+for every sentence $A$ in $T$'s language.
+An argument similar to the one used in Theorem~\ref{thm:tarski}
+shows that no sufficiently powerful theory can have a truth predicate,
+unless it is inconsistent.
+This result is also called ``Tarski's Theorem''.
+
+\begin{theorem}{Also Tarski's Theorem}{tarski3}
+  If $\mathrm{diag}$ is representable in a consistent theory $T$
+  then $T$ has no truth predicate.
+\end{theorem}
+\begin{proof}
+  \emph{Proof.}
+  Suppose $W(x)$ is a truth predicate for $T$.
+  By the Syntactic Diagonal Lemma,
+  there is a sentence $L$ such that $\proves_T L \leftrightarrow \neg W(\gn{L})$.
+  Since $W(x)$ is a truth predicate for $T$,
+  $\proves_T W(\gn{L}) \leftrightarrow L$.
+  So $\proves_T L \leftrightarrow \neg L$.
+  So $T$ is inconsistent. \qed
+\end{proof}
+
+While Gödel's sentence $G$ says of itself that it is unprovable,
+the sentence $L$ that figures in this proof says of itself that it is not true.
+It is a formal analogue of the Liar sentence `This sentence is false'.
+The existence of such a sentence leads to paradox:
+if $L$ is true then $L$ is false,
+and if $L$ is false then $L$ is true.
+Theorem~\ref{thm:tarski3} concludes that $L$ can't exist.
+By the Diagonal Lemma,
+it would exist if there were a truth predicate for $T$.
+So there can be no truth predicate for $T$.
+By contrast,
+it is not an option to deny the existence of $G$.
+By the Diagonal Lemma,
+$G$ can be constructed from $\smallcaps{Prov}_T(x)$.
+The existence of $\smallcaps{Prov}_T(x)$ is
+guaranteed by the fact that (for suitable choices of $T$) $\mathrm{Prf}_T$ is recursive.
+
+\begin{exercise}
+  Show that if $T$ is a sound theory then there is no truth predicate for $T$.
+\end{exercise}
+
+We'll now use Tarski's Theorem to derive both the undecidability of first-order logic
+and strengthened versions of Gödel's First Incompleteness Theorem.
+We begin with two small lemmas.
+
+\begin{lemma}{}{undecidable}
+  Every consistent theory in which all recursive functions are representable is recursively undecidable.
+\end{lemma}
+\begin{proof}
+  \emph{Proof.}
+  Let $T$ be a consistent theory in which all recursive functions are representable.
+  By Theorem~\ref{thm:tarski},
+  membership in $T$ is not representable in $T$.
+  So membership in $T$ is not recursive:
+  the set of Gödel numbers of sentences in $T$ is not recursively decidable.
+  \qed
+\end{proof}
+
+\begin{lemma}{}{qhat}
+  Let $\hat{Q}$ be the conjunction of the seven axioms of Q.
+  The set of $\L_A$-sentences of the form $\hat{Q} \to A$ is recursively decidable.
+\end{lemma}
+\begin{proof}
+  \emph{Proof.}
+  Let $P$ be the property of coding sentences of the form $\hat{Q} \to A$.
+  $P(n)$ can be defined as $\exists y \leq n\, (\mathrm{Sent}(y) \land (n = \gn{\hat{Q} \to} * y))$.
+  So $P(n)$ is (primitive) recursive.
+  \qed
+\end{proof}
+
+\begin{theorem}{Church's Theorem}{undecidability2}
+  The set of valid first-order sentence is recursively undecidable.
+\end{theorem}
+\begin{proof}
+  \emph{Proof.}
+  By Theorem~\ref{thm:Q-rep},
+  all recursive functions are representable in Q.
+  Since Q is consistent,
+  it follows by Lemma~\ref{lem:undecidable} that
+  Q is recursively undecidable.
+  As in the previous proof,
+  let $\hat{Q}$ be the conjunction of Q's axioms.
+  If the set of valid first-order sentences were recursively decidable,
+  the set of valid $\L_A$-sentences of the form $\hat{Q} \to A$ would also be recursively decidable,
+  by Lemma~\ref{lem:qhat} and the fact that the intersection of two recursively decidable sets is recursively decidable.
+  By the soundness and completeness of first-order logic,
+  $\hat{Q} \to A$ is valid iff $\proves_Q A$.
+  So Q would be recursively decidable,
+  contradicting what we just established.
+  \qed
+\end{proof}
+
+Church's Theorem shows that Hilbert's Entscheidungsproblem has no solution:
+there is no mechanical procedure that
+decides whether an arbitrary first-order sentence is valid.
+
+\begin{exercise}
+    In Section~\ref{sec:tm-uncomputability},
+    I explained how Theorem~\ref{thm:undecidability2} can be derived from
+    the unsolvability of the Halting Problem.
+    Explain in outline how we could derive the unsolvability of the Halting Problem
+    from Theorem~\ref{thm:undecidability2}.
+    (Hint: Given a first-order sentence $A$,
+    we can mechanically go through all first-order proofs
+    until we find a proof of $A$,
+    in which case we halt and output `yes'.)
+    % If the Halting Problem were solvable,
+    % we could use it to decide whether this procedure halts.)
+\end{exercise}
+
+\begin{exercise}
+  Explain why there can be no recursive bound on the length of
+  a proof for a sentence in the first-order calculus:
+  for every recursive function $f$,
+  there is a sentence with length $n$ that is provable,
+  but whose proof requires more than $f(n)$ lines.
+\end{exercise}
+
+Now for the strengthened version of the syntactic Incompleteness Theorem.
+In Section~\ref{sec:decidable} (Proposition~\ref{prop:complete-decidable}),
+I showed that
+every axiomatizable and complete first-order theory is decidable.
+Together with Lemma~\ref{lem:undecidable},
+this immediately gives us the what we seek:
+every axiomatizable and consistent theory in which all recursive functions are representable is incomplete.
+
+However,
+Proposition~\ref{prop:complete-decidable} used the informal concept of computable axiomatizability;
+so this argument relies on the Church-Turing Thesis.
+Let's prove a parallel result for recursive axiomatizability.
+
+\begin{lemma}{}{complete-re}
+  Every recursively axiomatizable and complete first-order theory is recursively decidable.
+\end{lemma}
+\begin{proof}
+  \emph{Proof.}
+  Let $T$ be a recursively axiomatizable and complete first-order theory.
+  As in the previous section,
+  let $\mathrm{Prf}_T$ be the relation that holds between numbers $n$ and $m$
+  iff $n$ codes a deduction of $m$ from some recursively decidable set of axioms for $T$.
+  We know that $\mathrm{Prf}_T$ is recursive.
+  We can now define the property $W$ of coding a member of $T$ as follows:
+  \[
+    W(x) \text{ iff }
+    \mathrm{Prf}_T(
+    \mu p[\mathrm{Prf}_T(p, x) \,\lor\, \mathrm{Prf}_T(p, \gln{\neg} * x)], x)
+  \]
+  To see how this works,
+  let $A$ be any sentence,
+  and $x$ its Gödel number.
+  $\mu p[{\mathrm{Prf}_T(p, x)} \,\lor\, \mathrm{Prf}_T(p, \gln{\neg} * x)]$
+  finds the (Gödel number of the) first proof of either $A$ or $\neg A$ in $T$.
+  Since at least one of $A$ and $\neg A$ must be in $T$ by completeness,
+  this search is guaranteed to terminate.
+  The outer $\mathrm{Prf}_T$ then checks whether the proof that has been found is a proof of $A$.
+  \qed
+\end{proof}
+
+\begin{theorem}{Also Gödel's First Incompleteness Theorem}{goedel1c}
+  Every consistent and recursively axiomatizable theory in which
+  all recursive functions are representable is incomplete.
+\end{theorem}
+\begin{proof}
+  \emph{Proof.}
+  Let $T$ be a consistent and recursively axiomatizable theory in which
+  all recursive functions are representable.
+  By Lemma~\ref{lem:undecidable},
+  $T$ is undecidable.
+  By Lemma~\ref{lem:complete-re},
+  it follows that $T$ is incomplete.
+  \qed
+\end{proof}
+
+\begin{exercise}
+    Let $T$ be a consistent theory in which $\mathrm{diag}$ is representable.
+    By Theorem~\ref{thm:tarski},
+    there is no formula $W(x)$ such that
+    \begin{cenumerate}
+    \item[(i)] if $\vdash_T A$, then $\vdash_T W(\gn{A})$, and
+    \item[(ii)] if $\not\vdash_T A$, then $\vdash_T \neg W(\gn{A})$.
+    \end{cenumerate}
+    But there could be formula $W(x)$ such that
+    \begin{cenumerate}
+    \item[(i*)] $\vdash_T A$ iff $\vdash_T W(\gn{A})$.
+    \end{cenumerate}
+    In the terminology of exercise~\ref{ex:weak-repr},
+    this formula \emph{weakly represents} membership in $T$.
+    Show that if such a formula exists
+    then $T$ is incomplete.
+
+    (Hint:
+    use the Diagonal Lemma to infer that there is a sentence $G$ such that
+    $\proves_T G \leftrightarrow \neg W(\gn{G})$;
+    show that neither $G$ nor $\neg G$ is in $T$.)
+\end{exercise}
+
+Since all recursive functions are representable in every extension of Q
+(Theorem~\ref{thm:Q-rep}),
+Theorem~\ref{thm:goedel1c} is often stated as saying that
+every consistent and recursively axiomatizable extension of Q is incomplete.
+We can prove an even stronger result
+by strengthening Lemma~\ref{lem:undecidable}.
+
+\begin{lemma}{}{undecidable2}
+  Every $\L_A$-theory consistent with Q is recursively undecidable.
+\end{lemma}
+\begin{proof}
+  \emph{Proof.}
+  Let $T$ be an $\L_A$-theory consistent with Q,
+  and suppose for reductio that $T$ is recursively decidable:
+  the set $W$ of Gödel numbers of sentences in $T$ is recursive.
+  Since $\mathrm{diag}$ is recursive,
+  so is the property $P$ that holds of a number $x$ iff
+  $\mathrm{diag}(x)$ is not in $W$.
+  By exercise~\ref{ex:weak-repr}.(c),
+  all recursive relations are weakly representable in any $\L_A$-theory
+  consistent with Q.
+  So $P$ is weakly representable in $T$:
+  there is a formula $A(x)$ such that
+  $\proves_T A(\num{n})$ iff $P(n)$.
+  So:
+  \begin{align*}  
+    \proves_T A(\gn{A(x)}) &\text{ iff } P(\gln{A(x)}) \\
+                           &\text{ iff } \mathrm{diag}(\gln{A(x)}) \notin W \\
+                           &\text{ iff } \gln{\exists x(x\!=\!\gn{A(x)} \land A(x))} \notin W \\
+                           &\text{ iff } \not\proves_T \exists x(x\!=\!\gn{A(x)} \land A(x))\\
+                           &\text{ iff } \not\proves_T A(\gn{A(x)}).
+  \end{align*}
+  Contradiction. \qed
+\end{proof}
+
+\begin{theorem}{}{goedel1d}
+  Every recursively axiomatizable $\L_A$-theory that is consistent with Q is incomplete.
+\end{theorem}
+\begin{proof}
+  \emph{Proof.}
+  Let $T$ be a recursively axiomatizable $\L_A$-theory that is consistent with Q.
+  By Lemma~\ref{lem:undecidable2},
+  $T$ is recursively undecidable.
+  By Lemma~\ref{lem:complete-re},
+  it follows that $T$ is incomplete.
+  \qed
+\end{proof}
+
+\section{The arithmetical hierarchy}
+
+Let's take stock.
+Since all recursive functions are representable in PA,
+Gödel's Theorem shows that PA is incomplete
+(unless it is inconsistent).
+The incompleteness can't be fixed by simply adding more axioms:
+as long as the resulting theory is
+consistent and axiomatizable,
+it will remain incomplete.
+
+The result carries over to more powerful theories like ZFC,
+in virtue of the fact that PA is interpretable in these theories
+(see Section~\ref{sec:ordinals}).
+More generally,
+Gödel's Theorem applies whenever a theory's language is rich enough to express
+central aspects of its own syntax.
+This isn't always the case.
+For example,
+consider a fragment of $\L_A$ whose only non-logical symbols are $0$, $s$, and $+$, without $\times$.
+In the previous chapter,
+we needed multiplication to define the recursive functions and relations.
+Without multiplication, 
+$\mathrm{Prf}_T$ and $*$ are no longer definable.
+As a consequence,
+the Incompleteness Theorems don't apply.
+Indeed,
+if you restrict the axioms of PA to this weaker language,
+and remove the two axioms for multiplication,
+you get a complete theory.
+(This theory is called \emph{Presburger Arithmetic}.)
+
+Return to PA.
+We know that there are (infinitely many) true sentences that PA can't prove.
+But what do they look like?
+This is important to assess the practical significance of Gödel's result.
+If PA can't prove 2+2=4,
+that's a serious problem.
+If the only arithmetical truths that PA can't prove take a trillion years to state,
+incompleteness may be harmless in practice.
+
+Gödel's original proof
+(unlike the proof via Tarski's Theorem)
+gives us an example of an unprovable sentence:
+the ``Gödel sentence'' $G$.
+As I'll explain below,
+this sentence states (in a very roundabout way) that
+a certain complicated equation between polynomials has no solution in the natural numbers.
+If it weren't for Gödel's Theorem,
+no one would ever have considered this equation.
+Until the 1960s,
+the only sentences known to be unprovable in PA were of this kind.
+Since then,
+more natural examples have been found.
+The simplest is probably Goodstein's Theorem.
+(See Section~\ref{sec:minimization}.)
+Goodstein's Theorem states an interesting fact about the natural numbers,
+but its proof involves transfinite ordinals:
+it is provable in ZFC, but not in PA.
+For ZFC itself,
+we already know of a ``natural'' statement that it can't decide:
+the Continuum Hypothesis.
+There are many other examples.
+
+To get a sense of which $\L_A$-sentences are provable and which might be unprovable in PA,
+it is useful to classify the $\L_A$-sentences by their construction from atomic formulas.
+Since the only predicate letter in $\L_A$ is the identity predicate `=',
+all atomic formulas of $\L_A$ are identity statements:
+they have the form $t_1 = t_2$.
+From these,
+complex formulas are constructed using truth-functional connectives and quantifiers.
+We'll divide them into stages.
+
+At the first stage,
+we have all identity statements $t_1 = t_2$,
+all inequalities of the form $t_1 < t_2$,
+and all formulas that can be constructed from these by truth-functional connectives
+and bounded quantification,
+where a bounded quantification of a formula $A$ is a formula of the form
+$\forall x(x < t \;\to\; A)$ or $\exists x(x < t \;\land\; A)$,
+with $x$ not occurring in $t$.
+(Officially,
+of course, $t_1 < t_2$ is short for $\exists z(t_1 + s(z) = t_2)$.)
+The formulas in this class are called \emph{$\Delta_{0}$-formulas}.
+Intuitively,
+a $\Delta_{0}$-formula is any $\L_A$-formula that doesn't involve unbounded quantification.
+
+% \begin{proposition}{}{Q-Delta0}
+%   Q correctly decides every $\Delta_{0}$-sentence:
+%   if $A$ is a true $\Delta_{0}$-sentence then $\proves_{\mathrm{Q}} A$,
+%   and if $A$ is a false $\Delta_{0}$-sentence then $\proves_{\mathrm{Q}} \neg A$.
+% \end{proposition}
+% \begin{proof}
+%   \emph{Proof sketch.}
+%   The proof is by induction on the complexity of $\Delta_{0}$-sentences,
+%   where we treat $t_1<t_2$ as if it were atomic.
+
+%   \emph{Base case.}
+%   We can show that Q correctly evaluates all $\L_A$ terms,
+%   in the sense that if a term $t$ denotes the number $n$ in $\Mod{N}$,
+%   then $\proves_{\mathrm{Q}} t = \num{n}$.
+%   (For the case where $t$ is $\num{a} + \num{b}$,
+%   for example,
+%   this is given by the fact that Q satisfies R5.)
+%   Since $x=y$ defines identity in $\L_A$ and $x<y$ the less-than relation,
+%   it follows that Q correctly decides all atomic sentences.
+
+%   \emph{Inductive step.}
+%   If Q correctly decides some $\Delta_{0}$-sentences,
+%   then it correctly decides any truth-functional combination of them
+%   because Q is closed under first-order consequence.
+
+%   For the bounded quantifier case,
+%   let's look at $\forall x(x < t \to A)$.
+%   If this is true,
+%   then for every number $n$ less than the number denoted by $t$,
+%   $A(x/\num{n})$ is true.
+%   By induction hypothesis,
+%   $\proves_{\mathrm{Q}} A(x/\num{n})$ for every such $n$.
+%   And then $\proves_{\mathrm{Q}} \forall x(x < t \to A)$.
+%   If $\forall x(x < t \to A)$ is false,
+%   then there is a number $n$ less than the number denoted by $t$
+%   for which $A(x/\num{n})$ is false.
+%   By induction hypothesis,
+%   $\proves_{\mathrm{Q}} \neg A(x/\num{n})$.
+%   And then $\proves_{\mathrm{Q}} \neg \forall x(x < t \to A)$.
+%   \qed
+% \end{proof}
+
+At the next stage,
+we consider all sentences that can be formed from $\Delta_{0}$-formulas
+by prefixing unbounded universal quantifiers or unbounded existential quantifiers.
+A $\Delta_{0}$-formula with a string of universal quantifiers in front
+is called a \emph{$\Pi_{1}$-formula};
+a $\Delta_{0}$-formula with a string of existential quantifiers in front
+is called a \emph{$\Sigma_{1}$-formula}.
+For example,
+$\forall x \forall y (x + y = y + x)$ is a $\Pi_{1}$-formula,
+while $\exists x \exists y (x + y = y + x)$ is a $\Sigma_{1}$-formula.
+
+Prefixing universal quantifiers to a $\Sigma_{1}$-formula yields a $\Pi_{2}$-formula;
+prefixing existential quantifiers to a $\Pi_{1}$-formula yields a $\Sigma_{2}$-formula.
+Thus $\forall x \exists y (x + y = y + x)$ is $\Pi_{2}$,
+and $\exists x \forall y (x + y = y + x)$ is $\Sigma_{2}$.
+And so on.
+
+This somewhat complicated classification is motivated by
+the computational properties of the relations defined by the relevant formulas.
+The relations expressed by $\Delta_{0}$-formulas are all primitive recursive.
+Since $\Delta_{0}$-formulas don't involve unbounded quantification,
+one can check whether they hold of some numbers by simple checks,
+without unbounded loops.
+By contrast,
+to check whether a $\Sigma_{1}$-formula $\exists x \, A(x)$ holds of some number,
+one may need to search through all numbers
+until one finds a witness for $A(x)$.
+Many $\Sigma_{1}$-formulas therefore express relations that are not primitive recursive.
+Some of them are merely recursive.
+In fact, every recursive relation is definable by a $\Sigma_{1}$-formula.
+But not every relation defined by a $\Sigma_{1}$-formula is recursive.
+
+Some are just recursively enumerable.
+A relation $R$ is \emph{recursively enumerable}
+if there is a recursive relation $S$
+such that $R(x_1,\ldots,x_n)$ holds iff $\exists y \, S(x_1,\ldots,x_n,y)$.
+By the Church-Turing Thesis,
+the recursively enumerable relations are precisely the computably enumerable relations.
+(See Propositions~\ref{prop:re-existential} and \ref{prop:decidable-from-re} in Section~\ref{sec:decidable}.)
+
+\begin{theorem}{}{rec-sigma1}
+  A relation is recursively enumerable iff is definable in $\L_A$ by a $\Sigma_{1}$-formula.
+\end{theorem}
+\begin{proof}
+  \emph{Proof sketch.}
+  I assume for readability that $R$ is one-place.
+  
+  From right to left,
+  assume that $R$ is defined by a $\Sigma_{1}$-formula $\exists y \, A(x,y)$,
+  where $A$ is $\Delta_{0}$.
+  We can then mechanically enumerate all $n$ for which $R(n)$ holds by
+  going through all pairs of numbers $(n,m)$ and check whether $A(n,m)$ holds.
+
+  For the other direction,
+  we need show that every recursive relation is defined by a $\Sigma_{1}$-formula.
+  Since prefixing existential quantifiers to a $\Sigma_{1}$-formula yields another $\Sigma_{1}$-formula,
+  the result extends to every recursively enumerable relation.
+
+  The proof that every recursive function is defined by a $\Sigma_{1}$-formula
+  proceeds by induction on the construction of recursive functions.
+  In chapter~\ref{ch:representability},
+  I showed that the base functions (zero, successor, projection) are definable in $\L_A$,
+  and that definability-in-$\L_A$ is closed under composition, primitive recursion, and minimization.
+  By going through each part of this proof,
+  we can check that
+  the defining formulas are all $\Sigma_{1}$.
+  This is obvious for the base functions,
+  which I explicitly defined using $\Delta_{0}$-formulas.
+  (For example, I showed that zero is defined by $x = 0$.)
+  Closure under composition is also straightforward.
+  I showed that
+  $\mathrm{Cn}[f,g_1]$ is defined
+  by $\exists v_1(F(y,v_1) \land G_1(v_1,x_1,\ldots,x_n))$.
+  Since any initial existential quantifiers in $F$ and $G_1$
+  can simply be pulled to the front,
+  so the whole formula is $\Sigma_{1}$ if $F$ and $G_1$ are.
+
+  Regular minimization requires a more work.
+  I showed that $\mathrm{Mn}[f]$ is defined by
+  $F(x,y,0) \land \forall z(z < y \;\to\; \neg F(x,z,0))$.
+  We need to show that any initial existential quantifiers in $F$
+  can be pulled to the front.
+  This is possible because
+  $\forall z(z < y \;\to\; \neg \exists wF(x,z,0))$
+  is equivalent to $\exists c \forall z(z < y \;\to\; \neg F(x,z,\smallcaps{beta}(c,z))$:
+  the beta term $\smallcaps{beta}(c,z)$ retrieves the witness for $F(x,z,0)$ from the code $c$.
+  By going through the construction of $\smallcaps{beta}$,
+  one can show that it is definable by a $\Delta_{0}$-formula.
+
+  Finally, for primitive recursion,
+  I showed that $\mathrm{Pr}[f,g_1]$ is defined by
+  $\exists c(\smallcaps{Seq}(c,x,k) \land \smallcaps{beta}(c,s(k),y))$,
+  where $\smallcaps{Seq}(c,x,k)$ is defined in terms of $F$ and $G_1$ and $\smallcaps{beta}$.
+  I've already mentioned that $\smallcaps{beta}$ is definable by a $\Delta_{0}$-formula.
+  Using the beta function trick that we've just used for minimization,
+  one can show that $\smallcaps{Seq}(c,x,k)$ is definable by a $\Sigma_{1}$-formula,
+  by pulling existential quantifiers to the front.
+  \qed
+\end{proof}
+
+We can use Theorem~\ref{thm:rec-sigma1} to get an idea of what the unprovable Gödel sentence $G$ for PA might look like.
+Recall that $G$ is equivalent in PA to $\neg \mathrm{Prov}_{\mathrm{PA}}(\gn{G})$.
+Since $\mathrm{Prov}_{\mathrm{PA}}$ is defined by existential quantification from the recursive relation $\mathrm{Prf}_{\mathrm{PA}}$,
+it is recursively enumerable.
+By Theorem~\ref{thm:rec-sigma1},
+it is definable by a $\Sigma_{1}$-formula.
+So the Gödel sentence $G$ is equivalent in PA to the negation of a $\Sigma_{1}$-sentence.
+This makes it equivalent to a $\Pi_{1}$-sentence.
+Gödel's result therefore shows that
+there are undecidable $\Pi_{1}$-sentences.
+% There are also undecidable sentences with greater arithmetical complexity (at stage $\Sigma_{2}$, $\Pi_{2}$, etc.),
+% but there are none below:
+% $\Pi_{1}$ is the lowest level of the arithmetical hierarchy where incompleteness can occur.
+
+Theorem~\ref{thm:rec-sigma1} can be strengthened:
+
+\begin{theorem}{The MRDP Theorem}{mrdp}
+  A relation is recursively enumerable iff it is definable in $\L_A$ by a formula of the form $\exists x_1\ldots \exists x_n \; t_1 = t_2$.
+\end{theorem}
+% Note that every term of $\L_{A}$ expresses a polynomial with integer coefficients;
+% it is (arithmetically) equivalent to an expression of the form
+% $a_{0} + a_{1} \times x + a_{2} \times x^{2} + \ldots + a_{n} \times x^{n}$.
+
+Since every $\L_A$-term expresses a polynomial,
+the MRDP Theorem shows that every recursively enumerable relation is expressed by a formula
+stating that a certain equation between polynomials has a solution in the natural numbers.
+That's why I said that the Gödel sentence is equivalent to the statement that
+some equation between polynomials has no solution in the natural numbers.
+The proof of the MRDP theorem is too difficult to be even sketched here.
+
+Let's return once more to Tarski and Gödel.
+By Theorem~\ref{thm:tarski2},
+arithmetical truth is not definable in $\L_A$.
+With our new understanding of the arithmetical hierarchy,
+we can now strengthen the semantic Incompleteness Theorem.
+As stated in Theorem~\ref{thm:goedel1},
+the semantic Theorem says that
+every sound and recursively axiomatizable $\L_A$-theory is incomplete.
+It is easy to see that a theory is recursively axiomatizable
+iff the set of Gödel numbers of its members is recursively enumerable.
+Theorem~\ref{thm:goedel1} therefore applies to all theories
+whose members are defined by a $\Sigma_{1}$-formula.
+We can extend the result to non-axiomatizable theories that
+are only definable by $\Pi_{2}$-formulas or $\Sigma_{12}$-formulas.
+
+Let's say that a theory $T$ is \emph{definable in $\L_A$} if
+there is an $\L_A$-formula $W(x)$ such that
+for all sentences $B$, ${\Mod{N} \satisfies W(\gn{B})}$ iff $B \in T$.
+
+\begin{theorem}{}{goedel1e}
+  Every sound $\L_A$-theory that is definable in $\L_A$ is incomplete.
+\end{theorem}
+\begin{proof}
+  \emph{Proof.}
+  If $T$ is sound and complete then $T = \mathrm{Th}(\Mod{N})$.
+  By Theorem~\ref{thm:tarski2},
+  $\mathrm{Th}(\Mod{N})$ is not definable in $\L_A$.
+  So if $T$ is sound and definable in $\L_A$
+  then it is incomplete.
+  \qed
+\end{proof} 
+
+\begin{exercise}
+  Explain why a theory is recursively axiomatizable iff
+  the set of Gödel numbers of its members is recursively enumerable.
+  (Hint: if $T$ is recursively axiomatizable then $\mathrm{Prf}_T$ is recursive.)
+\end{exercise}
+
+% xxxx argh, the converse requires Craig's trick!
+
+% \begin{lemma}{}{re-theory2}
+%   Every recursively axiomatizable theory is recursively enumerable.
+% \end{lemma}
+% \begin{proof}
+%   \emph{Proof.}
+%   If $T$ is recursively axiomatizable,
+%   the $\mathrm{Prf}_T$ relation is recursive.
+%   Since $\proves_T A$ iff $\exists y \, \mathrm{Prf}_T(y, \gln{A})$,
+%   it follows that $T$ is recursively enumerable.
+%   \qed
+% \end{proof}
 
 
-\section{Church's Theorem}
 
-Gödel's work immediately tells us that there is no primitive recursive decision
-procedure for PA; and that work is extendible to any notion that will be
-representable in PA. All that was necessary after 1931, then, was to formulate
-the appropriate general notion of computability, and show that all computable
-functions were numeralwise representable.
 
-\section{Undecidable sentences}
 
-Can we construct an undecidable sentence?
-Yes.
-Gödel's suggestion requires $\omega$-consistency.
-That's fine.
 
-But Rosser saw that one can drop this assumption by taking a more complicated sentence.
-Instead of diagonalizing ``there is no prove of $X$'',
-he diagonalizes ``for every proof of $X$ there is a shorter proof of $\neg X$''.
-Let $R$ be the Rosser sentence.
-
-If $T \proves R$,
-this proof has some godel number.
-By what $R$ asserts,
-$T$ must prove that there is a shorter proof of $\neg R$.
-So there must be such a proof. [Why?]
-So $T$ is inconsistent.
-
-If $T \proves \neg R$,
-then by what $R$ says,
-$T$ proves that there is a proof of $R$ with no smaller proof of $\neg R$.
-Since we have a proof of $\neg R$,
-there must be an even shorter proof of $R$.
-So $T$ is again inconsistent.
-
-Are there any natural examples?
-Yes, Goodstein's Theorem!
-
-In set theory, there are many more examples.
-In 1930,
-it was an open question whether ZFC is complete.
-Now we know that
-there are many natural hypotheses,
-such as the Continuum Hypotheses and so-called ``large cardinal axioms'',
-that it doesn't decide.
 
 
 %%% Local Variables:

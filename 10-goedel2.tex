@@ -1,92 +1,1378 @@
-\chapter{The unprovability of consistency}
+\setcounter{chapter}{9}
+\chapter{The Unprovability of Consistency}\label{ch:goedel2}
 
-\section{Provability predicates}
+Gödel's Second Incompleteness Theorem states that
+no sufficiently strong mathematical theory can prove its own consistency.
+In this chapter,
+we explore how this can be shown and
+what it implies for the foundations of mathematics and beyond.
 
-Note that the S4 conditions are very weak.
-They by no means capture provability in particular.
-E.g., 'x is the gn of a sentence' also satisfies them.
+\section{The Second Incompleteness Theorem}
 
+Let's review some background.
+As in the previous chapter,
+we're going to focus on axiomatizable theories in the language of arithmetic $\L_A$.
+A \emph{theory} is simply a set of sentences
+that is closed under logical consequence.
+A \emph{(recursively) axiomatizable} theory is one for which
+there is a (recursively) decidable set of axioms
+from which all and only the members of the theory are deducible.
 
+By coding $\L_A$-strings as numbers,
+we can use the language of arithmetic to reason about its own syntax.
+We use `$\gln{A}$' to denote the code (``Gödel number'') of an $\L_A$-string $A$,
+and `$\gn{A}$' to denote the $\L_A$-numeral for $\gln{A}$,
+relative to some fixed coding scheme.
+(The details of the scheme don't matter,
+as long as it is effective.)
 
-PA can't prove Con(PA).
-But we believe that Con(PA) is true.
-So we can add it as a further axiom.
-In the resulting theory,
-we can prove Con(PA).
-But the second incompleteness theorem will still apply:
-we can't prove Con(PA+Con(PA)),
-even though it's true.
-We can add it as an axiom.
-And so on.
-We might even consider the theory defined by
-the union of \emph{all} such additions,
-with infinitely many ever-stronger consistency assertions.
-This theory,
-too,
-won't prove its own consistency.
-We can add its consistency as an axiom.
-And so on.
+Given a recursively axiomatizable theory $T$,
+let $\mathrm{Prf}_{T}$ be the relation that holds between
+numbers $n$ and $m$ iff
+$n$ codes a deduction of the sentence coded by $m$ from
+some recursively decidable set of axioms for $T$.
+This relation is recursive.
+In Chapter~\ref{ch:representability} we proved that
+all recursive functions and relations are representable in any
+moderately strong theory of arithmetic --
+in particular,
+in any extension of Q.
+That is,
+if $T$ is at least as strong as Q
+then there is an $\L_A$-formula $\smallcaps{Prf}_T(x,y)$ such that
+\begin{cenumerate}
+  \item[(i)] if $\mathrm{Prf}_T(n,m)$ holds, then $\proves_T \smallcaps{Prf}_T(\gn{n},\gn{m})$;
+  \item[(ii)] if $\mathrm{Prf}_T(n,m)$ doesn't hold, then $\proves_T \neg \smallcaps{Prf}_T(\gn{n},\gn{m})$.
+\end{cenumerate}
+\noindent%
+If $T$ is sound,
+the formula $\smallcaps{Prf}_T(x,y)$ also defines $\mathrm{Prf}_T$ in $\L_A$,
+so that
+\begin{equation*}
+  \Mod{N} \satisfies \smallcaps{Prf}_T(\gn{n},\gn{m}) \text{ iff } \mathrm{Prf}_T(n,m).
+\end{equation*}
 
-But incompleteness is inescapable.
+From $\smallcaps{Prf}_T(x,y)$,
+we can define another formula $\smallcaps{Prov}_T(x)$ as
+$\exists y \, \smallcaps{Prf}_{T}(y,x)$.
+Informally,
+$\smallcaps{Prov}_T(x)$ says that
+the sentence with Gödel number $x$ is provable in $T$.
+
+Now remember that a theory $T$ is \emph{consistent} if it doesn't prove a contradiction.
+This can be spelled out in multiple ways:
+\begin{cenumerate}
+  \item[(1)] There is no sentence $A$ such that $\proves_T A$ and $\proves_T \neg A$;
+  \item[(2)] $\not\proves_T \bot$;
+  \item[(3)] There is some sentence $A$ such that $\not\proves_T A$.
+\end{cenumerate}
+In classical logic,
+all three conditions are equivalent.
+Let's focus on (2), since it is the shortest.
+If we have an $\L_A$-formula $\smallcaps{Prov}_T(x)$ that expresses provability in $T$,
+we can find another $\L_A$ formula that expresses the consistency of $T$:
+$\neg \smallcaps{Prov}_{T}(\gn{\bot})$.
+
+(Officially,
+`$\bot$' is not part of $\L_A$:
+in Chapter~\ref{ch:propcal}, I suggested that it abbreviates `$\neg(p \to p)$',
+but we also don't have sentence letters in $\L_A$.
+Let's say that $\bot$ is the sentence `$\neg(0\!=\!0)$'.
+Since $0\!=\!0$ is provable in first-order logic,
+$\bot$ is refutable in first-order logic,
+which is all that matters.)
+
+Now let $T$ be some recursively axiomatizable extension of Q.
+Since the consistency of $T$ can be expressed in $T$'s language,
+we might wonder whether $T$ can prove it:
+can an arithmetical theory prove its own consistency?
+At the end of the 1931 paper
+in which he proved the First Incompleteness Theorem,
+Gödel gave an answer:
+he claimed that
+no sufficiently strong, recursively axiomatizable, and consistent theory
+can prove its own consistency.
+This is Gödel's Second Incompleteness Theorem.
+
+Gödel also outlined a proof of this claim.
+It goes as follows.
+
+Remember that in his proof of the First Incompleteness Theorem,
+Gödel used the (Syntactic) Diagonal Lemma to construct a ``Gödel sentence'' $G$ such that
+\begin{equation}\tag{1}
+  \proves_{T} G \leftrightarrow \neg \smallcaps{Prov}_{T}(\gn{G}).
+\end{equation}
+He then showed that
+\emph{if $T$ is consistent then $T$ can't prove $G$.}
+He also showed that
+if $T$ is $\omega$-consistent then it can't prove $\neg G$.
+But let's focus on the first result.
+Its proof required no advanced mathematics.
+(No transfinite ordinals or the Axiom of Choice or anything like that.)
+It can be carried out in any moderately strong theory
+that can reason about recursivity, representability, and the syntax of $T$.
+Suppose it can be carried out in $T$ itself.
+Then the following sentence is provable in $T$:
+\begin{equation}\tag{2}
+  \neg \smallcaps{prov}_T(\gn{\bot}) \to \neg \smallcaps{Prov}_T(\gn{G}).
+\end{equation}
+This says in $\L_A$ that
+if $T$ is consistent
+then $T$ can't prove $G$.
+
+Now suppose that $T$ can prove its own consistency:
+it can prove $\neg \smallcaps{Prov}_T(\gn{\bot})$.
+By Modus Ponens and (2),
+$T$ can infer $\neg \smallcaps{Prov}_{T}(\gn{G})$.
+By (1),
+it can then infer $G$.
+But we've assumed that $T$ is a recursively axiomatizable extension of Q.
+And we know from Gödel's First Incompleteness Theorem that
+no recursively axiomatizable and \emph{consistent} extension of Q can prove $G$.
+So $T$ must be inconsistent.
+
+In sum,
+if $T$ is a consistent and recursively axiomatizable extension of Q,
+and (2) is provable in $T$,
+then $T$ can't prove its own consistency.
+
+\begin{exercise}
+  What is the arithmetical type of $\neg \smallcaps{Prov}_{\mathrm{PA}}(\gn{\bot})$:
+  is it $\Delta_0$, $\Sigma_1$, $\Pi_1$, \ldots?
+\end{exercise}
+
+It turns out that (2) isn't provable in Q.
+But it is provable in the standard axiomatization of arithmetic,
+Peano Arithmetic (PA).
+The Second Incompleteness Theorem therefore implies that
+PA can't prove its own consistency
+(assuming it is consistent).
+
+Before we investigate why (2) is provable in PA,
+let's think about the significance of the result.
+Why should we care whether PA can prove its own consistency?
+
+Note that any \emph{inconsistent} theory can trivially prove its own consistency
+(as long as this is expressible in its language):
+an inconsistent theory can prove everything.
+Even if a consistent theory could prove its own consistency,
+this would therefore provide no reason to think
+that the theory really is consistent.
+
+The significance of the Second Incompleteness Theorem comes from what it implies
+about the powers of theories to prove the consistency of \emph{other} theories.
+Take a theory like ZFC in which most of mathematics can be formalized.
+Hilbert had hoped that one could prove the consistency of such theories
+in a much weaker, ``finitary'' theory that studies deductions as finite syntactic objects.
+Gödel's Second Incompleteness Theorem implies that this can't be done.
+ZFC is certainly strong enough to prove (2).
+By Gödel's Theorem,
+it follows that ZFC can't prove its own consistency.
+But then \emph{no weaker theory} can prove the consistency of ZFC either:
+if something isn't even provable in ZFC,
+it can't be provable in, say, PA or Q --
+for anything that's provable in PA or Q is also provable
+(under a suitable translation, see Section~\ref{sec:ordinals})
+in ZFC.
+
+% \begin{exercise}
+%   A related observation:
+%   if PA can't prove its own consistency,
+%   then PA can't prove the consistency of any stronger theory,
+%   with further axioms about sets etc.
+%   Explain why this is so.
+% \end{exercise}
+
+\begin{exercise}
+  The Second Incompleteness Theorem allows that
+  the consistency of ZFC could be proved in a theory stronger than ZFC.
+  Explain why this would hardly reassure skeptics who doubt the consistency of ZFC.
+\end{exercise}
+
+To complete the proof of the Second Incompleteness Theorem,
+we'd need to show that
+sufficiently powerful theories like PA prove (2).
+Fortunately,
+this doesn't require formalizing the entire proof of the First Incompleteness Theorem.
+It is enough to show  that the formula $\smallcaps{Prov}_{T}(x)$ satisfies some basic conditions.
+These conditions are known as the \emph{Hilbert-Bernays-Löb provability conditions},
+because they were first formulated explicitly in a 1939 textbook by Hilbert and Bernays
+and later streamlined by Martin Löb.
+They are as follows.
+
+\begin{axioms}
+  P1 & If $\proves_T A$, then $\proves_T \smallcaps{Prov}_T(\gn{A})$.\\
+  P2 & $\proves_T \smallcaps{Prov}_T(\gn{A \to B}) \to (\smallcaps{Prov}_T(\gn{A}) \to \smallcaps{Prov}_T(\gn{B}))$.\\
+  P3 & $\proves_T \smallcaps{Prov}_T(\gn{A}) \to \smallcaps{Prov}_T(\gn{\smallcaps{Prov}_T(\gn{A})})$.
+\end{axioms}
+% If a formula $\smallcaps{Prov}_T(x)$ satisfies these conditions,
+% it is called a \emph{provability predicate} for $T$,
+% although this terminology is misleading.
+
+We'll see below how (2) can be derived from P1--P3.
+First,
+let's examine what it takes to show that, say,
+$\smallcaps{Prov}_{\mathrm{PA}}(x)$ satisfies the three conditions.
+
+P1 is easy.
+% if $\proves_{\mathrm{PA}} A$,
+% then $\proves_{\mathrm{PA}} \smallcaps{Prov}_{\mathrm{PA}}(\gn{A})$.
+Assume that $A$ is provable in PA.
+Then there is number $n$ that codes a deduction of $A$ from the axioms of PA.
+Since $\smallcaps{Prf}_{\mathrm{PA}}(x,y)$ represents $\mathrm{Prf}_{\mathrm{PA}}$ in PA,
+we have $\proves_{\mathrm{PA}} \smallcaps{Prf}_{\mathrm{PA}}(\num{n},\gn{A})$.
+So we also have $\proves_{\mathrm{PA}} \exists y \, \smallcaps{Prf}_{\mathrm{PA}}(y, \gn{A})$
+and therefore $\proves_{\mathrm{PA}} \smallcaps{Prov}_{\mathrm{PA}}(\gn{A})$.
+So $\smallcaps{Prov}_{\mathrm{PA}}(x)$ satisfies P1.
+
+The argument for P2 isn't much harder.
+Suppose we have a proof of $A \to B$ and a proof of $A$.
+From these,
+we can construct a proof of $B$
+by concatenating the two proofs and adding $B$ as a final line
+(applying Modus Ponens).
+All this can be formalized in PA,
+showing that if there are numbers $m$ and $n$ that code proofs of $A$ and $A \to B$,
+then there is a number $k$ that codes a proof of $B$.
+Which is what P2 says.
+
+The argument for P3 is more involved.
+It essentially requires formalizing within PA
+the proof that $\smallcaps{Prov}_{\mathrm{PA}}$ satisfies P1.
+This takes about a dozen pages of tedious tinkering.
+I'll spare us the details.
+(You can find them,
+for example,
+in George Boolos, \emph{The Logic of Provability}, 1993, ch.~2.)
+Let's just accept that
+$\smallcaps{Prov}_{\mathrm{PA}}(x)$ satisfies P1--P3.
+
+\begin{exercise}\label{ex:denec}
+  Using the soundness of PA,
+  show that $\smallcaps{Prov}_{\mathrm{PA}}(x)$ also satisfies the following condition:
+  \vspace{-0.2em}
+  \begin{axioms}
+    CNec & If $\proves_{T} \smallcaps{Prov}_T(\gn{A})$ then $\proves_{T} A$.
+  \end{axioms}
+  \vspace{-1em}
+% Suppose |- Prov(A), ie. |- ∃y Prf(A,y). Then there is some n such that |- Prf(A,n). So there is a proof of A from the axioms of PA. So |- A.
+\end{exercise}
+
+\begin{exercise}\label{ex:ref}
+  Explain why it doesn't follow from the previous exercise that $\smallcaps{Prov}_{\mathrm{PA}}(x)$ satisfies this condition:
+  \vspace{-0.2em}
+  \begin{axioms}
+    Ref & $\proves_{T} \smallcaps{Prov}_T(\gn{A}) \to A$.
+  \end{axioms}
+  \vspace{-1em}
+  % (b) Explain why CNec entails Ref if $T$ is complete.
+  % Yes: suppose PA doesn't prove □A → A. Then PA |- ¬(□A → A). So PA |- □A and PA |- ¬A. By previous exercise, PA |- A. So PA would be inconsistent.
+\end{exercise}
+
+We can now finish the proof of the Second Incompleteness Theorem,
+by deriving (2) from P1--P3.
+To remove clutter,
+I'll abbreviate $\smallcaps{Prov}_{T}(\gn{A})$ as $\Box A$.
+This is a little misleading because
+it suggests that the sentence $A$ occurs in $\Box A$,
+while in fact only its Gödel numeral does.
+But it will make the proof more readable.
+
+With this convention, P1--P3 can be written as follows:
+\begin{axioms}
+  P1 & If $\proves_T A$, then $\proves_T \Box A$.\\
+  P2 & $\proves_T \Box (A \to B) \to (\Box A \to \Box B)$.\\
+  P3 & $\proves_T \Box A \to \Box \Box A$.
+\end{axioms}
+
+\vspace{-1em}
+\begin{theorem}{Gödel's Second Incompleteness Theorem}{goedel2}
+  If $T$ is a consistent and recursively axiomatizable theory in which $\mathrm{diag}$ is representable,
+  and $\smallcaps{Prov}_T(x)$ is a formula that satisfies P1--P3,
+  then $T$ cannot prove $\neg \smallcaps{Prov}_T(\gn{\bot})$.
+\end{theorem}
+\begin{proof}
+  \emph{Proof.}
+  Applying the (Syntactic) Diagonal Lemma to the formula $\neg \smallcaps{Prov}_T(x)$,
+  we get a sentence $G$ such that $\proves_T G \leftrightarrow \neg \smallcaps{Prov}_T(\gn{G})$.
+  Using the fact that $\smallcaps{Prov}_T(x)$ satisfies P1--P3,
+  we now reason as follows.
+  \begin{flalign*}
+    \quad 1.\quad & \proves_{T} G \leftrightarrow \neg \Box G && \text{(Diagonal Lemma)}& \\
+    \quad 2.\quad & \proves_{T} G \to \neg \Box G && \text{(from 1)}& \\
+    \quad 3.\quad & \proves_{T} G \to (\Box G \to \bot) && \text{(from 2)}& \\
+    \quad 4.\quad & \proves_{T} \Box (G \to (\Box G \to \bot)) && \text{(from 3 by P1)}& \\
+    \quad 5.\quad & \proves_{T} \Box G \to \Box (\Box G \to \bot) && \text{(from 4 by P2)}& \\
+    \quad 6.\quad & \proves_{T} \Box G \to (\Box \Box G \to \Box \bot) && \text{(from 5 by P2)}& \\
+    \quad 7.\quad & \proves_{T} \Box G \to \Box \Box G && \text{(P3)}& \\
+    \quad 8.\quad & \proves_{T} \Box G \to \Box \bot && \text{(from 6 and 7)}& \\
+    \quad 9.\quad & \proves_{T} \neg \Box \bot \to \neg \Box G && \text{(from 8)} &
+  \end{flalign*}
+  Line 9 is (2) in the box notation.
+  From here,
+  the argument continues as explained above:
+  \begin{flalign*}
+    \quad 10.\quad & \proves_{T} \neg \Box \bot && \text{(Assumption)}&\\
+    \quad 11.\quad & \proves_{T} \neg \Box G && \text{(from 9 and 10)}&\\
+    \quad 12.\quad & \proves_{T} G && \text{(from 1 and 11)}&\\
+    \quad 13.\quad & \proves_{T} \Box G && \text{(from 12 by P1)}&
+  \end{flalign*}
+  This shows that if $T$ proves its own consistency (line 10)
+  then it is inconsistent:
+  it proves both $\smallcaps{Prov}_T(\gn{G})$ (line 13)
+  and $\neg \smallcaps{Prov}_T(\gn{G})$ (line 11).
+  By contraposition:
+  if $T$ is consistent,
+  it can't prove its own consistency.
+  \qed
+\end{proof}
+
+Why is this an \emph{incompleteness} theorem?
+Because it shows that a certain sentence,
+$\neg \smallcaps{prov}_T(\gn{\bot})$,
+is unprovable in any sufficiently strong and consistent theory $T$,
+even though it is true.
+In a way,
+this form of incompleteness is more striking than
+the one established by Gödel's First Theorem.
+% The First Theorem shows that
+% we can construct an unprovable sentence $G$ that says of itself that it is unprovable.
+% The Second Theorem give us a more natural unprovable sentence.
+Here is how Gödel put it in a 1951 lecture:
+
+\begin{quote}
+  [The second theorem] makes the incompletability of mathematics particularly evident.
+  For, it makes it impossible that someone should set up
+  a certain well-defined system of axioms and rules and
+  consistently make the following assertion about it:
+  All of these axioms and rules I perceive (with mathematical certitude)
+  to be correct,
+  and moreover I believe that they contain all of mathematics.
+  If someone makes such a statement he contradicts himself.
+  For if he perceives the axioms under consideration to be correct,
+  he also perceives (with the same certainty) that they are consistent.
+  Hence he has a mathematical insight not derivable from his axioms. 
+\end{quote}
+
+% As Gödel points out,
+% the ``insight'' that a sufficiently powerful, axiomatized theory $T$ is consistent
+% must always come from outside $T$:
+% it can't be proved within $T$,
+% unless $T$ is inconsistent.
+Take the standard axiomatization of set theory, ZFC.
+Suppose we ``perceive'' that ZFC is sound, and therefore consistent.
+If this ``perception'' is correct,
+it goes beyond what ZFC can prove,
+although the consistency part can be expressed in the language of ZFC:
+we perceive the truth of $\neg \smallcaps{Prov}_{\mathrm{ZFC}}(\gn{\bot})$.
+We might propose a strengthened version of ZFC,
+with $\neg \smallcaps{Prov}_{\mathrm{ZFC}}(\gn{\bot})$ as a new axiom.
+Call this theory ZFC$^+$.
+The Second Incompleteness Theorem still applies:
+ZFC$^+$ can't prove its own consistency (if it is consistent).
+But if ZFC is sound, then so is ZFC$^+$.
+Our ``perception'' of the soundness of ZFC
+therefore allows us to strengthen ZFC$^+$ by adding
+another consistency statement,
+$\neg \smallcaps{Prov}_{\mathrm{ZFC}^+}(\gn{\bot})$.
+Call this theory ZFC$^{++}$.
+The Second Incompleteness Theorem still applies \ldots.
+In this way,
+our perception of the soundness of ZFC
+allows us to construct an infinite sequence of ever stronger theories,
+each of which must be sound.
+We might even propose a theory ZFC$^{\omega}$
+that combines all these theories:
+the union of ZFC, ZFC$^+$, ZFC$^{++}$, etc.
+This theory is still recursively axiomatizable,
+so the Second Incompleteness Theorem still applies:
+it can't prove its own consistency (if it is consistent).
+So we can keep adding consistency statements,
+creating ZFC$^{\omega+1}$, ZFC$^{\omega+2}$, \ldots, ZFC$^{\omega+\omega}$, and so on,
+up through the ordinals until we reach a point
+(the ``Church-Kleene ordinal'' $\omega_1^{\mathrm{CK}}$)
+where the union of the previous theories
+can no longer be captured in the language of ZFC.
+
+\begin{exercise}
+  Formulas that satisfy P1--P3 are often called \emph{provability predicates}.
+  But this is misleading.
+  Show that the formula $\smallcaps{Sent}(x)$ that
+  represents (in PA) the property of coding an $\L_A$-sentence satisfies P1--P3.
+\end{exercise}
+
+\begin{exercise}
+  The Second Incompleteness Theorem applies to any predicate satisfying P1--P3:
+  the predicate $\smallcaps{prov}_T(x)$ that figures in the Theorem doesn't have to be defined as $\exists y \, \smallcaps{Prf}_T(y,x)$ from a predicate $\smallcaps{Prf}_T(x,y)$ that represents the proof relation of $T$.
+  What do we learn if we apply the Second Incompleteness Theorem to $\smallcaps{Sent}(x)$?
+\end{exercise}
+
+\begin{exercise}
+  Let PA$^+$ be obtained from PA by adding $\smallcaps{Prov}_{\mathrm{PA}}(\gn{\bot})$ as a new axiom.
+  Is this theory consistent?
+  Is it $\omega$-consistent?
+  % can you describe what a model of this theory might look like?
+  (Hint: remember that $\smallcaps{Prov}_{\mathrm{PA}}(\gn{\bot})$ abbreviates $\exists y \, \smallcaps{Prf}_{\mathrm{PA}}(y,\gn{\bot})$.)
+  % If PA is consistent,
+  % no number codes a PA-proof of $\bot$.
+  % That is, $\mathrm{Prf}_{\mathrm{PA}}(n,\gln{\bot})$ is false for every number $n$.)
+\end{exercise}
+
+\begin{exercise}
+  Using exercise~\ref{ex:denec},
+  explain why PA can't prove the negation of $\neg \smallcaps{Prov}_{\mathrm{PA}}(\gn{\bot})$,
+  unless it is inconsistent.
+% If $T$ could prove the negation of $\neg \smallcaps{prov}_T(\gn{\bot})$,
+% it could prove $\smallcaps{prov}_T(\gn{\bot})$,
+% by (Ref), it could prove $\bot$,
+\end{exercise}
 
 
 \section{Löb's Theorem}
 \label{sec:lobs-theorem}
 
-Gödel's proof of Incompleteness with his sentence `I am not provable' skirts the Liar paradox.
-The proof of Löb's Theorem skirts Curry's Paradox.
-Curry's Paradox goes like this.
+For a suitable theory $T$,
+the Diagonal Lemma allows us to construct a Gödel sentence $G$
+that says of itself that it is unprovable in $T$.
+We can also construct a sentence $H$ that
+says of itself that it is provable.
+More formally,
+if we apply the (Syntactic) Diagonal Lemma to the formula $\smallcaps{Prov}_T(x)$,
+we get a sentence $H$ such that
+\begin{equation}\tag{D}
+  \proves_T H \leftrightarrow \smallcaps{Prov}_T(\gn{H}).
+\end{equation}
+This is called the \emph{Henkin sentence} for $T$.
+It's easy to show that
+no consistent theory can prove its Gödel sentence.
+For the Henkin sentence,
+the situation is less clear.
+Is $H$ provable in $T$?
+This question was raised by Leon Henkin in 1952,
+and answered by Martin Löb in 1955.
+Löb showed that if $T$ is consistent, recursively axiomatizable, and sufficiently strong,
+and it proves $\smallcaps{Prov}_T(\gn{A}) \to A$
+for some sentence $A$,
+then it also proves that sentence $A$.
+This is known as \emph{Löb's Theorem}.
+Since (D) gives us $\proves_T \smallcaps{Prov}_T(\gn{H}) \to H$,
+the Theorem entails $\proves_T H$.
+The Henkin sentence $H$ is indeed provable in $T$.
+
+The proof of Löb's Theorem resembles the following proof that Santa Claus exists.
 
 Let $S$ be the sentence `if $S$ is true then Santa Claus exists'.
-Suppose that $S$ is true.
-Then it's true that if $S$ is true then Santa Claus exists
-(as that is what $S$ says).
-But we've assumed that $S$ is true.
-By Modus Ponens,
-we can infer that Santa Claus exists.
-Discharging the assumption,
-we've shown that \emph{if} $S$ is true then Santa Claus exists.
-That's just what $S$ says.
-So $S$ is true.
-Since we've shown that if $S$ is true then Santa Claus exists,
-we can conclude that Santa Claus exists.
+This being a conditional,
+we can try to prove it by deriving the consequent from the antecedent.
+So assume the antecedent: $S$ is true.
+So if $S$ is true then Santa Claus exists
+(for this is what $S$ says).
+Still assuming that $S$ is true,
+we can infer (by Modus Ponens) that Santa Claus exists.
+Now we have derived the consequent of $S$ from its antecedent.
+So we've proved $S$:
+we've proved that if $S$ is true then Santa Claus exists.
+And since we've proved $S$,
+we can infer by Modus Ponens that Santa Claus exists.
 
-Proof of Löb's Theorem. (Hamkins p.251?)
+This line of reasoning is known as \emph{Curry's Paradox}.
+It clearly works for any consequent $A$ in place of `Santa Claus exists'.
+In the following proof of Löb's Theorem,
+we replace `is true' (which is not expressible in $\L_A$) by `is provable'.
+The assumption $\proves_T \smallcaps{Prov}_T(\gn{A}) \to A$ of Löb's Theorem
+gives us one direction of the Tarski biconditional for $A$.
+In the presence of P1--P3,
+that's enough to run a Curry-style argument and show that $\proves_T A$.
 
+\begingroup
+\allowdisplaybreaks
+\begin{theorem}{(Löb's Theorem)}{Löb's Theorem}
+  If $T$ is a consistent, recursively axiomatizable theory in which $\mathrm{diag}$ is representable,
+  and $\smallcaps{prov}_T(x)$ satisfies P1--P3,
+  then the following holds for any sentence $A$ in the language of $T$:
+  \[
+    \text{If }\proves_T \smallcaps{Prov}_T(\gn{A}) \to A \text{ then }\proves_T A.
+  \]
+\end{theorem}
+\begin{proof}
+  Assume that $\proves_T \smallcaps{Prov}_T(\gn{A}) \to A$.
+  Applying the Syntactic Diagonal Lemma to the formula $\smallcaps{Prov}_T(x) \to A$,
+  we get a sentence $S$ such that $\proves_T S \leftrightarrow (\smallcaps{Prov}_T(\gn{S}) \to A)$.
+  Using the box notation, we now reason as follows.
+  \begin{flalign*}
+    \quad 1.\quad & \proves_T S \leftrightarrow (\Box S \to A) && \text{(Diagonal Lemma)}& \\
+    \quad 2.\quad & \proves_T S \to (\Box S \to A) && \text{(from 1)}& \\
+    \quad 3.\quad & \proves_T \Box (S \to (\Box S \to A)) && \text{(from 2 by P1)}& \\
+    \quad 4.\quad & \proves_T \Box S \to \Box (\Box S \to A) && \text{(from 3 by P2)}& \\
+    \quad 5.\quad & \proves_T \Box S \to (\Box \Box S \to \Box A) && \text{(from 4 by P2)} &\\
+    \quad 6.\quad & \proves_T \Box S \to \Box \Box S && \text{(P3)}& \\
+    \quad 7.\quad & \proves_T \Box S \to \Box A && \text{(from 5 and 6)}& \\
+    \quad 8.\quad & \proves_T \Box A \to A && \text{(assumption)}& \\
+    \quad 9.\quad & \proves_T \Box S \to A && \text{(from 7 and 8)}& \\
+    \quad 10.\quad & \proves_T S && \text{(from 1 and 9)}& \\
+    \quad 11.\quad & \proves_T \Box S && \text{(from 10 by P1)}& \\
+    \quad 12.\quad & \proves_T A && \text{(from 9 and 11)} & \qed
+  \end{flalign*}
+\end{proof}
+\endgroup
+\noindent%
+In line 1 of this proof,
+the Diagonal Lemma is used to construct the sentence $S$ that ``says that''
+(is provably equivalent to)
+`if $S$ is provable then $A$'.
+As in Curry's Paradox,
+$T$ can derive that if $S$ is provable then $A$ (line 9).
+From this,
+$T$ infers that $S$ is true (line 10), and thereby that $S$ provable (line 11),
+from which it infers $A$ by Modus Ponens (line 12).
 
 \begin{exercise}
-  Is there a consistent extension of PA than can prove its own inconsistency?
+  Prove the converse of Löb's Theorem:
+  if $\proves_T A$, then $\proves_T \smallcaps{Prov}_T(\gn{A}) \to A$.
+\end{exercise}
+
+From Löb's Theorem,
+it is a short step to the Second Incompleteness Theorem.
+Assume $T$ can prove $\neg \smallcaps{Prov}_T(\gn{\bot})$.
+By propositional logic,
+this entails $\smallcaps{Prov}_T(\gn{\bot}) \to \bot$.
+By Löb's Theorem,
+it follows that $T$ can prove $\bot$.
+So if $T$ can prove its own consistency,
+then $T$ is inconsistent.
+
+% \begin{exercise}
+%   Use the Deduction Theorem to show that $\mathrm{PA} \proves \smallcaps{Prov}_{\mathrm{PA}}(\gn{A}) \to A$ iff $\mathrm{PA}, \neg A \proves \neg \smallcaps{Prov}_{\mathrm{PA}}(\gn{A})$.
+% \end{exercise}
+
+Löb's Theorem also entails a version of Tarski's Theorem on the undefinability of truth.
+Recall that a predicate $W(x)$ is a \emph{truth predicate} for a theory $T$
+if $T$ can prove all the Tarski biconditionals
+\[
+  W(\gn{A}) \leftrightarrow A.
+\]
+Suppose that $W(x)$ is a truth predicate for $T$.
+Then $W(x)$ is also a provability predicate for $T$.
+Assume that $T$ is a recursively axiomatizable theory in which $\mathrm{diag}$ is representable.
+Since $\proves_T W(\gn{A}) \to A$ for all $A$,
+it follows by Löb's Theorem that $\proves_T A$ for all $A$.
+So $T$ is inconsistent.
+
+\begin{exercise}
+  Explain why a truth predicate for $T$ is also a provability predicate for $T$.
+\end{exercise}
+
+Löb's Theorem highlights the difference between
+the formal concept of provability and the concept of truth.
+One might have expected that
+a sufficiently powerful theory
+would ``know that'' whatever it can prove is the case.
+That is,
+one might have expected that $\smallcaps{Prov}_T$ should satisfy the Reflection principle
+from exercise~\ref{ex:ref}:
+
+\begin{axioms}
+  Ref & $\proves_{T} \smallcaps{Prov}_T(\gn{A}) \to A$.
+\end{axioms}
+
+(A truth predicate would satisfy both Ref and its converse.)
+Löb's Theorem shows that
+if $T$ is sufficiently strong and consistent then
+$\smallcaps{Prov}_T$ satisfies only those instances of Ref
+for which $A$ is already provable in $T$,
+in which case $\smallcaps{Prov}_T(\gn{A}) \to A$ follows by propositional logic.
+
+% We already know from Gödel's First Incompleteness Theorem that
+% mathematical truth and provability come apart:
+% for any consistent, axiomatizable theory in a sufficiently rich language,
+% there are true statements that the theory can't prove.
+% Löb's Theorem strengthens this point by showing that
+% provability,
+% at least when formalized,
+% has a structure very different from that of truth.
+
+% \begin{exercise}
+%   Explain why PA can't prove its own soundness.
+% \end{exercise}
+
+\begin{exercise}
+  What's the difference between the hypothesis $\proves_{\mathrm{PA}} A$ and
+  the arithmetical hypothesis $\smallcaps{Prov}_{\mathrm{PA}}(A)$?
+  Can one be true without the other? % cf Hamkins ex 7.9
 \end{exercise}
 
 \begin{exercise}
-  What's the difference between the hypothesis $PA \proves A$ and the arithmetical
-  hypothesis $Prov(A)$? Can one be true without the other? % cf Hamkins ex 7.9
+  Return to the theory PA$^+$ axiomatized by adding
+  $\smallcaps{Prov}_{\mathrm{PA}}(\gn{\bot})$ to the axioms of PA.
+  (a) Explain why $\proves_{\mathrm{PA}^+} \smallcaps{Prov}_{\mathrm{PA}^+}(\gn{\bot})$.
+  (b) Show that there is a sentence $A$ for which $\proves_{\mathrm{PA}^+} \neg(\smallcaps{Prov}_{\mathrm{PA}^+}(\gn{A}) \to A)$.
+\end{exercise}
+
+
+
+\section{The logic of provability}
+
+If you are familiar with modal logic,
+the provability conditions P1--P3 will look familiar,
+especially when written with the box operator $\Box$.
+If you aren't familiar with modal logic,
+let me quickly introduce some background.
+
+Propositional modal logic
+is an extension of classical propositional logic.
+The language $\L_M$ of propositional modal logic
+is obtained from $\L_0$ by adding the unary sentence operator `$\Box$'.
+Thus
+whenever $A$ is an $\L_M$-sentence,
+then so is $\Box A$.
+The intended meaning of the box varies from application to application;
+often
+it is used to express some kind of necessity.
+
+Hilbert-style proof systems for propositional modal logic
+extend the propositional calculus by axioms and inference rules
+that govern the behaviour of the box.
+A well-known proof system adds one axiom schema and one rule of inference:
+
+\begin{axioms}
+  K & $\Box (A \to B) \to (\Box A \to \Box B)$\\
+  Nec & From $A$ one may infer $ \Box A$
+\end{axioms}
+
+This system is known as K.
+(So `K' names both a proof system and an axiom schema.
+The letter stands for Saul Kripke.)
+Stronger systems can be obtained by adding further axioms.
+For example,
+the system K4 adds an axiom schema known (for obscure historical reasons) as `4':
+
+\begin{axioms}
+  4 & $\Box A \to \Box \Box A$;
+\end{axioms}
+
+the system S4 adds both 4 and Ref (more commonly known as `T'):
+
+\begin{axioms}
+  Ref & $\Box A \to A$.
+\end{axioms}
+
+Any system that can be obtained by adding axiom schemas to K is called a \emph{normal modal logic}.
+
+Above I used the ``box notation'' to simplify sentences of $\L_A$.
+Sentences in the ``box notation'' look just like sentences of $\L_M$.
+To make this more explicit,
+let $t$ be a function
+that maps each sentence letter $p$ of $\L_M$ to an $\L_A$-sentence $t(p)$.
+We can extend any such $t$ to a mapping from $\L_M$-sentences to $\L_A$-formulas,
+as follows:
+\begin{align*}
+  \transt{p} &= t(p) \\
+  \transt{\neg A} & = \neg \transt{A} \\
+  \transt{A \to B} & = \transt{A} \to \transt{B} \\
+  \transt{\Box A} & = \smallcaps{Prov}_T(\gn{\transt{A}})
+\end{align*}
+
+Here I use `$\transt{A}$' to denote the output of the mapping for input $A$.
+For example,
+assume that $t(p)$ is `$0\!=\!0$'.
+Then $\transt{p}$ is `$0\!=\!0'$,
+$\transt{\neg p}$ is `$\neg(0\!=\!0)$',
+and
+$\transt{\Box p}$ is `$\smallcaps{Prov}_T(\gn{0\!=\!0})$'.
+
+Now assume that $\smallcaps{Prov}_T(x)$ satisfies P1--P3.
+In ``box notation'',
+P1, P2, and P3 are Nec, K, and 4,
+respectively.
+We might therefore expect that
+whenever an $\L_M$-sentence $A$ is provable in the modal system K4,
+then $\transt{A}$ is provable in $T$.
+We'll confirm this below.
+
+The full modal logic of provability isn't K4,
+however.
+It has another axiom schema, known as GL (for Gödel-Löb):
+
+\begin{axioms}
+  GL & $\Box (\Box A \to A) \to \Box A$.
+\end{axioms}
+\noindent
+The system of modal logic obtained by adding GL to K4 is also called GL.
+(It turns out that the 4 schema is redundant:
+it can be derived from GL.)
+
+GL is the modal translation of a formalized version of Löb's Theorem.
+Löb's Theorem states that
+\begin{quote}
+  If $\proves_T \smallcaps{Prov}_T(\gn{A}) \to A$ then $\proves_T A$.  
+\end{quote}
+The formalized version of Löb's Theorem lifts this into $T$:
+\begin{quote}
+  $\proves_T \smallcaps{Prov}_T(\gn{\smallcaps{Prov}_T(\gn{A}) \to A}) \to \smallcaps{Prov}_T(\gn{A})$.
+\end{quote}
+It is easily derivable from Löb's Theorem itself:
+
+\begin{lemma}{}{lob-formalized}
+  If $T$ is a consistent, recursively axiomatizable theory in which $\mathrm{diag}$ is representable,
+  and $\smallcaps{prov}_T(x)$ satisfies P1--P3,
+  then the following holds for any sentence $A$ in the language of $T$:
+    \[
+        \proves_T \smallcaps{Prov}_T(\gn{\smallcaps{Prov}_T(\gn{A}) \to A}) \to \smallcaps{Prov}_T(\gn{A}).
+    \]
+\end{lemma}
+\begin{proof}
+  \emph{Proof.}
+  Using the box notation,
+  we need to show that $T$ proves $\Box (\Box A \to A) \to \Box A$.
+  Call this sentence $S$.
+  We show $\proves_T S$ by showing $\proves_T \Box S \to S$,
+  from which $\proves_T S$ follows by Löb's Theorem.
+  \begin{flalign*}
+    \quad 1.\quad & \proves_T \Box (\Box (\Box A \to A) \to \Box A) \to (\Box\Box(\Box A \to A) \to \Box \Box A) && \text{(P2)} & \\
+    \quad 2.\quad & \proves_T \Box (\Box A \to A) \to \Box\Box(\Box A \to A) && \text{(P3)} & \\
+    \quad 3.\quad & \proves_T \Box(\Box A \to A) \to (\Box\Box A \to \Box A) && \text{(P2)} & \\
+    \quad 4.\quad & \proves_T \Box (\Box (\Box A \to A) \to \Box A) \to (\Box(\Box A \to A) \to \Box A) && \text{(1--3)} &\\
+    \quad 5.\quad & \proves_T \Box (\Box A \to A) \to \Box A && \text{(4, Löb's Thm.)} & \qed
+  \end{flalign*}
+
+\end{proof}
+
+The following theorem confirms that
+if $\smallcaps{Prov}_T(x)$ satisfies P1--P3,
+and an $\L_M$-sentence $A$ is provable in the modal logic GL,
+then $\transt{A}$ is provable in $T$.
+
+\begin{theorem}{The Arithmetical Soundness Theorem}{gl-soundness}
+  If $\smallcaps{Prov}_T(x)$ satisfies P1--P3,
+  then
+  for any $\L_M$-sentence $A$,
+  if $\proves_{\mathrm{GL}} A$
+  then $\proves_T \transt{A}$.
+\end{theorem}
+\begin{proof}
+  \emph{Proof.}
+  Assume $\proves_{\mathrm{GL}} A$.
+  This means that
+  there is a sequence $A_1, A_2, \ldots, A_n$ of $\L_M$-sentences such that $A_n$ is $A$ and
+  each $A_k$ in the sequence is
+  either an axiom of GL, an instance of the classical propositional axioms A1--A3, or follows from previous sentences by MP or Nec.
+  We show by induction on $k$ that
+  $\proves_{T} \transt{A_k}$.
+
+  If $A_k$ is an instance of A1-A3
+  then $\transt{A_k}$ is also an instance of A1-A3,
+  and so $\proves_{T} \transt{A_k}$.
+
+  If $A_k$ is an instance of K
+  then $\proves_T \transt{A_k}$ by P2,
+
+  If $A_k$ is an instance of 4
+  then $\proves_T \transt{A_k}$ by P3.
+  
+  If $A_k$ is an instance of GL,
+  then $\proves_T \transt{A_k}$ by Lemma~\ref{lem:lob-formalized}.
+  
+  If $A_k$ follows by MP from $A_i$ and $A_j$ with $i,j < k$,
+  then $\transt{A_k}$ follows by MP from $\transt{A_i}$ and $\transt{A_j}$.
+  By induction hypothesis,
+  $\proves_{T} \transt{A_i}$ and $\proves_{T} \transt{A_j}$.
+  So $\proves_{T} \transt{A_k}$.
+
+  Assume $A_k$ follows by Nec from $A_i$ with $i < k$.
+  Then $\transt{A_k}$ is $\smallcaps{Prov}_{T}(\gn{\transt{A_i}})$.
+  By induction hypothesis,
+  $\proves_{T} \transt{A_i}$.
+  So $\proves_{T} \transt{A_k}$ by P1.
+  \qed
+\end{proof}
+
+The converse of Theorem~\ref{thm:gl-soundness} also holds:
+whenever $\proves_{T} \transt{A}$,
+then $\proves_{\mathrm{GL}} A$.
+This \emph{arithmetical completeness theorem} was proved by Robert Solovay in 1976.
+The proof is too hard to get into here.
+
+Theorem~\ref{thm:gl-soundness} shows that
+we can use propositional modal logic to establish results about provability in theories like PA.
+Solovay's theorem shows that
+\emph{all} general facts about provability in such theories can be established in this way.
+
+For a simple illustration of how this works,
+here is a GL-proof of a formalized version of the Second Incompleteness Theorem,
+showing that if $T$ meets the conditions for the Theorem,
+then it can prove that
+if it can prove its own consistency,
+then it is inconsistent.
+\begin{flalign*}
+  \quad 1.\quad & \proves_{GL} \neg \Box \bot \to (\Box \bot \to \bot) && \text{(propositional logic)}& \\
+  \quad 2.\quad & \proves_{GL} \Box (\neg \Box \bot \to (\Box \bot \to \bot)) && \text{(from 1 by Nec)}& \\
+  \quad 3. \quad & \proves_{GL} \Box \neg \Box \bot \to \Box (\Box \bot \to \bot) && \text{(from 2 by K)}& \\
+  \quad 4.\quad & \proves_{GL} \Box(\Box \bot \to \bot) \to \Box \bot && \text{(GL)}& \\
+  \quad 5.\quad & \proves_{GL} \Box \neg \Box \bot \to \Box \bot && \text{(from 3 and 4)}&
+\end{flalign*}
+By Theorem~\ref{thm:gl-soundness},
+it follows that 
+$\proves_T \smallcaps{Prov}_T(\gn{\neg \smallcaps{Prov}_T(\gn{\bot})}) \to \smallcaps{Prov}_T(\gn{\bot})$.
+
+For another illustration,
+one can show that (for any sentence $A$)
+\begin{equation*}
+  \proves_{GL} \Box(A \leftrightarrow \Box \neg A) \to \Box(A \leftrightarrow \Box \bot).
+\end{equation*}
+Among other things,
+this tells us what theories like PA will make of
+a sentence $N$ that ``says of itself'' that its negation is provable.
+We get such a sentence by applying the Diagonal Lemma to the formula $\smallcaps{Prov}_{T}(\gn{\neg x})$:
+\begin{equation*}
+  \proves_{T} N \leftrightarrow \smallcaps{Prov}_{T}(\gn{\neg N}).
+\end{equation*}
+By P1, this entails
+\[
+  \proves_{T} \smallcaps{Prov}_{T}(\gn{N \leftrightarrow \smallcaps{Prov}_{T}(\gn{\neg N})}).
+\]
+The above result from GL gives us
+\[
+  \proves_{T} \smallcaps{Prov}_{T}(\gn{N \leftrightarrow \smallcaps{Prov}_{T}(\gn{\neg N})}) \to \smallcaps{Prov}_{T}(\gn{N \leftrightarrow \smallcaps{Prov}_{T}(\gn{\bot})}).
+\]
+So by Modus Ponens,
+\[
+  \proves_{T} \smallcaps{Prov}_{T}(\gn{N \leftrightarrow \smallcaps{Prov}_{T}(\gn{\bot})}).
+\]
+If $T$ is sound,
+this entails
+\[
+  \proves_{T} N \leftrightarrow \smallcaps{Prov}_{T}(\gn{\bot}).
+\]
+So the sentence $N$ that says that its negation is provable in PA
+is equivalent in PA to the statement that PA is inconsistent.
+Since PA can neither prove nor disprove its own consistency (assuming it is consistent),
+it can neither prove nor disprove $N$. 
+
+\begin{exercise}
+  Show that $\proves_{GL} \Box\neg\Box A \to \Box A$.
 \end{exercise}
 
 \begin{exercise}
-  Suppose someone provides a list of new arithmetical axioms from which one can prove that this list is consistent. What does this tell us? % Hamkins 7.11
+  Let GL+Ref be the system obtained by adding the axiom schema Ref to GL.
+  Show that $\Box \bot$ is provable in GL+Ref.
+  Is GL+Ref consistent?
+\end{exercise}
+
+\begin{exercise}
+  Show that $\Box \bot$ is provable in the system GL+5
+  obtained by adding the axiom schema 5 to GL:
+  \vspace{-0.2em}
+    \begin{axioms}
+      5 & $\neg \Box A \to \Box \neg \Box A$.
+    \end{axioms}
+  \vspace{-1em}
+\end{exercise}
+
+\begin{exercise}
+  % The proof of Theorem~\ref{th:goedel2} shows that
+  % $\proves_{GL} (G \leftrightarrow \neg \Box G) \to (\neg \Box \bot \to G)$.
+  Show that
+  $\proves_{GL} (G \leftrightarrow \neg \Box G) \to (G \leftrightarrow \neg\Box \bot)$.
+  (What does this tell us about the Gödel sentence $G$?)
+  % Proof idea:
+  % If G then
+  %    ¬□G (by D)
+  %    □⊥ → □G (from ⊢ ⊥ → G)
+  %    So ¬□⊥
+  % The news is that G is undecidable as long as T extends PA, doesn't need to be
+  % ω-consistent.
+  % Also G is equivalent to Con.
+\end{exercise}
+
+\begin{exercise}
+  How should we restrict the Nec rule
+  if we wanted to allow for deductions from premises in our calculus for normal modal logics?
+  % so that the Deduction Theorem becomes provable?
 \end{exercise}
 
 
-\section{Fineness of grain}
+\section{Chaitin's Incompleteness Theorem}
 
-The Montagovian point...
+In 1974,
+Gregory Chaitin proved a version of the First Incompleteness Theorem that
+connects it to issues of computability.
+We'll see that it also opens a new route to the Second Incompleteness Theorem.
+
+Recall that a Turing machine takes as input a pattern of strokes and blanks on its tape.
+Its output,
+if it halts,
+is also a pattern of strokes and blanks.
+If we ignore the blank cells to the left of the first stroke
+and to the right of the last stroke,
+all these patterns are finite.
+Every finite pattern can be produced by a Turing machine.
+In fact,
+for every finite pattern of strokes and blanks,
+there are infinitely many Turing machines that produce it.
+We might be interested in the most efficient way to generate a given pattern:
+what is the shortest Turing machine program that produces it
+(starting on blank tape)?
+
+The \emph{program} of a Turing machine is a string that lists all its instructions --
+all quintuples like $\t{q_0, B, 1, R, q_1}$ that
+specify what machine does if it scans a certain symbol in a certain state.
+We've seen in Section~\ref{sec:universal-tm} that
+these instructions can themselves be coded as patterns of strokes and blanks and fed to a universal Turing machine,
+which will execute the program.
+
+Let's define the \emph{complexity} of a pattern as the length of the shortest program that produces it.
+(This is somewhat imprecise,
+but the imprecision will do us no harm.
+The more precise concept is called \emph{Kolmogorov complexity}.)
+ 
+Some patterns can be produced by very short programs,
+others require very long programs.
+As a rule,
+short and regular patterns can be produced by short programs,
+while long and disorderly patterns tend to require long programs:
+they have high complexity.
+
+It's easy to see that
+there is no limit to how complex a pattern can be.
+For any number $n$,
+only finitely many patterns can be produced by programs of length up to $n$;
+all other patterns require longer programs:
+they have greater complexity.
+
+You'd think that for any number $n$,
+we can easily find examples of patterns
+whose complexity is demonstrably greater than $n$.
+Chaitin's Incompleteness Theorem shows that this is not so.
+In essence,
+it says that
+for any recursively axiomatized and consistent theory
+that knows some basic facts about Turing machines,
+there is a particular number $L$ such that
+the theory can't prove
+of any pattern that its complexity is greater than $L$.
+
+To state this more precisely,
+consider the relation $H$ that holds between a Turing machine program $M$,
+a pattern of strokes and blanks $S$,
+and a number $t$ if
+$M$ halts with output $S$ after $t$ steps.
+This relation is decidable.
+(With a concrete coding of programs and patterns,
+it can easily be shown to be recursive.)
+So it is representable in any sufficiently strong arithmetical theory
+-- e.g., in any extension of Q --
+by some formula $\smallcaps{H}(x,y,z)$.
+Let $\smallcaps{Len}(x,y)$ represent the
+(obviously computable) function that maps each program to its length.
+We can now express ``the complexity of pattern $S$ exceeds $n$'' in $\L_A$
+as the claim that there is no program $x$ of length $\leq n$ that produces $S$ after some number of steps $t$:
+$\forall x \forall y \forall t \, ((\smallcaps{len}(x,y) \land y \!\leq\! \num{n}) \,\to\, \neg \smallcaps{H}(x, \gn{S}, t))$.
+Abbreviate this as $\smallcaps{CompExc}(S, n)$.
+Chaitin's Theorem says that
+beyond some limit $L$,
+no such statement is provable.
+
+\begin{theorem}{Chaitin's Incompleteness Theorem}{chaitin}
+  If $T$ is a consistent, recursively axiomatizable extension of Q,
+  there is a number $L$ such that
+  for any pattern $S$,
+  $T$ cannot prove that the complexity of $S$ exceeds $L$:
+  $\not\proves_T \smallcaps{CompExc}(S, L)$.
+\end{theorem}
+\begin{proof}
+  \emph{Proof sketch.}
+  Since $T$ is recursively axiomatizable,
+  we can design a Turing machine $M_T$ that
+  takes a number $k$ as input and
+  searches through all proofs in $T$
+  until it finds a proof of a sentence of the form $\smallcaps{CompExc}(S, \num{k})$;
+  it then outputs $S$ and halts.
+  
+  We know from section \ref{sec:tm-arith}
+  that there's a (fairly simple) machine that doubles the number of strokes on the tape.
+  For any number $n>0$,
+  we can therefore design another machine $M_n$ that (when started on a blank tape)
+  \begin{cenumerate}
+    \item[1.] writes a single stroke, then
+    \item[2.] doubles the number of strokes on the tape $n$ times, then
+    \item[3.] moves to the left end of all the strokes, then
+    \item[4.] calls $M_T$.
+  \end{cenumerate}
+  This machine writes $2^n$ strokes on the tape and then calls $M_T$.
+  If there is a proof in $T$
+  that the complexity of some pattern $S$ is greater than $2^n$,
+  $M_n$ will find some such proof;
+  it will then output $S$ and halt.
+  If there is no such proof,
+  $M_n$ runs forever.
+
+  The program for $M_n$ has length $d \cdot n + c$,
+  where $d$ is the length of the doubling machine's program
+  and $c$ is a constant for 
+  the length of $M_T$'s program
+  plus whatever is needed for writing the initial stroke and
+  for moving to the left end of a block of strokes.
+
+  Since $d \cdot n + c$ grows more slowly than $2^n$,
+  there must be a number $k$ such that
+  \[
+    d \cdot k + c < 2^k.
+  \]
+  Now suppose for reductio that there is a pattern $S$
+  for which $T$ can prove that its complexity exceeds $L = 2^k$.
+  Then $M_k$ will output some such $S$ and halt.
+  Since the program for $M_k$ has length $d \cdot k + c$ and outputs $S$,
+  the complexity of $S$ is at most $d \cdot k + c$,
+  which is less than $L$.
+  % If we assume that $T$ is sound,
+  % we already have a contradiction.
+  % But we don't need soundness.
+  
+  Since $\smallcaps{H}$ represents the halting-with-bound relation,
+  and $M_k$ produces $S$ after some number of steps $t$,
+  $T$ proves $\smallcaps{H}(\gn{M_k}, \gn{S}, \num{t})$.
+  $T$ also knows the length of $M_k$'s program:
+  it can prove $\smallcaps{len}(\gn{M_k}) = \num{d \cdot k + c}$.
+  So $T$ proves that there is a program of length $d \cdot k + c$ that produces $S$ within $t$ steps.
+  By assumption,
+  however,
+  $T$ also proves $\smallcaps{CompExc}(S, \num{2^k})$,
+  which states that
+  there is no program of length $\leq 2^k$ that produces $S$ after any number of steps.
+  So $T$ is inconsistent.
+  \qed
+\end{proof}
+
+A nice aspect of this proof is that
+it works for any reasonable definition of complexity.
+(That's why we didn't need to be very precise about this.)
+It also works for programs in ordinary programming languages like Python or JavaScript,
+rather than Turing machine programs,
+and for data structures that aren't just patterns of strokes and blanks.
+Among other things,
+it shows that there is a number $L$
+such that we can't prove (in, say, ZFC) of any specific string of bits that
+it requires a Python program longer than $L$ to be produced.
+
+We can estimate the value of $L$.
+One would certainly need a lot of instructions to program the machine $M_T$ (in the proof of Theorem~\ref{thm:chaitin})
+that takes a number $k$ as input and
+then searches through all proofs in $T$
+until it finds a proof of some statement of the form
+`the complexity of $S$ is greater than $k$'.
+But one wouldn't need an astronomical number of instructions.
+10,000 should be enough.
+If the doubling machine needs 10 instructions,
+$M_n$ needs around $10 n + 10,000$ instructions,
+each of which has a fixed length.
+If the average length of these instructions is, say, 10
+(never mind how this is measured),
+$d \cdot k + c$ will be around $100,000 + 100k$.
+The smallest $k$ with $100,000 + 100k < 2^k$ is $k = 17$.
+This puts $L$ at $2^{17} = 131,072$.
+For less cumbersome kinds of programs,
+$L$ is even smaller.
+For Python and bit strings,
+it is well under 10,000.
+
+That's an astonishingly small number.
+Imagine a 3D movie of the entire observable universe
+for its first billion years,
+at atomic resolution.
+Could you write a Python program 
+that generates this movie,
+in under 10 KB,
+without using external resources?
+Surely not!
+Chaitin's Incompleteness Theorem implies that
+while this may be true,
+it can't be proved.
+
+\begin{exercise}
+  Show that the $\mathrm{complexity}$ function
+  that assigns to any finite pattern of strokes and blanks its complexity
+  is not computable.
+  
+  (Hint: Assume some machine $M$ computes the complexity function.
+  For any number $n$,
+  one can then design a machine $M_n$ that
+  goes through all finite patterns
+  until it finds one whose complexity exceeds $n$,
+  then outputs that string and halts.
+  The program for $M_n$ is not much longer than that of $M$.
+  Now derive a contradiction.)
+\end{exercise}
+
+Like Gödel's First Incompleteness Theorem,
+Chaitin's Incompleteness Theorem shows that
+certain arithmetical truths are unprovable in PA or ZFC
+In 2010, Shira Kritchman and Ran Raz pointed out that
+there is also a route from Chaitin's Theorem
+to the Second Incompleteness Theorem.
+
+We begin with an apparent paradox.
+There is a finite number of programs of length $\leq L$.
+Let $N$ be that number plus 1.
+Each number $n$ between $1$ and $N$ can be coded as a pattern of $n+1$ strokes.
+Since there are more such numbers than programs of length $\leq L$,
+at least one of them must require a program longer than $L$ to be printed.
+How many, exactly, require a program longer than $L$?
+
+Suppose there is exactly one number $x$ between $1$ and $N$
+that requires a program longer than $L$ to be printed.
+In that case, we can find that number.
+We can run all Turing machines whose program has length $\leq L$.
+By assumption,
+at some point,
+all the $N\!-\!1$ numbers that can be printed by such machines have been printed.
+We know that there is at least one number between $1$ and $N$
+that requires a longer program.
+So we know that the remaining number must be the one that requires a longer program.
+We have a proof that the complexity of that remaining number is greater than $L$.
+But by Chaitin's Incompleteness Theorem,
+we can't prove this!
+
+This argument seems to show that
+there can't be a single number between $1$ and $N$
+that requires a program longer than $L$ to be printed.
+Well,
+suppose there are exactly two.
+In that case,
+we can find them.
+We run through all Turing machines with programs of length $\leq L$
+until all the $N-2$ numbers that can be printed by such machines have been printed.
+We've just shown that there must be at least two numbers between $1$ and $N$
+that require a program longer than $L$ to be printed.
+So we can identify these two numbers as the ones that haven't been printed yet.
+We have therefore proved that the complexity of these two numbers is greater than $L$.
+By Chaitin's Incompleteness Theorem,
+this is impossible.
+
+So there can't be exactly two numbers between $1$ and $N$
+that require a program longer than $L$ to be printed.
+Well, suppose there are exactly three.\ldots
+
+Continuing this line of thought up to $N$,
+we can seemingly show that every number between $1$ and $N$
+is too complex to be printed with a program of length $\leq L$.
+But this is evidently false.
+We can easily show that, say, the number 1 can be printed with a program much shorter than $L$.
+
+Kritchman and Raz show where the paradoxical argument fails if it is spelled out formally.
+This requires a theory in which one can formalize the proof of Chaitin's Theorem.
+Q is too weak for this,
+but PA is strong enough.
+More specifically,
+PA can prove that there is a number $L$ such that PA can't prove
+of any number $x$
+that the complexity of $x$ is greater than $L$ --
+unless PA is inconsistent,
+in which case, of course, it proves everything.
+PA can also prove that there is at least one number between $1$ and $N$
+whose complexity is greater than $L$.
+And it can prove that if there is exactly one such number
+then PA can find it,
+by showing that all the other numbers $y < N$ have complexity at most $L$,
+and inferring that the remaining number has complexity greater than $L$.
+So PA can prove that if there is exactly one number between $1$ and $N$
+then PA can prove that the complexity of that number is greater than $L$.
+
+In the argument above,
+I said that this contradicts Chaitin's Incompleteness Theorem.
+But Chaitin's Theorem for PA doesn't quite say that
+PA can't prove that the complexity of $x$ is greater than $L$.
+It says that PA can't prove this \emph{if PA is consistent}.
+
+If PA could prove its own consistency,
+it could use Chaitin's Theorem to conclude that there can't be exactly one number between $1$ and $N$
+with complexity greater than $L$.
+It could similarly show that there can't be exactly two such numbers,
+and so on.
+It would reach the conclusion that
+every number between $1$ and $N$ has complexity greater than $L$,
+which it can also refute,
+as it can prove that 1 has complexity less than $L$. 
+Thus,
+if PA could prove its own consistency,
+it would be inconsistent.
+
+% In this way,
+% Chaitin's Incompleteness Theorem gives us another proof of the Second Incompleteness Theorem.
+
+\section{Philosophy of Mind}
+
+Gödel's Incompleteness Theorems, and their corollaries, have profound implications for the foundations of mathematics.
+They derailed Hilbert's program.
+They draw a wedge between truth and provability,
+showing that
+there is no way to capture all mathematical truths in an axiomatic system.
+Some have argued that
+Gödel's theorems also have profound implications for our understanding of the human mind:
+they show that our mathematical capacity goes beyond what any mechanical system
+(any computer) can achieve.
+
+In its basic form,
+this argument goes as follows.
+
+Let $S$ be the set of mathematical sentences that I accept as true.
+$S$ includes the axioms of PA.
+Let $S^+$ be the set of sentences entailed by $S$.
+If my mind is equivalent to a Turing machine,
+$S$ is computably enumerable,
+and $S^+$ is a computably axiomatizable extension of PA.
+I can then go through the proof of Gödel's First Incompleteness Theorem
+to construct a sentence $G$ that is true,
+but not in $S^+$.
+This is impossible:
+since I realize that $G$ is true,
+$G$ is part of my mathematical knowledge:
+it must be in $S^+$!
+Hence my mind is not equivalent to a Turing machine.
+
+An initial problem with this argument is that
+the inference to the truth of $G$
+requires the assumption that $S^+$ is consistent.
+Gödel's proof shows that if $S^+$ is axiomatizable \emph{and consistent},
+then $G$ is not in $S^+$.
+% (Since $S^+$ is an extension of PA,
+% it can replicate this reasoning:
+% $\proves_{S^+} \neg \smallcaps{Prov}_{S^+}(\gn{\bot}) \to G$.)
+To reach the conclusion that $G$ is true,
+the argument therefore assumes that
+the set $S^+$ includes the statement that $S^+$ is consistent.
+Obviously,
+$S^+$ is consistent iff $S$ is consistent.
+So the argument assumes that
+the set $S$ of my mathematical beliefs includes the statement that
+this very set is consistent.
+It's not enough to believe that
+``my mathematical beliefs are consistent'';
+I would also have to be aware of the fact that
+my mathematical beliefs comprise precisely the set $S$.
+Thus one way to escape the argument is to hold that
+we cannot be fully aware of our mathematical beliefs.
+
+There are other problems with the argument.
+The concepts of mathematical knowledge and belief are surprisingly difficult to model consistently,
+especially if we want to allow for beliefs about one's own beliefs.
+
+Suppose we extend the language of arithmetic by a predicate $B$ for belief.
+On its intended interpretation,
+$B(\gn{A})$ is meant to express that I accept the sentence $A$.
+(We could use special quote marks to refer to sentences,
+rather than Gödel numbers.
+This would make no difference.)
+We could also add a predicate $K$ for knowledge.
+
+We might now want to lay down some axioms for $B$ and $K$.
+For example,
+since knowledge is factive
+(what is known is true),
+a minimal theory of mathematical knowledge and belief should
+include the schema Ref$_K$:
+\begin{axioms}
+    Ref$_K$ & $\proves_T K(\gn{A}) \to A$.
+\end{axioms}
+Suppose such a theory also includes the axioms of Q.
+In fact,
+let's simply consider the theory $T$ that adds Ref$_K$ to Q.
+By the Diagonal Lemma, 
+there is a sentence $G$ such that
+\begin{equation}\tag{D}
+  \proves_{T} G \leftrightarrow \neg K(\gn{G}).
+\end{equation}
+By Ref$_K$,
+$\proves_{T} K(\gn{G}) \to G$.
+Combining this with (D),
+we get $\proves_{T} K(\gn{G}) \to \neg K(\gn{G})$,
+which entails $\proves_{T} \neg K(\gn{G})$.
+By (D) again,
+we get $\proves_{T} G$.
+
+This shows that
+the sentence $G$ that figures in (D)
+is derivable from the axioms of Q and an instance of Ref$_K$.
+One would think that I could know the axioms of Q and the relevant instance of Ref$_K$.
+Going through the above reasoning,
+I could thereby come to know $G$.
+But this is incompatible with $T$,
+for we've just seen that $\proves_T \neg K(\gn{G})$!
+
+This puzzle is known as the \emph{Knower Paradox}.
+If we hold fixed classical logic and the factivity of knowledge (as expressed by Ref$_K$),
+the only way to avoid contradiction is to deny that
+I can come to know $G$
+by competently going through its proof.
+Notice that
+the above argument against the equivalence between my mind and a Turing machine
+involved a very similar assumption:
+that I could come to know the Gödel sentence $G$ of $S^+$
+by going through the proof of Gödel's Theorem.
+
+% For even if $K$ doesn't satisfy Nec$_K$,
+% we can use a different formula $\smallcaps{KC}(x,y)$
+% so that $\smallcaps{KC}(c,\gn{A})$ expresses that
+% there is a proof in pure first-order logic of $A$ from things that $c$ knows
+% -- more formally,
+% there is a code $s$ of a sequence of sentences $A_1, \ldots, A_n$ such that
+% $K(c, \smallcaps{entry}(s,i))$ for each $i$, and
+% $\exists y \smallcaps{Prf}_1(y, \gn{A_1 \land \ldots \land A_n \to A})$.
+% All ingredients of this formula are expressible in $\L_K$.
+% By construction,
+% it satisfies the analogue of Nec$_K$:
+% if $A$ is provable in $T$
+% then it is provable in $T$ from any premises,
+% so $\smallcaps{KC}(c, \gn{A})$ holds.
+% Hmmm, but how do we get T for KC?
+
+The situation for belief is arguably even worse.
+If we add $B$ to $\L_A$,
+we can construct a formula $\smallcaps{BC}(x,y)$ saying that
+there is a code $c$ of a sequence of sentences $A_1, \ldots, A_n$ such that
+$B(\smallcaps{entry}(c,i))$ for each $1 \leq i \leq n$,
+and $\exists y \smallcaps{Prf}_{\mathrm{PA}}(y, \gn{A_1 \land \ldots \land A_n \to A})$.
+That is, $\smallcaps{BC}(\gn{A})$ is true iff
+$A$ is provable in PA from premises that I believe.
+
+Now assume that
+the set of sentences that I believe is decidable and consistent with PA.
+(This is surely possible.)
+Let $B^*$ be the set of sentences that are
+provable in PA from premises that I believe.
+$B^*$ is a consistent, axiomatizable extension of PA.
+Without further assumptions about $B$,
+one can show that $\smallcaps{BC}(x)$ satisfies P1--P3.
+So Löb's Theorem applies:
+whenever $B^*$ contains $\smallcaps{BC}(\gn{A}) \to A$,
+it also contains $\smallcaps{BC}(\gn{A})$.
+
+This is highly counterintuitive.
+For example,
+one might think that I could believe that
+$1\!+\!1\! =\! 3$ does not follow in PA from my mathematical beliefs.
+(It certainly seems to me as if I believe this!)
+But if $\neg \smallcaps{BC}(\gn{1\!+\!1\!=\!3})$ is in $B^*$
+then so is its tautological consequence $\smallcaps{BC}(\gn{1\!+\!1\!=\!3}) \to 1\!+\!1\!=\!3$.
+By Löb's Theorem,
+it follows that `$1\!+\!1\!=\!3$' is in $B^*$.
+That is,
+I can only believe that `$1\!+\!1\!=\!3$'
+does not follow from my mathematical beliefs
+if it actually follows from my mathematical beliefs!
+% (In that case,
+% my beliefs are inconsistent with PA.
+% So if my beliefs are decidable and consistent with PA
+% then I can't believe that 1+1=3 doesn't follow from my beliefs.
+
+% This time,
+% we haven't assumed any special axioms for $B$,
+% so we can't escape the conclusion by dropping the axioms.
 
 
-Remember that our models are implausibly coarse-grained. There's more to the meaning of a sentence than its truth-value, or to the meaning of a predicate than its extension.
 
-This doesn't matter if the language doesn't have operators that depend on more than extension.
 
-We could introduce a second-order identity predicate. Then we might want more fine-grained models, so as not to validate the Fregean axiom.
 
-Or we could introduce other non-truth-functional sentence operators. In modal
-logic, we introduce a box. Models now include world-relative assignments.
 
-How fine-grained the models should be depends on the distinctions we want to
-draw. We can have operators like Prov that are sensitive to very fine-grained
-distinctions.
-
-But there are surprising limitations to what operators we can have! \ldots
 
 %%% Local Variables:
 %%% mode: latex

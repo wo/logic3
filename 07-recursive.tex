@@ -1,6 +1,9 @@
 \setcounter{chapter}{6}
 \chapter{Recursive Functions}\label{ch:recursive}
 
+% xxx I should define r.e.
+% xxx I should define exp
+
 In this chapter,
 we define the class of recursive functions as
 the functions that can be built from certain base functions
@@ -15,7 +18,7 @@ I said that a function is \emph{computable} if
 there are precise instructions, an \emph{algorithm},
 for determining its output for any given input,
 without drawing on external resources or creativity.
-Let's concentrate on functions on natural numbers.
+Let's concentrate on functions with natural numbers as inputs and outputs.
 (I've explained in Section~\ref{sec:coding} why this is not a serious restriction.)
 
 Consider the ``counting on'' algorithm for addition
@@ -47,7 +50,7 @@ we start with three kinds of base functions.
 \begin{cenumerate}
   \item The \emph{successor function} $s$ returns the next larger number for any input number.
 
-  \item The \emph{zero function} $z$ returns 0 for any input number.
+  \item The \emph{zero function} $z$ that returns 0 for any input number.
 
   \item For each $n,i$, the \emph{projection function} $\pi^{n}_{i}$ takes $n$ numbers as input and return the $i$-th of them. (For example $\pi^{3}_{2}(5,9,2) = 9$.)
 \end{cenumerate}
@@ -86,11 +89,13 @@ $\mathrm{Cn}[s,z](x) = s(z(x))$.
 This is the constant function that always outputs 1.
 
 \begin{exercise}
-  What is (a) $\mathrm{Cn}[s,s]$? \, (b) $\mathrm{Cn}[s, \mathrm{Cn}[s,z]]$?
+  What is (a) $\mathrm{Cn}[s,s]$? \, (b) $\mathrm{Cn}[s, \mathrm{Cn}[s,z]]$? \,
+  (c) $\mathrm{Cn}[\pi^{2}_{2}, z, z]$?
 \end{exercise}
 
 \begin{exercise}
-  Define the 1-place function that always returns 4, using composition and the base functions.
+  Using $\mathrm{Cn}$ and the base functions,
+  define the 1-place function that always returns 4.
 \end{exercise}
 
 Our second method for constructing functions is primitive recursion.
@@ -110,9 +115,10 @@ then working our way up through $x+1$, $x+2$, and so on,
 until we reach $x+y$.
 (The first line gives us $x+0$;
 the second line tells us how to get from $x+y$ to $x+s(y)$.)
-The algorithm,
+In imperative pseudocode,
+the algorithm,
 which resembles the counting-on strategy,
-could be stated more explicitly as follows:
+could be stated as follows:
 
 \begin{quote}\small
 \begin{verbatim}
@@ -124,12 +130,64 @@ function add(x, y):
 \end{verbatim}
 \end{quote}
 
-In the most general case, a function $h$ is defined by primitive recursion from
-two other functions, $f$ and $g$:
-$f$ specifies the starting point, $h(x_1,\ldots,x_n,0)$;
-$g$ specifies $h(x_1,\ldots,x_n,s(y))$ in terms of $h(x_1,\ldots,x_n,y)$.
+Some more examples.
+First, the \emph{factorial function} that takes
+a number $n$ as input and returns the product of all numbers from 1 to $n$:
+\begin{align*}
+  \mathrm{fact}(0) &= 1\\
+  \mathrm{fact}(s(y)) &= s(y) \cdot \mathrm{fact}(y)
+\end{align*}
+
+Next,
+we can define the \emph{truncated predecessor} function that
+maps any positive number to its predecessor,
+and 0 to 0:
+\begin{align*}
+  \mathrm{pred}(0) &= 0\\
+  \mathrm{pred}(s(y)) &= y
+\end{align*}
+\noindent%
+This is a somewhat unusual case of primitive recursion
+because the value of $\mathrm{pred}$ for $s(y)$ doesn't depend on the value of $\mathrm{pred}$ for $y$;
+it only depends on $y$ itself.
+But we allow for that.
+
+Using $\mathrm{pred}$,
+we can define a \emph{truncated subtraction} function:
+\begin{align*}
+  x \dotminus 0 &= x\\
+  x \dotminus s(y) &= \mathrm{pred}(x \dotminus y)
+\end{align*}
+%
+\noindent%
+$x \dotminus y$ is $x-y$ if $x \geq y$
+and 0 otherwise.
+
+Another useful function is the \textit{switcheroo} function $\delta$ (``delta'') that
+takes every positive integer to 0 and 0 to 1:
+\begin{align*}
+  \delta(0) &= 1\\
+  \delta(s(y)) &= 0
+\end{align*}
+Here, the value for $s(y)$ depends on neither the value for $y$ nor on $y$ itself.
+That, too, is allowed.
+
+\begin{exercise}
+  Define multiplication and exponentiation using primitive recursion.
+\end{exercise}
+
+\begin{exercise}
+  Use primitive recursion to define a function $h$
+  that maps 0 to 0 and every positive number to 1.  
+\end{exercise}
+
+Let's officially define the operation of primitive recursion.
+We assume that an $n\!+\!1$-place function $h$ is defined by primitive recursion from
+an $n$-place function $f$ and an $n\!+\!2$-place function $g$.
+The function $f$ specifies the starting point, $h(x_1,\ldots,x_n,0)$;
+The function $g$ specifies $h(x_1,\ldots,x_n,s(y))$ in terms of $h(x_1,\ldots,x_n,y)$.
 We allow $g$ to also depend on $x_1, \ldots, x_n$, and $y$.
-So the general format for primitive recursion looks like this:
+So our general format for primitive recursion looks like this:
 \begin{align*}
   h(x_1,\ldots,x_n,0) &= f(x_1,\ldots,x_n)\\
   h(x_1,\ldots,x_n,s(y)) &= g(x_1,\ldots,x_n,y,h(x_1,\ldots,x_n,y)).
@@ -148,7 +206,7 @@ function h(x1, ..., xn, y):
 \end{quote}
 
 If $h$ is defined by primitive recursion from $f$ and $g$,
-we also write $h = \mathrm{Pr}[f,g]$.
+we write $h = \mathrm{Pr}[f,g]$.
 For example, addition is $\mathrm{Pr}[\pi^1_1,\mathrm{Cn}[s,\pi^{3}_{3}]]$.
 That's because
 \begin{align*}
@@ -156,46 +214,43 @@ That's because
   x + s(y) &= \mathrm{Cn}[s, \pi^{3}_{3}](x,y,x+y) = s(x+y).
 \end{align*}
 
-For another example,
-consider the \emph{truncated predecessor} function $\mathrm{pred}$ that
-returns the predecessor of a number if that number is positive,
-and otherwise 0.
-This can be defined by primitive recursion as follows:
+\begin{exercise}
+  Can you express your definition of multiplication using the $\mathrm{Pr}$ notation?
+  % Pr[z, Cn[add, pi^3_1, pi^3_3]]
+\end{exercise}
+
+A downside of the above format is that
+it doesn't directly account for our definitions of $\mathrm{pred}$, $\mathrm{fact}$, and $\delta$,
+which are one-place functions.
+Recall the definition of $\mathrm{pred}$:
 \begin{align*}
   \mathrm{pred}(0) &= 0\\
   \mathrm{pred}(s(y)) &= y
 \end{align*}
-
-Here, there are no extra arguments $x_1, \ldots, x_n$.
-Using $\mathrm{pred}$,
-we can define a \emph{truncated difference} function:
-\begin{align*}
-  x \dotminus 0 &= x\\
-  x \dotminus s(y) &= \mathrm{pred}(x \dotminus y)
-\end{align*}
-%
 \noindent%
-$x \dotminus y$ is $x-y$ if $x \geq y$,
-and 0 otherwise.
+Here there are no extra arguments $x_1, \ldots, x_n$.
+So the function $f$ would be a zero-place ``function'' that returns 0.
+We don't have such a function,
+and we can't define it using our present resources.
 
-Another useful function is \textit{switcheroo} function $\delta$ (``delta'') that
-takes every positive integer to 0, and 0 to 1:
+But there's a workaround.
+We can first define a two-place function $\mathrm{dpred}$
+with a dummy first argument:
 \begin{align*}
-  \delta(0) &= 1\\
-  \delta(k + 1) &= 0
+  \mathrm{dpred}(x,0) &= 0\\
+  \mathrm{dpred}(x,s(y)) &= y
 \end{align*}
-%
-\begin{exercise}
-  Write the definitions of $\mathrm{pred}$, $\dotminus$, and $\delta$ using the $\mathrm{Pr}$ notation.
-\end{exercise}
+This fits our official format:
+$\mathrm{dpred} = \mathrm{Pr}[z, \pi^{3}_{2}]$.
+Since $\mathrm{pred}(y) = \mathrm{dpred}(x, y)$ for any $x$,
+we can now define $\mathrm{pred}$ by composition and projection from $\mathrm{dpred}$: 
+\[
+  \mathrm{pred} = \mathrm{Cn}[\mathrm{dpred}, \pi^{1}_{1}, \pi^{1}_{1}]
+\]
+This trick also works for $\mathrm{fact}$ and $\delta$,
+and any other case of ``one-place primitive recursion''.
 
-\begin{exercise}
-  Define the multiplication function using primitive recursion.
-  Can you express your definition using the $\mathrm{Pr}$ notation?
-  % Pr[z, Cn[add, pi^3_1, pi^3_3]]
-\end{exercise}
-
-The class of primitive recursive functions is now defined as follows:
+We now define the class of primitive recursive functions.
 
 \begin{definition}{}{pr-functions}
   A function is \emph{primitive recursive} if
@@ -225,22 +280,24 @@ We can extend the concept of primitive recursiveness to sets and relations:
 \end{definition}
 
 Remember that the characteristic function of a set is the function
-that maps any member of the set to 1 and any non-member to 0.
+that maps every member of the set to 1 and every non-member to 0.
 At the moment,
 we are interested in sets whose members are numbers or tuples of numbers.
 For example,
 the set of odd numbers is primitive recursive,
-as its characteristic function $\chi$ can be defined by primitive recursion, as follows:
+as its characteristic function $\chi_{\text{odd}}$ can be defined by primitive recursion, as follows:
 \begin{align*}
-  \chi(0) &= 0\\
-  \chi(s(y)) &= \delta(\chi(y))
+  \chi_{\text{odd}}(0) &= 0\\
+  \chi_{\text{odd}}(s(y)) &= \delta(\chi_{\text{odd}}(y))
 \end{align*}
-The property of being odd is also primitive recursive.
-A property is a 1-place relation.
-So a property of numbers is primitive recursive iff
-there is a primitive recursive function that maps every number that has the property to 1 and every other number to 0.
 
-An example of a 2-place primitive recursive relation is the less-than-or-equal relation on $\mathbb{N}$.
+Definition~\ref{def:pr-relations} also covers properties,
+because a property is a 1-place relation.
+A property of numbers is primitive recursive iff
+there is a primitive recursive function that maps every number that has the property to 1 and every other number to 0.
+As we've just shown, the property of being odd is primitive recursive.
+
+An example of a two-place primitive recursive relation is the less-than-or-equal relation on $\mathbb{N}$.
 Its characteristic function can be defined by composition from $\dotminus$ and $\delta$:
 \[
 \mathrm{Leq}(x,y) \;=\; \delta(x\dotminus y).
@@ -291,7 +348,7 @@ it follows that the primitive recursive relations are closed under all truth-fun
 \end{proposition}
 \begin{proof}
   \emph{Proof}.
-  Immediately from exercises~\ref{ex:pr-negation} and~\ref{ex:pr-conjunction}. \qed
+  Immediate from exercises~\ref{ex:pr-negation} and~\ref{ex:pr-conjunction}. \qed
   % Let $\chi_{R}$ and $\chi_{S}$ be the characteristic functions of $R$ and $S$.
   % Then $\chi_{\neg R}(x) = \delta(\chi_{R}(x))$,
   % $\chi_{R \land S}(x) = \chi_{R}(x) \cdot \chi_{S}(x)$,
@@ -331,8 +388,7 @@ this relation is primitive recursive:
 \begin{proof}
   \emph{Proof.}
   To simplify notation,
-  I assume that $R$ is a two-place relation $R(x,y)$;
-  the generalization to more arguments is straightforward.
+  I assume that $R$ is a two-place relation $R(x,y)$.
   Let $\chi$ be the characteristic function of $R$.
   Define $\chi'$ by primitive recursion as follows:
   \begin{align*}
@@ -344,7 +400,7 @@ this relation is primitive recursive:
   So $\chi'(x,k)$ is the characteristic function of $\forall y \!\leq\! k\, R(x,y)$.
 
   From bounded universal quantification, we obtain bounded existential quantification by truth-functional operations:
-  $\exists y \!\leq\! k\, R(x,y)$ is equivalent to $\neg (\forall y \!\leq\! k\, \neg R(x,y))$.
+  $\exists y \!\leq\! k\, R(x,y)$ is equivalent to $\neg \,\forall y \!\leq\! k\, \neg R(x,y)$.
   \qed
 \end{proof}
 
@@ -354,6 +410,7 @@ as the following definition shows:
 \[
   \mathrm{Prime}(x) \text{ iff } 1 < x \land \forall y \!\leq\! x \,(\mathrm{Divides}(y,x) \to (y = 1 \lor y = x)).
 \]
+
 Don't get confused by the fact that
 this looks vaguely like
 a formula of first-order logic.
@@ -377,7 +434,7 @@ that returns the larger of two numbers $x$ and $y$:
 We can use switcheroo and addition to distinguish the two cases:
 \begin{align*}
   \mathrm{max}(x,y) &= x \cdot \mathrm{Leq}(y,x) + y \cdot \delta(\mathrm{Leq}(y,x))\\
-                    &= x \cdot \delta(x\dotminus y) + y \cdot \delta(\delta(x\dotminus y)).
+                    &= x \cdot \delta(y\dotminus x) + y \cdot \delta(\delta(y\dotminus x)).
 \end{align*}
 
 This trick can be generalized:
@@ -465,12 +522,12 @@ $\mu y \leq x \,R(y)$ is 0 if there is no number $y \leq x$ for which $R(y)$ hol
 
 \begin{exercise}
   Let $h(x) = \mu y \!\leq\! x\, (y + y = x)$.
-  What is $h(0)$? What is $h(3)$?
+  What are $h(0)$, $h(1)$, and $h(2)$?
 \end{exercise}
 
 \begin{proposition}{}{pr-closure-bounded-least}
   If $R(x_1, \ldots, x_n, y)$ is a primitive recursive relation,
-  then the function defined by
+  then the function $f$ defined by
   \[
     f(x) = \mu y \leq x \,R(x_1, \ldots, x_n, y)
   \]
@@ -503,12 +560,13 @@ $\mu y \leq x \,R(y)$ is 0 if there is no number $y \leq x$ for which $R(y)$ hol
   \[
     \mu y \leq x \,R(x,y) = \begin{cases}
       \, f(x,x) & \text{if } f(x,x) \leq x,\\
-      \,0 & \text{otherwise.} \hspace{17em} \qed
+      \,0 & \text{otherwise.}
     \end{cases}
   \]
+  \qed
 \end{proof}
 
-These operations give us a powerful toolkit for defining primitive recursive functions and relations.
+These operations give us a useful toolkit for defining primitive recursive functions and relations.
 I'll give three examples,
 related to coding sequences of (non-zero) numbers by prime powers,
 as introduced in section~\ref{sec:coding}.
@@ -521,10 +579,11 @@ returns the $n$-th prime number (counting from zero).
 This function is primitive recursive:
 \begin{align*}
   \mathrm{pri}(0) &= 2,\\
-  \mathrm{pri}(s(y)) &= \mu x \leq \mathrm{pri}(y)! + 1 \,(\mathrm{Prime}(x) \land x > \mathrm{pri}(y)).
+  \mathrm{pri}(s(y)) &= \mu x \leq 2 \cdot \mathrm{pri}(y) \,(\mathrm{Prime}(x) \land x > \mathrm{pri}(y)).
 \end{align*}
-Here I use Euclid's observation that if $p$ is prime
-then the next prime is no greater than $p! + 1$.
+Here I use Chebyshev's theorem,
+which states that for any $n \geq 1$
+there is a prime between $n$ and $2n$.
 
 Second,
 we can define a primitive recursive function $\mathrm{entry}(x,y)$ that
@@ -536,18 +595,14 @@ I call this `entry' because it returns the $y$-th entry in the sequence coded by
 when we use Gödel's scheme to code a sequence of numbers $n_1, n_2, \ldots, n_k$ as
 $2^{n_1} \cdot 3^{n_2} \cdots p_{k}^{n_k}$.
 For example,
-$\mathrm{entry}(2^3 \cdot 3^2 \cdot 5^1 \cdot 7^4, 1) = 2$.
+$\mathrm{entry}(2^3 \cdot 3^2 \cdot 5^6 \cdot 7^4, 3) = 6$.
 
 Finally, we can define a primitive recursive function $\mathrm{len}(x)$ that
 returns the length of the sequence coded by $x$:
 \[
   \mathrm{len}(x) = \mu y \leq x \,\forall z \leq x \,(z \geq y \to \mathrm{entry}(x,z) = 0).
 \]
-Thus $\mathrm{len}(2^3 \cdot 3^2 \cdot 5^1 \cdot 7^4) = 4$.
-
-\begin{exercise}
-  What are $\mathrm{entry}(1, 0)$ and $\mathrm{len}(1)$?
-\end{exercise}
+Thus $\mathrm{len}(2^3 \cdot 3^2 \cdot 5^6 \cdot 7^4) = 4$.
 
 \section{Unbounded search}\label{sec:minimization}
 
@@ -593,18 +648,19 @@ But it is clearly computable:
 from each item in the sequence,
 one can mechanically compute the next item.
 To compute the Goodstein function for $n$,
-we therefore simply need to compute all items in the sequence
+we therefore simply need to compute all items in the sequence,
+one by one,
 until we reach 0,
 keeping count of how many items we've computed.
 
 For another example of a computable function that isn't primitive recursive,
-note that we can effectively enumerate the primitive recursive functions
-(with, say, a single argument):
+note that we can effectively enumerate the primitive recursive functions:
 we start with the base functions,
-then we list all (one-place) functions that can be obtained from these by one application of composition or primitive recursion,
+then we list all functions that can be obtained from these by one application of composition or primitive recursion,
 followed by all functions that require two applications of these operations,
 and so on.
-Let $f_1, f_2, f_3, \ldots$ be this enumeration.
+Let $f_1, f_2, f_3, \ldots$ be this enumeration,
+but omitting any functions with more than one argument.
 We can now define an antidiagonal function $d$ by setting
 \[
   d(n) = f_n(n) + 1.
@@ -616,7 +672,7 @@ But it can't be primitive recursive,
 since it differs from each primitive recursive function $f_n$ at input $n$.
 
 How would we compute $d(n)$?
-We would first identify the $n$-th primitive recursive function $f_n$.
+We would first identify the $n$-th one-place primitive recursive function $f_n$.
 Then we would compute $f_n(n)$ until we get the output,
 to which we would add 1.
 Like the computation of the Goodstein function,
@@ -626,17 +682,15 @@ we can't tell in advance how long this will take.
 
 If we want to capture all computable functions,
 we need to add an operation that allows for this kind of unbounded search.
-The operation will
+This operation will
 search through all numbers $0,1,2,\ldots$
 until it finds a number $x$ for which a given condition $P(x)$ is satisfied.
 
-We've briefly met such an operation above,
-in the form of the unbounded minimization operator `$\mu$':
+We've already met such an operation above,
+in the form of the unbounded minimization operation $\mu$:
 $\mu x \,P(x)$ is the least number $x$ for which $P(x)$ holds.
-We'll introduce a version of this operation that applies to functions rather than relations.
-
 Given a two-place function $f(x,y)$,
-we can define a 1-place function $h$
+we can use $\mu$ to define a 1-place function $h$
 that maps any number $x$ to the least number $y$ for which
 $f(x,y)$ equals a desired value $k$:
 \[
@@ -647,13 +701,14 @@ we can assume that the desired value is always 0:
 if we want to find the least $y$ such that $f(x,y) = k$,
 we can equivalently look for the least $y$ such that $g(x,y) = 0$
 where $g(x,y)$ is defined as $f(x,y) \dotminus k$.
+
 So assume that $f$ is a total function of $n+1$ arguments.
-(We'll deal with non-total functions later.)
+(We'll deal with non-total functions in a moment.)
 Then the $n$-place function $h$ defined by
 \[
   h(x_1, \ldots, x_n) = \mu x \, f(x_1, \ldots, x_n, x) = 0
 \]
-is the \emph{minimization} of $f$.
+is called the \emph{minimization} of $f$.
 We write $h = \mathrm{Mn}[f]$.
 
 If $f$ is computable then so is $\mathrm{Mn}[f]$.
@@ -693,16 +748,16 @@ we say that $\mathrm{Mn}[f]$ is defined by \emph{regular minimization} from $f$.
 
 So far,
 I've assumed that $\mathrm{Mn}$ is applied to a total function.
-We can also apply minimization to partial functions,
-but we need a further constraint to ensure that $\mathrm{Mn}[f]$ is computable.
+We can also apply minimization to non-total functions.
+But we need a further constraint to ensure that $\mathrm{Mn}[f]$ is computable.
 Suppose $f(x,y)$ is 0 for some $x,y$,
 and undefined for the same $x$ and some $z < y$.
 Then we may not be able to effectively search for the least $y$ with $f(x,y) = 0$
 by checking $f(x,0), f(x,1), f(x,2), \ldots$:
-if the computation of $f(x,z)$ never halts,
-the search never proceeds beyond $z$.
+if the computation of, say, $f(x,2)$ never halts,
+the search doesn't proceed beyond 2.
 We therefore stipulate that
-if $f$ is an arbitrary $n+1$-place function, then
+if $f$ is an $n+1$-place function, then
 $\mathrm{Mn}[f]$ is the function that
 takes $n$ numbers $x_1, \ldots, x_n$ as input and
 returns the least number $y$ for which
@@ -716,14 +771,27 @@ If there is no such $y$, $\mathrm{Mn}[f](x_1, \ldots, x_n)$ is undefined.
   Let $f(x,y) = x \cdot y$.
   What is $\mathrm{Mn}[f]$?
   Is it total? Is it regular?
-  What is $\mathrm{Mn}[\mathrm{Mn}[f]]$?
   % Mn[*] is z.
+\end{exercise}
+
+\begin{exercise}
+  Assume that $g$ is a total recursive two-place function,
+  and $f$ is a total recursive one-place function.
+  Show that we can construct a recursive function $h$ such that
+  $h(x)$ is the least $y$ for which $g(x,y) = f(y)$,
+  assuming such a $y$ always exists.
+\end{exercise}
+
+\begin{exercise}
+  Assume that $R$ is primitive recursive two-place relation.
+  Show that we can construct a recursive function $h$ such that
+  $h(x)$ is the least number $y$ for which $R(x,y)$ holds.
+  (If there is no such $y$, $h(x)$ is undefined.)
 \end{exercise}
 
 \begin{exercise}
   Consider the function $h(x) = \mu y \,(2y = x)$.
   What does this function do?
-  Is it total? Is it regular?
   Can you define $h$ with the $\mathrm{Mn}$ notation?
   % $h(x) = \mathrm{Mn}[g](x)$ where $g(x,y) = (2y \dotminus x) + (x \dotminus 2y)$.
 \end{exercise}
@@ -759,14 +827,6 @@ we can extend the concept of recursiveness to sets and relations.
   A relation is recursive if its extension is (total) recursive.
 \end{definition}
 
-\begin{exercise}
-  Is the class of recursive relations closed under truth-functional operations?
-\end{exercise}
-
-\begin{exercise}
-  Can you give an example of a set that is recursive but not primitive recursive?
-\end{exercise}
-
 Above,
 I mentioned two functions that are computable but not primitive recursive:
 the Goodstein function and the antidiagonal of the primitive recursive functions.
@@ -775,6 +835,14 @@ There is no known example of a computable function that is not recursive,
 and there are good reasons to believe that no such function exists.
 As we're going to show next,
 any such function would also be uncomputable by a Turing machine.
+
+% \begin{exercise}
+%   Is the class of recursive relations closed under truth-functional operations?
+% \end{exercise}
+
+% \begin{exercise}
+%   Can you give an example of a set that is recursive but not primitive recursive?
+% \end{exercise}
 
 % Many pr functions and relations can also be defined with Cm and Mn alone.
 
@@ -788,7 +856,7 @@ any such function would also be uncomputable by a Turing machine.
 %   x\,\,\mbox{divides}\,\,y &\Leftrightarrow& \exists z\!\le\!y\,(y=x\cdot z)
 % \end{eqnarray*}
 
-\section{Turing-computability}
+\section{Recursiveness and Turing-computability}
 
 We'll now show that the class of partial recursive functions coincides precisely with
 the class of Turing-computable functions.
@@ -813,7 +881,6 @@ composition, primitive recursion, and minimization.
   The proof is by induction on the construction of partial recursive functions.
   I assume the same coding convention as in section \ref{sec:tm-arith},
   so that a number $n$ is represented by a block of $n+1$ strokes.
-  I write $\bar x$ for $x_1, \ldots, x_n$.
 
   \emph{Base functions.}
   You designed a Turing machine for the successor function in exercise~\ref{ex:tm-add-stroke}.
@@ -823,52 +890,55 @@ composition, primitive recursion, and minimization.
   These machines are trivial to design.
 
   \emph{Composition.}
-  Suppose we have Turing machines for computing $g_1,\dots,g_m$ and $f$.
+  I assume for readability that $n=1$ and $m=2$.
+  Suppose we have Turing machines for computing $g_1, g_2$ and $f$.
   We can design a machine for computing
-  $h = \mathrm{Cn}[f,g_1,\dots,g_m]$ on any input $\bar x$ as follows.
-  The machine first calls each $g_i$ machine (as a subroutine) on input $\bar x$,
-  and stores the results next to each other, separated by blanks.
+  $h = \mathrm{Cn}[f,g_1,g_2]$ on any input $x$ as follows.
+  The machine first calls the $g_1$ and $g_2$ machines (as subroutines) on input $x$,
+  and stores the results next to each other, separated by a blank.
   It then calls the $f$ machine on this pattern of strokes and blanks.
-  The output is $f(g_1(\bar x), \ldots, g_m(\bar x))$.
+  The output is $f(g_1(x), g_2(x))$.
 
   \emph{Primitive recursion.}
   Suppose we have Turing machines for computing $f$ and $g$.
   Let $h = \mathrm{Pr}[f,g]$.
-  That is, $h(\bar x,0)=f(\bar x)$ and $h(\bar x,y{+}1)=g\big(\bar x,y,h(\bar x,y)\big)$.
+  That is, $h(x,0)=f(x)$ and $h(x,y{+}1)=g\big(x,y,h(x,y)\big)$,
+  assuming for readability that $f$ is 1-place.
   The machine for computing $h$ works as follows.
-  Given input $\bar x,y$,
-  it first calls the $f$-machine on $\bar x$ and stores the result in a block that will eventually hold $h(\bar x,y)$;
+  Given input $x,y$,
+  it first calls the $f$-machine on $x$ and stores the result in a block that will eventually hold $h(x,y)$;
   call this the ``result block''.
   The input $y$ is kept on the tape in a separate ``$y$ block''.
   In yet another block, we initialize a counter to $0$ (represented by a single stroke).
   The machine then enters a loop.
   If the counter has the same length as the $y$ block,
   the machine erases everything except the result block and halts.
-  Otherwise it calls the $g$ machine on $\bar x$, the current counter value, and the current result block,
+  Otherwise it calls the $g$ machine on $x$, the current counter value, and the current result block,
   and stores the output in the result block.
   The machine then increments the counter (by adding one stroke)
   and enters the next iteration of the loop.
   The loop will run exactly $y$ times before halting.
   At that point,
-  the result block will contain $h(\bar x,y)$.
+  the result block will contain $h(x,y)$.
 
   \emph{Minimization.}
   Suppose we have a Turing machine for computing $f$.
   Let $h = \mathrm{Mn}[f]$.
-  that is, $h(\bar x)=\mu y\,[\,f(\bar x,y)=0\,]$.
+  that is, $h(x)=\mu y\,[\,f(x,y)=0\,]$,
+  assuming for readability that $h$ is 1-place. 
   We can construct a machine for computing $h$ as follows.
   First,
   the machine initialises a ``$y$ block'' to $0$, represented by a single stroke.
   It then goes into a loop.
   In each iteration,
-  it runs the machine for $f$ on $\bar x$ and the current $y$ block.
+  it runs the machine for $f$ on $x$ and the current $y$ block.
   If the output is $0$,
   the machine halts and erases everything except the $y$ block.
   Otherwise,
   the machine adds a stroke to the $y$ block
   and enters the next iteration of the loop.
-  If there is some $y$ such that $f(\bar x,y)=0$
-  and $f(\bar x,z)$ is defined for all $z<y$,
+  If there is some $y$ such that $f(x,y)=0$
+  and $f(x,z)$ is defined for all $z<y$,
   this machine will output the least such $y$.
   \qed
 \end{proof}
@@ -896,7 +966,7 @@ the contents of the tape.
 The initial configuration of our machine $M$ on some input $x$,
 for example,
 specifies that the machine is in state $q_0$
-and that its head is scanning the leftmost stroke of a block of $x+1$ strokes on an otherwise blank tape.
+and that its head is scanning the leftmost stroke of a block of $x\!+\!1$ strokes on an otherwise blank tape.
 We can code any such configuration as a natural number.
 Let $\mathrm{init}$ be a function that
 takes a number $x$ as input and
@@ -1065,7 +1135,7 @@ Notice that the entire construction only uses a single unbounded $\mu$,
 at the very end.
 We've therefore discovered an interesting corollary:
 
-\begin{theorem}{(Kleene's Normal Form Theorem)}{kleene-normal}
+\begin{theorem}{}{kleene-normal}
   Every partial recursive function can be defined using a single instance of $\mathrm{Mn}$.
 \end{theorem}
 \begin{proof}
@@ -1123,23 +1193,44 @@ it is partial recursive and total.
   \qed
 \end{proof}
 
-Since the Turing-computable functions and the recursive functions coincide,
+Since the Turing-computable functions and the partial recursive functions coincide,
 it doesn't matter if we state the Church-Turing thesis
 (Section~\ref{sec:computable-functions})
 as the claim that
-every computable function is recursive
+the computable functions are precisely the partial recursive functions
 or as the claim that
-every computable function is Turing-computable.
+the computable functions are precisely the Turing-computable functions.
 The two claims are equivalent.
 
-\begin{exercise}
-  Is the Busy Beaver function (section~\ref{sec:tm-uncomputability}) recursive?
-\end{exercise}
+I can now also explain -- if it isn't clear already --
+why the Church-Turing Thesis is true.
+Take any partial recursive function:
+a function that can be defined from zero, successor, and projection
+by composition, primitive recursion, and  minimization.
+The definition effectively \emph{gives us} an algorithm for computing the function.
+That such an algorithm exists,
+or that one could in principle follow it mechanically,
+is not a speculative conjecture.
+This direction of the Church-Turing thesis is beyond doubt.
+
+The other direction, that every computable function is recursive,
+requires a little more argument.
+Here,
+we may draw on the fact that
+any mechanical computation must be representable as
+a rule-based, step-by-step manipulation of symbols,
+where the manipulations at each step are determined by a finite set of predefined rules.
+This isn't fully precise,
+but every way of making it precise leads to the same conclusion:
+the computation can be simulated by a Turing machine,
+and so it computes a partial recursive function.
 
 \begin{exercise}
+  Give a diagonal argument to show that
+  the set of total computable functions is not computably enumerable.
   Using the Church-Turing thesis,
-  explain why the set of regular recursive functions is not decidable.
-  Is it computably enumerable?
+  show that (a) the set of total recursive functions is not computably enumerable, and
+  therefore (b) the set of regular recursive functions is not decidable.
 \end{exercise}
 
 
