@@ -1,9 +1,6 @@
 \setcounter{chapter}{6}
 \chapter{Recursive Functions}\label{ch:recursive}
 
-% xxx I should define r.e.
-% xxx I should define exp
-
 In this chapter,
 we define the class of recursive functions as
 the functions that can be built from certain base functions
@@ -1197,17 +1194,16 @@ Since the Turing-computable functions and the partial recursive functions coinci
 it doesn't matter if we state the Church-Turing thesis
 (Section~\ref{sec:computable-functions})
 as the claim that
-the computable functions are precisely the partial recursive functions
-or as the claim that
-the computable functions are precisely the Turing-computable functions.
+the functions that are intuitively computable are precisely the partial recursive functions
+or as the claim that they are precisely the Turing-computable functions.
 The two claims are equivalent.
 
 I can now also explain -- if it isn't clear already --
-why the Church-Turing Thesis is true.
+why we should accept the Church-Turing Thesis.
 Take any partial recursive function:
 a function that can be defined from zero, successor, and projection
 by composition, primitive recursion, and  minimization.
-The definition effectively \emph{gives us} an algorithm for computing the function.
+The definition effectively gives us an algorithm for computing the function.
 That such an algorithm exists,
 or that one could in principle follow it mechanically,
 is not a speculative conjecture.
@@ -1225,9 +1221,11 @@ but every way of making it precise leads to the same conclusion:
 the computation can be simulated by a Turing machine,
 and so it computes a partial recursive function.
 
+In any case,
+the \emph{formal} concept of computability is defined as Turing-computability,
+or equivalently, as partial recursiveness.
+
 \begin{exercise}
-  Give a diagonal argument to show that
-  the set of total computable functions is not computably enumerable.
   Using the Church-Turing thesis,
   show that (a) the set of total recursive functions is not computably enumerable, and
   therefore (b) the set of regular recursive functions is not decidable.
@@ -1300,7 +1298,7 @@ deciding whether an $\L_0$-sentence is satisfiable.
 Nobody has yet found such an algorithm,
 and it is generally believed that none exists.
 But we don't know for sure.
-This is an instance of the notorious \emph{P vs NP problem},
+This is the notorious \emph{P vs NP problem},
 which has yet to be resolved.
 
 

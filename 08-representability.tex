@@ -1,8 +1,6 @@
 \setcounter{chapter}{7}
 \chapter{Arithmetization}\label{ch:representability}
 
-% xxx I should mention somewhere that the BB function isn't even c.e.
-
 In this chapter,
 we'll show that
 all computable functions and relations on the natural numbers
@@ -169,7 +167,7 @@ We'll show that all recursive functions and relations
 are expressible in $\L_{A}$.
 This is not obvious.
 The factorial function,
-for example, is recursive,
+for example, is computable,
 but it is hard to find an $\L_{A}$-formula $F(x,y)$ that expresses it.
 (Try it!)
 
@@ -216,7 +214,7 @@ called the \emph{Gödel number} of the sentence or sequence.
 Since there is an algorithm
 for checking whether a sequence is a proof of some target sentence,
 it follows by Church's Thesis that
-the relation Prf(x,y) is recursive,
+the relation Prf(x,y) is computable,
 and so represented by a formula $Prf(x,y)$.
 We can then construct a formula $Prov(y)$ as $\exists x Prf(x,y)$
 that expresses provability.
@@ -333,7 +331,7 @@ We can also talk about representing functions:
 
 % A more direct analog of condition (ii) for relations would be to require that
 % \begin{cenumerate}
-%   \item[(ii$'$)] if $b \not= f(a_{1},\ldots,a_{n})$, then $\proves_{T} \neg A(\num{a_{1}},\ldots,\num{a_{n}},\num{b})$.
+%   \item[(ii$'$)] if $m \not= f(n_{1},\ldots,n_{k})$, then $\proves_{T} \neg A(\num{n_{1}},\ldots,\num{n_{k}},\num{m})$.
 % \end{cenumerate}
 % Our condition (ii) is strictly stronger than this.
 
@@ -399,10 +397,10 @@ we say that the function or relation is \emph{representable} in $T$.
 %   \emph{Proof.}
 %   Assume that $A(x_{1},\ldots,x_{n},y)$ is $t = y$ and that it satisfies condition (i).
 %   Let $a_{1},\ldots,a_{n}$ be numbers,
-%   and let $b = f(a_{1},\ldots,a_{n})$.
-%   By (i), $\proves_{T} t = \num{b}$.
+%   and let $m = f(n_{1},\ldots,n_{k})$.
+%   By (i), $\proves_{T} t = \num{m}$.
 %   By the first-order calculus,
-%   it follows that $\proves_{T} \forall y(t = y \to y = \num{b})$.
+%   it follows that $\proves_{T} \forall y(t = y \to y = \num{m})$.
 %   \qed
 % \end{proof}
 
@@ -417,16 +415,16 @@ we say that the function or relation is \emph{representable} in $T$.
 
 In the following sections,
 we'll show that
-all recursive functions are representable in any
+all computable functions are representable in any
 arithmetical theory that knows some basic facts about arithmetic.
 It will follow by Proposition~\ref{prop:repr-def} that
-all recursive functions are expressible in $\L_{A}$.
+all computable functions are expressible in $\L_{A}$.
 
 We can focus on functions
-because a relation is recursive iff its characteristic function is recursive.
+because a relation is copmutable iff its characteristic function is computable.
 As the next proposition shows,
-the representability of all recursive functions in a theory
-entails the representability of all recursive relations,
+the representability of all computable functions in a theory
+entails the representability of all computable relations,
 if the theory can prove $0 \not= 1$.
 
 \begin{proposition}{}{char-func-repr}
@@ -456,11 +454,11 @@ if the theory can prove $0 \not= 1$.
 
   For the other direction,
   assume $A(x,y)$ represents $\chi_{R}$ in $T$.
-  This means that whenever $R$ holds of $a$,
+  This means that whenever $R$ holds of $n$,
   then $\proves_{T} A(\num{n},\num{1})$,
   by condition (i) in definition~\ref{def:repr-function}.
   Moreover,
-  when $R$ does not hold of $a$,
+  when $R$ does not hold of $n$,
   then $\proves_{T} A(\num{n},\num{0})$ by condition (i)
   and $\proves_{T} \forall yA(\num{n},y) \to y=\num{0}$ by condition (ii).
   Assuming that $\proves_{T} \num{0} \not= \num{1}$,
@@ -497,21 +495,22 @@ if the theory can prove $0 \not= 1$.
 
 \section{Conditions for Representability I}
 
-We want to show that every recursive function
+We want to show that every computable total function
 is representable in any theory
 that knows some basic facts about arithmetic.
-We proceed by induction on the construction of recursive functions.
-By definition~\ref{def:total-recursive} in Section~\ref{sec:minimization},
-every recursive function
+Remember that `computable' has a precise meaning:
+a total function is computable iff it is recursive.
+Since every recursive function
 is constructed from
 the base functions zero, successor, and projection
-by composition, primitive recursion, and regular minimization.
-We'll first show that
-the base functions are representable in any theory.
-Then we'll show that
-representability in a theory $T$ is preserved
-under composition, primitive recursion, and regular minimization,
-provided that $T$ knows certain facts about arithmetic.
+by composition, primitive recursion, and regular minimization,
+we can show that
+all computable functions are representable in a theory $T$
+by showing, first, that
+the base functions are representable in $T$,
+and then that
+representability in $T$ is preserved
+under composition, primitive recursion, and regular minimization.
 
 % if a function is constructed from other functions
 % by composition, primitive recursion, or regular minimization,
@@ -550,8 +549,8 @@ We need to confirm that it also represents $z$ in any suitable theory $T$.
 
 % Obviously,
 % $x\!=\!x \land y\!=\!0$ also \emph{expresses} the zero function:
-% for any $a,b$,
-% $\num{a}\!=\!\num{a} \land \num{b}\!=\!0$ is true (in $\Mod{N}$) iff $b\!=\!0$.
+% for any $n,m$,
+% $\num{n}\!=\!\num{n} \land \num{m}\!=\!0$ is true (in $\Mod{N}$) iff $m\!=\!0$.
 % As I mentioned above,
 % we don't need to check for expressibility separately:
 % as long as the theories $T$ in which a formula represents a function
@@ -580,11 +579,11 @@ We need to confirm that it also represents $z$ in any suitable theory $T$.
 % \begin{proof}
 %   We need to show:
 %   \begin{cenumerate}[(i)]
-%     \item[(i)] For all $a$, $\vdash_{T} s(\num{a}) = \num{a+1}$.
-%     \item[(ii)] For all numbers $a$, $\vdash_{T} \forall y(s(\num{a})=y \to y = \num{a+1})$.
+%     \item[(i)] For all $n$, $\vdash_{T} s(\num{n}) = \num{n+1}$.
+%     \item[(ii)] For all numbers $n$, $\vdash_{T} \forall y(s(\num{n})=y \to y = \num{n+1})$.
 %   \end{cenumerate}
 %   (ii) follows from (i) by standard predicate logic.
-%   (i) is a logical truth because the $\L_{A}$-numeral $\num{a+1}$ is $s(\num{a})$.
+%   (i) is a logical truth because the $\L_{A}$-numeral $\num{n+1}$ is $s(\num{n})$.
 % \end{proof}
 
 \begin{lemma}{}{proj-repr}
@@ -641,79 +640,40 @@ We start with composition.
     \exists v_{1}\exists v_{2}(G_{1}(x,v_{1}) \land G_{2}(x,v_{2}) \land F(v_{1},v_{2},y)).
   \]
 
-  Condition (i) for representations requires that whenever $h(a) = b$ then
+  Condition (i) for representations requires that whenever $h(n) = m$ then
   \[
-    \proves_{T} \exists v_{1}\exists v_{2}(G_{1}(\num{a},v_{1}) \land G_{2}(\num{a},v_{2}) \land F(v_{1},v_{2},\num{b})).
+    \proves_{T} \exists v_{1}\exists v_{2}(G_{1}(\num{n},v_{1}) \land G_{2}(\num{n},v_{2}) \land F(v_{1},v_{2},\num{m})).
   \]
-  So assume $h(a) = b$.
-  Then there are $c_{1},c_{2}$ such that
-  $g_{1}(a) = c_{1}$, $g_{2}(a) = c_{2}$, and $f(c_{1},c_{2}) = b$.
+  So assume $h(n) = m$.
+  Then there are $k_{1},k_{2}$ such that
+  $g_{1}(n) = k_{1}$, $g_{2}(n) = k_{2}$, and $f(k_{1},k_{2}) = m$.
   Since $g_{1}$ and $g_{2}$ are represented by $G_{1}(x,y_{1})$ and $G_{2}(x,y_{2})$,
   respectively,
   and $f$ is represented by $F(x_{1},x_{2},y)$,
   we have
   \begin{gather*}
-    \proves_{T} G_{1}(\num{a},\num{c_{1}}) \\
-    \proves_{T} G_{2}(\num{a},\num{c_{2}}) \\
-    \proves_{T} F(\num{c_{1}},\num{c_{2}},\num{b}).
+    \proves_{T} G_{1}(\num{n},\num{k_{1}}) \\
+    \proves_{T} G_{2}(\num{n},\num{k_{2}}) \\
+    \proves_{T} F(\num{k_{1}},\num{k_{2}},\num{m}).
   \end{gather*}
   The desired claim follows by the fact that $T$ is closed under first-order consequence.
 
   For condition (ii),
   we have to show that
   \[
-    \proves_{T} \forall y(\exists v_{1}\exists v_{2}(G_{1}(\num{a},v_{1}) \land G_{2}(\num{a},v_{2}) \land F(v_{1},v_{2},y)) \,\to\, y\!=\!\num{f(g_{1}(a),g_{2}(a))}).
+    \proves_{T} \forall y(\exists v_{1}\exists v_{2}(G_{1}(\num{n},v_{1}) \land G_{2}(\num{n},v_{2}) \land F(v_{1},v_{2},y)) \,\to\, y\!=\!\num{f(g_{1}(a),g_{2}(a))}).
   \]
   This, too, follows from the representability conditions for $F$, $G_{1}$, and $G_{2}$,
   which yield
   \begin{gather*}
-    \proves_{T} \forall y(G_{1}(\num{a},y) \,\to\, y\!=\!\num{c_{1}}) \\
-    \proves_{T} \forall y(G_{2}(\num{a},y) \,\to\, y\!=\!\num{c_{2}}) \\
+    \proves_{T} \forall y(G_{1}(\num{n},y) \,\to\, y\!=\!\num{k_{1}}) \\
+    \proves_{T} \forall y(G_{2}(\num{n},y) \,\to\, y\!=\!\num{k_{2}}) \\
     \proves_{T} \forall y(F(\num{c_{1}},\num{c_{2}},y) \,\to\, y\!=\!\num{f(c_{1},c_{2})}).
   \end{gather*}
   \vspace{-3\baselineskip}
   
   \qed
 \end{proof}
-
-\vspace{\baselineskip}
-% \begin{proof}
-%   For the first condition,
-%   assume $h(a_{1},\ldots,a_{n}) = b$.
-%   Then there are some $c_{1},\ldots,c_{m}$ such that
-%   for all $g_{i}$,
-%   $g_{i}(a_{1},\ldots,a_{n}) = c_{i}$ and $f(c_{1},\ldots,c_{m}) = b$.
-%   Since each $g_{i}$ is represented by $G_{i}(x_{1},\ldots,x_{n},y_{i})$,
-%   and $f$ by $F(x_{1},\ldots,x_{m},y)$,
-%   we have
-%   \begin{gather*}
-%     \vdash_{Q} G_{1}(\num{a_{1}},\ldots,\num{a_{n}},\num{c_{1}}) \\
-%     \vdash_{Q} \ldots \\
-%     \vdash_{Q} G_{m}(\num{a_{1}},\ldots,\num{a_{n}},\num{c_{m}}) \\
-%     \vdash_{Q} F(\num{c_{1}},\ldots,\num{c_{m}},\num{b}).
-%   \end{gather*}
-%   It follows (by closure under first-order consequences) that
-%   \[
-%     \vdash_{Q} \exists v_{1}\ldots \exists v_{m}\,(G_{1}(\num{a_{1}},\ldots,\num{a_{n}},v_{1}) \land \ldots \land
-%     G_{m}(\num{a_{1}},\ldots,\num{a_{n}},v_{m}) \land F(v_{1},\ldots,v_{m},\num{b})).
-%   \]
-%   The first condition for representability is thereby satisfied.
-
-%   The second is also satisfied,
-%   for the assumption that $G_{1},\ldots,G_{m},F$ represent $g_{1},\ldots,g_{m},f$
-%   means that
-%   \begin{gather*}
-%     \vdash_{Q} \forall y(G_{1}(\num{x},y) \to y = \num{c_{1}}) \\
-%     \ldots\\
-%     \vdash_{Q} \forall y(G_{m}(\num{x},y) \to y = \num{c_{m}}) \\
-%     \vdash_{Q} \forall y(F(c_{1},\ldots,c_{m},y) \to y = \num{b}).
-%   \end{gather*}
-%   And this entails
-%     \[
-%         \vdash_{Q} \forall y(\exists v_{1}\ldots \exists v_{m}\,(G_{1}(\num{a},v_{1}) \land \ldots \land
-%         G_{m}(\num{a},v_{m}) \land F(v_{1},\ldots,v_{m},y)) \to y = \num{b}).
-%     \]
-% \end{proof}
 
 I leave the case of primitive recursion for last:
 it is by far the hardest.
@@ -736,10 +696,10 @@ the theory must have some idea of what $<$ means.
 The following conditions are sufficient.
 
 \begin{axioms}
-  R1 & $\text{For all }a\text{, }\vdash_{T} \forall x (\num{a} < x \;\lor\; x = \num{a} \;\lor\; x < \num{a})\text{.}$\\
+  R1 & $\text{For all }n\text{, }\vdash_{T} \forall x (\num{n} < x \;\lor\; x = \num{n} \;\lor\; x < \num{n})\text{.}$\\
   R2 & $\vdash_{T} \neg \exists x (x < 0)\text{.}$\\
-  R3 & $\text{For all }a > 0\text{, }\vdash_{T} \forall x (x < \num{a} \;\to\; (x = 0 \;\lor\; \ldots \;\lor\; x = \num{a-1}))\text{.}$\\
-  R4$^{-}$ & $\text{For all }a > 0, \vdash_{T} \num{a} \ne 0$
+  R3 & $\text{For all }n > 0\text{, }\vdash_{T} \forall x (x < \num{n} \;\to\; (x = 0 \;\lor\; \ldots \;\lor\; x = \num{n-1}))\text{.}$\\
+  R4$^{-}$ & $\text{For all }n > 0, \vdash_{T} \num{n} \ne 0$
 \end{axioms}
 
 Officially,
@@ -756,51 +716,50 @@ where $z$ is a variable that doesn't occur in $t_{1}$ or $t_{2}$.
 
 \begin{proof}
   \emph{Proof.}
-  Assume that $F(x,y,z)$ represents $f$ in $T$,
-  and $T$ satisfies R1, R2, R3, and R4$^{-}$.
-  For readability, I'll assume that $f$ is a two-place function.
+  Assume that $f$ is a 2-place function represented in $T$ by $F(x,y,z)$,
+  where $T$ satisfies R1, R2, R3, and R4$^{-}$.
   I claim that $h = \mathrm{Mn}[f]$ is represented in $T$ by
   $F(x,y,0) \land \forall z(z < y \;\to\; \neg F(x,z,0))$.
   We have to confirm that
-  whenever $h(a) = b$ then $T$ can prove
+  whenever $h(n) = m$ then $T$ can prove
   \begin{cenumerate}
-    \item[(i)] $F(\num{a},\num{b},0) \land \forall z(z < \num{b} \,\to\, \neg F(\num{a},z,0))$.
-    \item[(ii)] $\forall y(F(\num{a},y,0) \land \forall z(z < y \,\to\, \neg F(\num{a},z,0)) \,\to\, y = \num{b})$.
+    \item[(i)] $F(\num{n},\num{m},0) \land \forall z(z < \num{m} \,\to\, \neg F(\num{n},z,0))$.
+    \item[(ii)] $\forall y(F(\num{n},y,0) \land \forall z(z < y \,\to\, \neg F(\num{n},z,0)) \,\to\, y = \num{m})$.
   \end{cenumerate}
 
-  From the fact that $h = \mathrm{Mn}[f]$ and $h(a) = b$, we know that
-  $f(a,b) = 0$ and $f(a,c) \neq 0$ for all $c < b$.
+  From the fact that $h = \mathrm{Mn}[f]$ and $h(n) = m$, we know that
+  $f(n,m) = 0$ and $f(n,k) \neq 0$ for all $k < m$.
   Since $f$ is represented in $T$ by $F$,
   $T$ can prove
   \begin{equation}\tag{1}
-    F(\num{a},\num{b},0) 
+    F(\num{n},\num{m},0)
   \end{equation}
-  as well as (for $c<b$)
+  as well as (for $k<m$)
   \begin{equation}\tag{2}
-    \forall y(F(\num{a},\num{c},y) \,\to\, y = \num{f(a,c)}).
+    \forall y(F(\num{n},\num{k},y) \,\to\, y = \num{f(n,k)}).
   \end{equation}
   From (2) and R4$^{-}$,
-  it follows that $T$ can prove $\neg F(\num{a},\num{c},0)$ for all $c < b$.
+  it follows that $T$ can prove $\neg F(\num{n},\num{k},0)$ for all $k < m$.
   By R3,
   $T$ can prove
-  $\forall z(z < \num{b} \,\to\, (z = 0 \lor \ldots \lor z = \num{b-1}))$
-  whenever $b > 0$.
-  So if $b>0$ then  $T$ can prove
+  $\forall z(z < \num{m} \,\to\, (z = 0 \lor \ldots \lor z = \num{m-1}))$
+  whenever $m > 0$.
+  So if $m>0$ then  $T$ can prove
   \begin{equation}\tag{3}
-    \forall z(z < \num{b} \,\to\, \neg F(\num{a},z,0)).
+    \forall z(z < \num{m} \,\to\, \neg F(\num{n},z,0)).
   \end{equation}
-  For $b = 0$,
+  For $m = 0$,
   (3) follows from R2.
   (i) is the conjunction of (1) and (3).
 
   For (ii),
-  we show (by reasoning ``inside $T$'') that $T$ can derive $y = \num{b}$ from
+  we show (by reasoning ``inside $T$'') that $T$ can derive $y = \num{m}$ from
   \begin{equation}\tag{4}
-    F(\num{a},y,0) \land \forall z(z < y \,\to\, \neg F(\num{a},z,0)).
+    F(\num{n},y,0) \land \forall z(z < y \,\to\, \neg F(\num{n},z,0)).
   \end{equation}
-  (1) and (4) imply $\neg (\num{b} < y)$.
-  From (3) and (4), we have $\neg (y < \num{b})$.
-  By R1, it follows that $y = \num{b}$.
+  (1) and (4) imply $\neg (\num{m} < y)$.
+  From (3) and (4), we have $\neg (y < \num{m})$.
+  By R1, it follows that $y = \num{m}$.
   \qed
 \end{proof}
 
@@ -808,52 +767,52 @@ Now for the hard part: primitive recursion.
 
 \section{Conditions for Representability II}
 
-Return to the factorial function that maps
+Return to the factorial function $\mathrm{fact}$ that maps
 each number $n$ to $n! = 1 \times 2 \times \ldots \times n$.
-The construction by primitive recursion goes as follows:
+The primitive recursive definition goes as follows:
 \begin{align*}
-  0! & = 1 \\
-  s(y)! & = s(y) \times y!
+  \mathrm{fact}(0) & = 1 \\
+  \mathrm{fact}(s(y)) & = s(y) \times \mathrm{fact}(y).
 \end{align*}
-We need to find a formula $F(x,y)$ that expresses this function in $\L_{A}$,
-so that $F(x,y)$ is true of numbers $a$ and $b$ iff $a! = b$.
+We need to find a formula $F(x,y)$ that expresses this function in $\L_{A}$.
 
-The trick is to see the recursive construction as defining a sequence:
-$\t{0!, 1!, 2!, \ldots, n!}$.
-Our formula $F(x,y)$ will say that ``$y$ is the last element of the sequence $\t{0!, 1!, \ldots x!}$''.
+The trick is to see the recursive definition as defining a sequence:
+$\t{\mathrm{fact}(0), \mathrm{fact}(1), \mathrm{fact}(2), \ldots}$.
+Our formula $F(x,y)$ will say ``$y$ is the last element of the sequence $\t{\mathrm{fact}(0), \ldots, \mathrm{fact}(x)}$''.
 
 Of course,
 $\L_{A}$ doesn't have terms for sequences.
 But we know that sequences of numbers can be coded as single numbers.
 Suppose we can find a formula $\smallcaps{Entry}(x,i,y)$
 that expresses ``$y$ is the $i$-th entry in the sequence coded by $x$''.
-Using $\smallcaps{Entry}(x,i,y)$, we can then express a formula $\smallcaps{Seq}(z,x)$
+Using $\smallcaps{Entry}(x,i,y)$, we can then construct a formula $\smallcaps{Seq}(z,x)$
 saying that
 \begin{cenumerate}
   \item[(i)] $z$ codes a sequence whose first entry is 1, and
   \item[(ii)] for all $i<x$, the $s(i)$-th entry in the sequence coded by $z$ is the product of the $i$th entry and $s(i)$.
 \end{cenumerate}
 So $\smallcaps{Seq}(z,x)$ will say that
-$z$ codes the sequence $\t{0!, 1!, \ldots, x!}$.
+$z$ codes the sequence $\t{\mathrm{fact}(0), \mathrm{fact}(1), \ldots, \mathrm{fact}(x)}$.
 From this,
 we can express $F(x,y)$ as $\exists z(\smallcaps{Seq}(z,x) \land \smallcaps{Entry}(z,s(x),y))$.
 This says that
-there is a number $z$ that codes $\t{0!, 1!, \ldots, x!}$ and
+there is a number $z$ that codes $\t{\mathrm{fact}(0), \ldots, \mathrm{fact}(x)}$
 that $y$ is the $s(x)$-th entry in that sequence.
-(We need an $s(x)$ here because $F(x,0)$ is the \emph{first}, not the \emph{zero}-th, entry in the sequence.)
+(We need an $s(x)$ here because $F(x,0)$ is the \emph{first}, not the \emph{zero}-th, entry in the sequence,
+and so $\mathrm{fact}(x)$ is the $s(x)$-th entry.)
 
 The main task, then,
 is to find the formula $\smallcaps{Entry}(x,i,y)$
 that holds of numbers $x,i,y$ iff
 $y$ is the $i$-th entry in the sequence coded by $x$.
 
-As you may remember,
+You may remember that
 in Section~\ref{sec:pr-examples}
-I showed how to construct a primitive recursive function $\mathrm{entry}(x,y)$
+I showed how to define a primitive recursive function $\mathrm{entry}(x,y)$
 that returns the $y$-th number in the sequence coded by $x$,
 using the prime exponents method to code sequences of numbers.
 Unfortunately,
-my construction of the $\mathrm{entry}$ function involved primitive recursion,
+my definition of the $\mathrm{entry}$ function involved primitive recursion,
 so we can't assume that this function is expressible in $\L_{A}$.
 In fact,
 we won't code sequences of numbers in terms of prime exponents,
@@ -862,7 +821,7 @@ We'll use a different coding method.
 
 To explain that method,
 assume first that
-we want to code a sequence $\t{a_{1}, a_{2}, \ldots, a_{n}}$ of numbers
+we want to code a sequence $\t{n_{1}, n_{2}, \ldots, n_{k}}$ of numbers
 all of which are below 9.
 We could simply
 concatenate their decimal representation:
@@ -887,7 +846,7 @@ We obviously can't assume that all of the numbers are below 9.
 We therefore code sequences not to base 10,
 but to some base $p$ that is at least 2 greater than
 all numbers in the sequence and all index numbers
-($p-1$ is used to mark the index numbers).
+($p\!-\!1$ is used to mark the index numbers).
 For convenience,
 we'll always use a prime number as the base $p$.
 The sequence $\t{1, 12, 0}$,
@@ -897,11 +856,11 @@ would be coded in base 17 as
   16 \pconcatseventeen 1 \pconcatseventeen 1 \pconcatseventeen 16 \pconcatseventeen 2 \pconcatseventeen 12 \pconcatseventeen 16 \pconcatseventeen 3 \pconcatseventeen 0,
 \]
 where `$\pconcatseventeen$' is the operation of concatenation in base 17.
-(I'll express this formally below.)
+(I'll define this formally below.)
 If $q$ is the code number of a sequence in base $p$,
 the $i$-th element of the sequence can be retrieved as
 \begin{quote}
-  $\mathrm{alpha}(p,q,i)$ = the unique number $x$ for which $(p-1) \pconcat i \pconcat x$ is part of the base-$p$ numeral of $q$.
+  $\mathrm{alpha}(p,q,i)$ = the unique number $x$ for which $(p\!-\!1) \pconcat i \pconcat x$ is part of the base-$p$ numeral of $q$.
 \end{quote}
 We'll see that this can be expressed in $\L_{A}$.
 
@@ -917,27 +876,31 @@ when we discussed Cantor's zig-zag method:
 \]
 
 The $\mathrm{j}$ function is easily expressed in $\L_{A}$.
-We can also express two functions $\mathrm{l}$ and $\mathrm{r}$ that
+We can also express two functions $\mathrm{lft}$ and $\mathrm{rgt}$ that
 extract the elements of a pair encoded by $\mathrm{j}$,
-so that $\mathrm{l}(\mathrm{j}(x,y)) = x$ and $\mathrm{r}(\mathrm{j}(x,y)) = y$.
-If we have coded a sequence of numbers $\t{a_{1},\ldots,a_{n}}$ by
+so that $\mathrm{lft}(\mathrm{j}(x,y)) = x$ and $\mathrm{rgt}(\mathrm{j}(x,y)) = y$.
+If we have coded a sequence of numbers $\t{n_{1},\ldots,n_{k}}$ by
 $p$ and $q$ as described above,
 and packaged these into a single number $c = \mathrm{j}(p,q)$,
-we can now retrieve any element $a_{i}$ of the doubly coded sequence as
+we can now retrieve any element $n_{i}$ of the doubly coded sequence as
 \[
-  \text{beta}(c,i) = \text{alpha}(\mathrm{l}(c),\mathrm{r}(c),i).
+  \text{beta}(c,i) = \text{alpha}(\mathrm{lft}(c),\mathrm{rgt}(c),i).
 \]
 We'll show that this function $\mathrm{beta}$ is expressible in $\L_{A}$.
 The formula $\smallcaps{Beta}(x,y,z)$ that expresses it
 is the formula $\smallcaps{Entry}(x,y,z)$ that we were looking for.
 
-I'm not actually going to {write down} $\smallcaps{Beta}(x,y,z)$ as an $\L_A$-formula.
+I'm not actually going to write down $\smallcaps{Beta}(x,y,z)$ as an $\L_A$-formula.
 Instead,
 I'll show that the function
-$\mathrm{beta}$ can be constructed by composition and minimization from certain
-functions and relations that are easily expressible in $\L_{A}$:
+$\mathrm{beta}$ can be defined by composition and minimization from certain
+functions that are easily expressible in $\L_{A}$.
+Since expressibility is preserved under composition and minimization,
+it follows that $\mathrm{beta}$ is expressible.
+
+The base functions I'll need to define $\mathrm{beta}$ are
 projection, addition, multiplication, and the characteristic function $\chi_=$ of identity.
-$\chi_=$ is the two-place function
+This is the two-place function
 that returns 1 if its two arguments are equal and 0 otherwise.
 It is expressed in $\L_A$ by
 $({x\!=\!y} \land {z\!=\!1}) \lor ({x\!\neq\!y} \land {z\!=\!0})$.
@@ -950,9 +913,9 @@ these formulas also \emph{represent} the relevant functions in a theory $T$,
 we need the following assumptions:
 
 \begin{axioms}
-  R4 & $\text{For all }a, b\text{, if }a \neq b\text{ then }\vdash_{T} \num{a} \neq \num{b}\text{.}$\\
-  R5 & $\text{For all }a, b\text{, }\vdash_{T} \num{a} + \num{b} = \num{a+b}\text{.}$\\
-  R6 & $\text{For all }a, b\text{, }\vdash_{T} \num{a} \times \num{b} = \num{a\times b}\text{.}$
+  R4 & $\text{For all }n, m\text{, if }n \neq m\text{ then }\vdash_{T} \num{n} \neq \num{m}\text{.}$\\
+  R5 & $\text{For all }n, m\text{, }\vdash_{T} \num{n} + \num{m} = \num{n+m}\text{.}$\\
+  R6 & $\text{For all }n, m\text{, }\vdash_{T} \num{n} \times \num{m} = \num{n\times m}\text{.}$
 \end{axioms}
 \noindent%
 Note that R4 subsumes R4$^{-}$.
@@ -972,82 +935,24 @@ Note that R4 subsumes R4$^{-}$.
   $\chi_=$ is represented by $(x\!=\!y \land z\!=\!1) \lor (x\!\neq\!y \land z\!=\!0)$ in every theory $T$ that satisfies R4.
   For condition (i),
   we need to show that
-  if $\chi_= (a,b) = c$ then $\proves_T {( \num{a}\!=\!\num{b} \land \num{1}\!=\!\num{c})} \lor {(\num{a}\!\neq\!\num{b} \land \num{0}\!=\!\num{c})}$.
-  There are two ways in which $\chi_=(a,b) = c$ can hold:
-  either $a=b$ and $c=1$ or $a \neq b$ and $c=0$.
-  In the first case, $\num{a}=\num{b}$ and $\num{1}=\num{c}$ are logical truths.
-  In the second case, $\num{0}=\num{c}$ is a logical truth and $\num{a}\neq\num{b}$ holds by R4.
+  if $\chi_= (n,m) = k$ then $\proves_T {( \num{n}\!=\!\num{m} \land \num{1}\!=\!\num{k})} \lor {(\num{n}\!\neq\!\num{m} \land \num{0}\!=\!\num{k})}$.
+  There are two ways in which $\chi_=(n,m) = k$ can hold:
+  either $n=m$ and $k=1$ or $n \neq m$ and $k=0$.
+  In the first case, $\num{n}=\num{m}$ and $\num{1}=\num{k}$ are logical truths.
+  In the second case, $\num{0}=\num{k}$ is a logical truth and $\num{n}\neq\num{m}$ holds by R4.
   Condition (ii) holds by first-order logic.
   \qed
 \end{proof}
 
-\iffalse
-  
-\begin{lemma}{}{identity-repr}
-   The identity relation is represented by $x=y$ in every theory $T$ that satisfies R4.
-\end{lemma}
-\begin{proof}
-  \emph{Proof.}
-  We need to show that for all $a,b$:
-  \begin{cenumerate}
-    \item[(i)] if $a = b$ then $\vdash_{T} \num{a} = \num{b}$.
-    \item[(ii)] if $a \neq b$ then $\vdash_{T} \neg (\num{a} = \num{b})$.
-  \end{cenumerate}
-  (i) holds in any theory because $\num{a}$ and $\num{b}$ are the same term.
-  (ii) holds by R4. \qed
-\end{proof}
-
-\begin{lemma}{}{plus-repr}
-   The addition function is represented by $x+y=z$ in every theory $T$ that satisfies R5.
-\end{lemma}
-\begin{proof}
-  \emph{Proof.}
-  Condition (i) in the definition of representation is given by R5.
-  Condition (ii) is a theorem of the predicate calculus.
-  \qed
-\end{proof}
-
-\begin{lemma}{}{times-repr}
-  The multiplication function is represented by $x\times y=z$ in every theory $T$ that satisfies R6.
-\end{lemma}
-\begin{proof}
-  \emph{Proof.}
-  Exercise.
-  % Condition (i) in the definition of representation is given by R6.
-  % Condition (ii) is a theorem of the predicate calculus.
-  % \qed
-\end{proof}
-
-\begin{exercise}
-  Prove Lemma~\ref{lem:times-repr}.
-\end{exercise}
-
-\fi
-
-Now we need to show that $\mathrm{beta}$ can be constructed
+Now we need to show that $\mathrm{beta}$ can be defined
 from projection, addition, multiplication, and $\chi_=$
 by composition and minimization.
 To this end,
 let's first introduce a name for the class of functions that can be so constructed.
-I'll call a function \emph{tame} if it can be constructed
+I'll call a function \emph{tame} if it can be defined
 from projection, addition, multiplication, and $\chi_=$
 by composition and minimization;
 I'll call a relation \emph{tame} if its characteristic function is tame.
-
-\begin{lemma}{}{tame-repr}
-  All tame functions and relations are representable
-  in any theory that satisfies R1--R6.
-\end{lemma}
-\begin{proof}
-  \emph{Proof.}
-  By Lemma~\ref{lem:base-repr},
-  projection, addition, multiplication, and $\chi_=$ are representable in any theory
-  that satisfies R4--R6.
-  By Lemmas~\ref{lem:repr-closure-cn} and \ref{lem:repr-closure-mn},
-  composition and minimization preserve representability
-  in any theory that satisfies R1--R4.
-  \qed
-\end{proof}
 
 The following lemmas show that
 the class of tame relations is closed under truth-functional combinations,
@@ -1123,11 +1028,31 @@ for all $x_{1},\ldots,x_{n}$ there is some $y$ such that $R(x_{1},\ldots,x_{n},y
   % Solution: $x \leq y$ iff $\exists z \leq y (x + z = y)$.
 \end{exercise}
 
+Now I'll show that
+the $\mathrm{beta}$ function is tame.
+It immediately follows that
+it is representable in any theory that satisfies R1--R6:
+
+\begin{lemma}{}{tame-repr}
+  All tame functions and relations are representable
+  in any theory that satisfies R1--R6.
+\end{lemma}
+\begin{proof}
+  \emph{Proof.}
+  By Lemma~\ref{lem:base-repr},
+  projection, addition, multiplication, and $\chi_=$ are representable in any theory
+  that satisfies R4--R6.
+  By Lemmas~\ref{lem:repr-closure-cn} and \ref{lem:repr-closure-mn},
+  composition and minimization preserve representability
+  in any theory that satisfies R1--R4.
+  \qed
+\end{proof}
+
 \begin{lemma}{Beta Function Lemma}{beta}
   There is a function $\mathrm{beta}$ such that
-  for any finite sequence $\t{a_{1}, \ldots, a_{n}}$ of natural numbers,
+  for any finite sequence $\t{n_{1}, \ldots, n_{k}}$ of natural numbers,
   there is a number $c$ such that
-  $\mathrm{beta}(c,i) = a_{i}$ for all $1 \leq i \leq n$.
+  $\mathrm{beta}(c,i) = n_{i}$ for all $1 \leq i \leq k$.
   Moreover,
   $\mathrm{beta}$ is representable in any theory that satisfies R1--R6.
 \end{lemma}
@@ -1135,11 +1060,11 @@ for all $x_{1},\ldots,x_{n}$ there is some $y$ such that $R(x_{1},\ldots,x_{n},y
 \begin{proof}
   \emph{Proof.}
   We use the coding method described above:
-  given a sequence $\t{a_{1},\ldots,a_{n}}$,
-  let $p$ be the smallest prime that's at least 2 greater than all of $a_{1},\ldots,a_{n}$ and n;
-  let $q$ be the base-$p$ numeral built as $(p-1) \pconcat 1 \pconcat a_{1} \pconcat \ldots \pconcat (p-1) \pconcat n \pconcat a_{n}$;
+  given a sequence $\t{n_{1},\ldots,n_{k}}$,
+  let $p$ be the smallest prime that's at least 2 greater than all of $n_{1},\ldots,n_{k}$ and $k$;
+  let $q$ be the base-$p$ numeral built as $(p\!-\!1) \pconcat 1 \pconcat n_{1} \pconcat \ldots \pconcat (p\!-\!1) \pconcat k \pconcat n_{k}$;
   let $c = \mathrm{j}(p,q)$.
-  I'll now show how we can construct a function $\mathrm{beta}(c,i)$ that
+  I'll show that we can construct a function $\mathrm{beta}(c,i)$ that
   retrieves the $i$-th element from the sequence coded by $c$:
 
   \vspace{-1.5\baselineskip}
@@ -1166,92 +1091,19 @@ for all $x_{1},\ldots,x_{n}$ there is some $y$ such that $R(x_{1},\ldots,x_{n},y
     \mathrm{alpha}(p,q,i) &= \mu x\, (\mathrm{Part}((p \dotminus 1) \pconcat i \pconcat x, q, p) \lor x\!=\!q)\\
                 &\quad \text{\;\;(the $x$ for which $(p-1) \pconcat i \pconcat x$ is part of the base-$p$ numeral of $q$)}.\\
     \mathrm{J}(x,y,q) &\Leftrightarrow 2 \times q = (x+y) \times (x+y+1) + 2\times y.\\
-    \mathrm{r}(q) &= \mu y\, \exists x\!\le\!q(\mathrm{J}(x,y,q)).\\
-    \mathrm{l}(q) &= \mu x\, \exists y\!\le\!q(\mathrm{J}(x,y,q)).\\
-    \mathrm{beta}(c,i) &= \text{alpha}(\mathrm{l}(c),\mathrm{r}(c),i).
+    \mathrm{rgt}(q) &= \mu y\, \exists x\!\le\!q(\mathrm{J}(x,y,q)).\\
+    \mathrm{lft}(q) &= \mu x\, \exists y\!\le\!q(\mathrm{J}(x,y,q)).\\
+    \mathrm{beta}(c,i) &= \text{alpha}(\mathrm{lft}(c),\mathrm{rgt}(c),i).
   \end{align*}
   
     \endgroup
 
   \vspace{-.5\baselineskip}
   
-  \iffalse
-  (If you pay close attention,
-  you'll see that the construction also involves the projection functions,
-  which we get for free by Proposition~\ref{prop:proj-repr}.)
-  
-  As explained above, beta is expressed by composition from $\text{alpha}$, $L$ and $R$.
-  \[
-    \mathrm{beta}(c,i) = \text{alpha}(\mathrm{l}(c),\mathrm{r}(c),i).
-  \]
-  $L$ and $R$ can be constructed by regular minimization and bounded quantification
-  from $J$ and identity:
-  \begin{eqnarray*}
-    \mathrm{l}(q) &=& \mu x\, \exists y\!\le\!q(\mathrm{J}(x,y)=q) \\
-    \mathrm{r}(q) &=& \mu y\, \exists x\!\le\!q(\mathrm{J}(x,y)=q)
-  \end{eqnarray*}
-  $J$ can be constructed by composition and regular minimization from addition, multiplication, and identity
-  (and the constants 1 and 2,
-  which can constructed from s and 0):
-  \[
-    \mathrm{j}(x,y) = \mu z \, (2 \times z = (x+y) \times (x+y+1) + 2\times y).
-  \]
-
-  It remains to express $\text{alpha}$.
-  Here is a more explicit version of the construction given above:
-  \begin{eqnarray*}
-    \text{alpha}(p,q,i) &=& \mu x\, ((p \dotminus 1) \pconcat i \pconcat x\,\,\mbox{is part$_{p}$ of}\,\, q).
-  \end{eqnarray*}
-
-  `$x \,\mbox{is part$_{p}$ of}\, y$' means
-  `the base-$p$ numeral of $x$ is part of the base-$p$ numeral of $y$',
-  and '$\dotminus$' is truncated subtraction,
-  which we can construct as follows:
-  \begin{eqnarray*}
-    x \dotminus y &=& \mu z\, ((y\!<\!x \,\to\, y\!+\!z\!=\!x) \,\land\, (\neg(y\!<\!x) \,\to\, z\!=\!0)) \\
-    x < y &\Leftrightarrow& \exists z\!\le\!y (x + s(z) = y).
-  \end{eqnarray*}
-
-  The part$_{p}$ relation can be constructed in terms of base-$p$ concatenation:
-
-  \begin{eqnarray*}
-    x \,\mbox{is part$_{p}$ of}\, y &\Leftrightarrow& \exists v\!\le\!y \, \exists w\!\le\!y \, (v \pconcat x \pconcat w = y \,\lor\, v \pconcat x = y \, \\
-                                    && \lor\, x \pconcat v = y \, \lor \, x \!=\! y)
-  \end{eqnarray*}
-
-  To construct base-$p$ concatenation,
-  we use the function $\eta(p,x)$
-  that returns the smallest power of $p$  greater than $x$.
-  That is,
-  $\eta(p,x)$ is the next-greater number after $x$ whose base-$p$ numeral
-  is longer than the base-$p$ numeral of $x$.
-
-  \begin{eqnarray*}
-    x \pconcat y &=& x \times \eta(p,y) +y \\
-    \eta(p,x) &=& \mu y\,((y\,\,\mbox{is power of prime}\,\, p \\
-                 && \,\land\, \, y\!>\!x \,\land\, y\!>\!1) \, \lor \,  (\neg(p\,\,\mbox{is prime}) \,\land\, y\!=\!0))
-  \end{eqnarray*}
-
-  Finally, we construct `$x$ is power of $p$' and `$x$ is prime':
-
-  \begin{eqnarray*}
-    x\,\,\mbox{is power of prime}\,\,p &\Leftrightarrow& x\!\not=\!0 \,\land\,
-   p\,\,\mbox{is prime} \\
-   && \land\, \forall y\!\le\!x\, (y\,\,\mbox{divides}\,\,x
-   \,\to\, y\!=\!1 \,\lor\, p\,\,\mbox{divides}\,\,y) \\
-  x\,\,\mbox{is prime} &\Leftrightarrow& x \ne 0 \text{ and } x \ne 1 \text{ and } \forall
-    y\!<\!x\,(y\,\,\mbox{divides}\,\,x \,\to\, y\!=\!1 \,\lor\, y\!=\!x) \\
-  x\,\,\mbox{divides}\,\,y &\Leftrightarrow& \exists z\!\le\!y\,(y=x\times z)
-  \end{eqnarray*}
-
-  \fi
-  
   To be clear:
-  this chain of definitions doesn't directly express
-  the relevant functions and relations in $\L_{A}$.
-  The expressions on the right-hand side aren't $\L_{A}$-formulas;
+  the expressions on the right-hand side aren't $\L_{A}$-formulas;
   they are metalinguistic descriptions of certain functions and relations.
-  The chain of definitions merely shows
+  The chain of definitions shows
   how $\mathrm{beta}$ can be constructed from
   addition, multiplication, projection, and $\chi_=$
   by composition, truth-functional combination, bounded quantification, and regular minimization,
@@ -1262,15 +1114,15 @@ for all $x_{1},\ldots,x_{n}$ there is some $y$ such that $R(x_{1},\ldots,x_{n},y
   \qed
 \end{proof}
 
-
-Now we can show that representability is closed under primitive recursion.
+With Lemma~\ref{lem:beta},
+we can show that representability is closed under primitive recursion.
 
 % Assume that $h = Pr[f,g]$,
 % Above I suggested that 
-% we could construct a formula $S(c,x,k)$
-% for ``$c$ codes the sequence $h(x,0), h(x,1), \ldots, h(x,k)$''.
+% we could construct a formula $S(k,x,k)$
+% for ``$k$ codes the sequence $h(x,0), h(x,1), \ldots, h(x,k)$''.
 % From this,
-% we could express $H(x,y,z)$ as $\exists c(S(c,x,y) \land \mathrm{beta}(c,y,z))$.
+% we could express $H(x,y,z)$ as $\exists k(S(k,x,y) \land \mathrm{beta}(k,y,z))$.
 % But we can take a shortcut:
 
 \begin{lemma}{}{repr-closure-pr}
@@ -1290,7 +1142,7 @@ Now we can show that representability is closed under primitive recursion.
   respectively.
   Let $\smallcaps{Seq}(c,x,k)$ be the formula
   \begin{multline*}
-    \exists u (\smallcaps{Beta}(c,1,u) \land F(x,u)) \land\\
+    \exists u (\smallcaps{Beta}(c,\num{1},u) \land F(x,u)) \land\\
     \forall i(i < k \to \exists t \exists u(
     \smallcaps{Beta}(c,s(i),t) \land \smallcaps{Beta}(c,s(s(i)),u) \land G(x,i,t,u))).
   \end{multline*}
@@ -1306,15 +1158,15 @@ Now we can show that representability is closed under primitive recursion.
   $y$ is the last element of $\t{h(x,0), \ldots, h(x,k)}$.
   It therefore represents $h$ in $T$. \qed
 
-  % To check this, assume that $b = h(a,k)$.
-  % Let $c$ code the sequence $\t{h(a,0), \ldots, h(a,k)}$.
+  % To check this, assume that $m = h(n,k)$.
+  % Let $k$ code the sequence $\t{h(n,0), \ldots, h(n,k)}$.
   % Since $F$, $G$, and $\smallcaps{beta}$ represent $f$, $g$, and $\mathrm{beta}$,
-  % $T$ can prove $\smallcaps{Beta}(\num{c},\num{s(0)},\num{b})$ 
-  % and $F(\num{a},\num{h(a,0)})$ as well as
-  % $\forall t \forall u(\smallcaps{Beta}(\num{c},s(\num{j}),t) \land G(\num{a},\num{j},t,u) \to \smallcaps{Beta}(\num{c},s(s(\num{j})),u))$, for each $j < k$.
-  % By R3, $T$ can therefore prove $S(\num{c},\num{a},\num{k})$.
-  % Since $T$ can also prove $\smallcaps{Beta}(\num{c},\num{s(k)},\num{b})$,
-  % it can prove $H(\num{a},\num{k},\num{b})$.
+  % $T$ can prove $\smallcaps{Beta}(\num{k},\num{s(0)},\num{m})$
+  % and $F(\num{n},\num{h(n,0)})$ as well as
+  % $\forall t \forall u(\smallcaps{Beta}(\num{k},s(\num{j}),t) \land G(\num{n},\num{j},t,u) \to \smallcaps{Beta}(\num{k},s(s(\num{j})),u))$, for each $j < k$.
+  % By R3, $T$ can therefore prove $S(\num{k},\num{n},\num{k})$.
+  % Since $T$ can also prove $\smallcaps{Beta}(\num{k},\num{s(k)},\num{m})$,
+  % it can prove $H(\num{n},\num{k},\num{m})$.
   
   
   % By lemma \ref{lem:repr-closure-mn},
@@ -1340,225 +1192,12 @@ Now we can show that representability is closed under primitive recursion.
   (Hint: if $h = \mathrm{Pr}[f,g]$ then $h$ can be constructed from $f$, $g$, and $\mathrm{beta}$, roughly as in the proof of Lemma~\ref{lem:repr-closure-pr}.)
 \end{exercise}
 
-\iffalse
-
-These are obviously expressible in $\L_{A}$.
-To ensure that they are also representable in a theory $T$,
-we have to assume that $T$ satisfies the following conditions:
-
-\begin{axioms}
-  R4 & $\text{For all }a, b\text{, if }a \neq b\text{ then }\vdash_{T} \num{a} \neq \num{b}\text{.}$\\
-  R5 & $\text{For all }a, b\text{, }\vdash_{T} \num{a} + \num{b} = \num{a+b}\text{.}$\\
-  R6 & $\text{For all }a, b\text{, }\vdash_{T} \num{a} \times \num{b} = \num{a\times b}\text{.}$
-\end{axioms}
-
-\begin{lemma}{}{identity-repr}
-   The identity relation is represented by $x=y$ in every theory $T$ that satisfies R4.
-\end{lemma}
-\begin{proof}
-  \emph{Proof.}
-  We need to show that for all $a,b$:
-  \begin{cenumerate}
-    \item[(i)] if $a = b$ then $\vdash_{T} \num{a} = \num{b}$.
-    \item[(ii)] if $a \neq b$ then $\vdash_{T} \neg (\num{a} = \num{b})$.
-  \end{cenumerate}
-  (i) holds in any theory because $\num{a}$ and $\num{b}$ are the same term.
-  (ii) holds by R4. \qed
-\end{proof}
-
-\begin{lemma}{}{plus-repr}
-   The addition function is represented by $x+y=z$ in every theory $T$ that satisfies R5.
-\end{lemma}
-\begin{proof}
-  \emph{Proof.}
-  Condition (i) in the definition of representation is given by R5.
-  Condition (ii) is a theorem of the predicate calculus.
-  \qed
-\end{proof}
-
-\begin{lemma}{}{times-repr}
-  The multiplication function is represented by $x\times y=z$ in every theory $T$ that satisfies R6.
-\end{lemma}
-\begin{proof}
-  \emph{Proof.}
-  Condition (i) in the definition of representation is given by R6.
-  Condition (ii) is a theorem of the predicate calculus.
-  \qed
-\end{proof}
-
-\begin{lemma}{}{repr-closure-bounded}
-  Assume that $T$ satisfies R2, R3, and R5,
-  and an $n\!+\!1$-ary relation $R$ is represented in $T$ by a formula $A(x_{1},\ldots,x_{n},y)$.
-  Then for all $k$,
-  the $n$-ary relation $\forall y < k R(x_{1},\ldots,x_{n},y)$
-  is represented in $T$ by $\forall y (y < \num{k} \to A(x_{1},\ldots,x_{n},y))$,
-  and $\exists y < k R(x_{1},\ldots,x_{n},y)$
-  by $\exists y (y < \num{k} \land A(x_{1},\ldots,x_{n},y))$.
-\end{lemma}
-\begin{proof}
-  \emph{Proof.}
-  As usual, I'll focus on the case of $n=1$ for readability.
-  For the universal quantifier,
-  we have to show that $\forall y(y < \num{k} \to A(\num{a},y))$ satisfies the two representation conditions for relations:
-  \begin{cenumerate}
-    \item[(i)] if $\forall y < k R(a,y)$ then
-      $\vdash_{T} \forall y (y < \num{k} \to A(\num{a},y))$,
-    \item[(ii)] if $\neg \forall y < k R(a,y)$ then
-      $\vdash_{T} \neg \forall y (y < \num{k} \to A(\num{a},y)$.
-  \end{cenumerate}
-
-  For (i), assume $\forall y < k R(a,y)$.
-  We first consider the case where $k > 0$.
-  Since $A$ represents $R$ in $T$,
-  $T$ can prove $A(\num{a},\num{b})$ for all $b < k$.
-  So $T$ can prove $\forall y(y\!=\!\num{b} \to A(\num{a},y))$ for all $b < k$.
-  By R3,
-  $T$ can prove $\forall y (y < \num{k} \to (y = 0 \lor \ldots \lor y = \num{k-1}))$.
-  So $T$ can prove $\forall y (y < \num{k} \to A(\num{a},y))$.
-  For $k = 0$,
-  $T$ can prove $\neg \exists y (y < 0)$ by R2,
-  which entails $\forall y (y < 0 \to A(\num{a},y))$.
-
-  For (ii), assume $\neg \forall y < k R(a,y)$.
-  Then there is some $b < k$ such that $\neg R(a,b)$.
-  Since $A$ represents $R$,
-  $T$ can prove $\neg A(\num{a},\num{b})$.
-  Pick any $c$ with $k = b+(c+1)$.
-  By R5,
-  $T$ can prove $\num{b} + \num{c+1} = \num{k}$.
-  Since $T$ can also prove $\num{c+1} = s(\num{c})$
-  (because the two sides are the same term),
-  $T$ can prove $\num{b} + s(\num{c}) = \num{k}$
-  and thus also $\num{b} < \num{k}$,
-  which is short for $\exists z(\num{b} + s(z) = \num{k})$.
-  Hence $T$ can prove $\exists y (y < \num{k} \land \neg A(\num{a},y))$,
-  which is equivalent to $\neg \forall y (y < \num{k} \to A(\num{a},y)$.
-
-  The proof for $\exists y < k R(x_{1},\ldots,x_{n},y)$ is analogous.
-\end{proof}
-
-% It follows that x<y is representable as ∃z(∃v(z+s(v)=y) ∧ x+s(z)=y) in any
-% theory that satisfies R1-R6.
-
-\begin{lemma}{}{repr-closure-boolean}
-  If two $n$-ary relations $R_{1}$ and $R_{2}$ are represented in a theory $T$
-  by formulas $A_{1}$ and $A_{2}$, respectively,
-  then $A_{1} \land A_{2}$ represents the conjunction of $R_{1}$ and $R_{2}$ in $T$
-  $A_{1} \lor A_{2}$ represents the disjunction of $R_{1}$ and $R_{2}$ in $T$
-  and $\neg A_{1}$ represents the negation of $R_{1}$ in $T$.
-\end{lemma}
-\begin{proof}
-  Let's look at the case for conjunction, assuming $n=1$.
-  We have to show that
-  \begin{cenumerate}
-    \item[(i)] if $R_{1}(a)$ and $R_{2}(a)$,
-    then $\vdash_{T} A_{1}(\num{a}) \land A_{2}(\num{a})$;
-    \item[(ii)] if it is not the case that $R_{1}(a)$ and $R_{2}(a)$,
-    then $\vdash_{T} \neg (A_{1}(\num{a}) \land A_{2}(\num{a}))$.
-  \end{cenumerate}
-
-  For (i),
-  assume $R_{1}(a)$ and $R_{2}(a)$.
-  By the assumption that $A_{1}$ and $A_{2}$ represent $R_{1}$ and $R_{2}$,
-  $T$ can prove $A_{1}(\num{a})$ and $A_{2}(\num{a})$.
-  Then $T$ can also prove their conjunction.
-
-  For (ii),
-  assume it is not the case that $R_{1}(a)$ and $R_{2}(a)$.
-  By the assumption that $A_{1}$ and $A_{2}$ represent $R_{1}$ and $R_{2}$,
-  $T$ can prove $\neg A_{1}(\num{a})$ or $\neg A_{2}(\num{a})$.
-  Either way, $T$ can prove their disjunction.
-
-  The other cases are similarly trivial.
-  \qed
-\end{proof}
-
-Together,
-these lemmas show that beta is representable in any theory $T$
-that satisfies R2--R6,
-where R4 subsumes R4$^{-}$.
-
-\begin{lemma}{Beta-function Lemma}{beta}
-  There is a function $\mathrm{beta}$ such that
-  for any finite sequence $a_{1}, \ldots, a_{n}$ of natural numbers,
-  there is a number $c$ such that
-  $\mathrm{beta}(c,i) = a_{i}$ for all $1 \leq i \leq n$.
-  Moreover,
-  beta is representable in any theory $T$ that satisfies R1--R6.
-\end{lemma}
-\begin{proof}
-  \emph{Proof.}
-  I've explained above how this function $\mathrm{beta}$ can be expressed
-  by composition, regular minimization, bounded quantification, and boolean combination
-  from addition, multiplication, identity, and the successor function.
-  By lemmas \ref{lem:s-repr}, \ref{lem:identity-repr}, \ref{lem:plus-repr}, \ref{lem:times-repr},
-  this basis is representable in any theory $T$ that satisfies R1--R6.
-  By lemma \ref{lem:repr-closure-composition}, \ref{lem:repr-closure-minimization},
-  \ref{lem:repr-closure-bounded}, and \ref{lem:repr-closure-boolean},
-  representability in any such $T$ is closed under
-  composition, regular minimization, bounded quantification, and boolean combination.
-  \qed
-\end{proof}
-
-With this, we can prove our final lemma.
-
-\begin{lemma}{}{repr-closure-pr}
-  If $h$ is expressed from an $f$ and $g$ by primitive recursion,
-  and $f$ and $g$ are representable in a theory $T$ that satisfies R1--R6,
-  then $h$ is also representable in $T$.
-\end{lemma}
-\begin{proof}
-  \emph{Proof.}
-  Assume that $h = Pr[f,g]$,
-  meaning that
-  \begin{align*}
-    h(x_{1},\ldots,x_{n},0) & = f(x_{1},\ldots,x_{n}) \\
-    h(x_{1},\ldots,x_{n},n+1) & = g(x_{1},\ldots,x_{n},n,h(x_{1},\ldots,x_{n},n)).
-  \end{align*}
-  For readability, I assume that $n=1$.
-
-  With the help of the beta function lemma,
-  it's not hard to construct a formula $S(c,x,k)$
-  for ``$c$ codes the sequence $h(x,0), h(x,1), \ldots, h(x,k)$''.
-  We could then express $H(x,y,z)$ as $\exists c(S(c,x,y) \land \mathrm{beta}(c,y,z))$,
-  and show that $H$ represents $h$ in $T$.
-
-  But let's take a shortcut.
-  Let $\text{Seq}$ be the \emph{relation}
-  that holds between numbers $c,x,k$
-  iff $c$ codes the sequence $h(x,0), \ldots, h(x,k)$.
-  This can be expressed from $f$, $g$, and $\mathrm{beta}$
-  by boolean combination and bounded quantification:
-  \[
-    \text{Seq}(c,x,k) = \mathrm{beta}(c,1) = f(x) \text{ and } \forall i \leq k(\mathrm{beta}(c,i+1) = g(x,i,\mathrm{beta}(c,i))).
-  \]
-  By the assumption that $f$ and $g$ are representable in $T$
-  and lemmas \ref{lem:beta}, \ref{lem:repr-closure-bounded} and \ref{lem:repr-closure-boolean},
-  $\text{Seq}$ is representable in $T$.
-  By lemma \ref{lem:repr-closure-mn},
-  so is the function
-  \[
-    d(x,k) = \mu c \, \text{Seq}(c,x,k)
-  \]
-  that returns the code of $h(x,0), \ldots, h(x,k)$.
-  From this,
-  we can express $h$ by composition, projection, and successorhood:
-  \[
-    h(x,k) = \mathrm{beta}(d(x,k),s(k)).
-  \]
-  By lemmas \ref{lem:closure-s}, \ref{lem:repr-closure-composition} and \ref{lem:repr-closure-projection},
-  $h$ is representable in $T$.
-  \qed
-\end{proof}
-
-\fi
-
-\section{Summing up}
+\section{Wrapping up}
 
 The lemmas from the previous two sections combine to give us our main result:
 
 \begin{theorem}{}{recrep}
-  All recursive functions are representable in any theory that satisfies R1--R6.
+  All computable functions are representable in any theory that satisfies R1--R6.
 \end{theorem}
 \begin{proof}
   \emph{Proof.}
@@ -1572,14 +1211,14 @@ The lemmas from the previous two sections combine to give us our main result:
   by composition, regular minimization, or primitive recursion
   from functions that are representable in $T$
   is itself representable in $T$.
-  Since all recursive functions can be constructed
+  Since all computable (=recursive) functions can be constructed
   from zero, successor, and projection by these operations,
-  it follows that all recursive functions are representable in $T$.
+  it follows that all computable functions are representable in $T$.
   \qed
 \end{proof}
 
 \begin{theorem}{}{recrelrep}
-  All recursive relations are representable in any theory that satisfies R1--R6.
+  All computable relations are representable in any theory that satisfies R1--R6.
 \end{theorem}
 \begin{proof}
   \emph{Proof.}
@@ -1590,7 +1229,7 @@ The lemmas from the previous two sections combine to give us our main result:
 \end{proof}
 
 The conditions R1--R6 can be seen as defining a minimal arithmetical theory
-in which all recursive functions and relations are representable.
+in which all computable functions and relations are representable.
 This theory is not especially elegant.
 More elegant is the theory Q (or ``Robinson Arithmetic'') that we met in Section~\ref{sec:arithmetic}.
 As a reminder,
@@ -1615,17 +1254,17 @@ that is at least as strong as Q,
 in the sense that it contains all sentences in Q.
 
 % \begin{axioms}
-%   R1 & $\text{For all }a\text{, }\vdash_{T} \forall x (\num{a} < x \lor x = \num{a} \lor x < \num{a})\text{.}$\\
+%   R1 & $\text{For all }n\text{, }\vdash_{T} \forall x (\num{n} < x \lor x = \num{n} \lor x < \num{n})\text{.}$\\
 %   R2 & $\vdash_{T} \neg \exists x (x < 0)\text{.}$\\
-%   R3 & $\text{For all }a > 0\text{, }\vdash_{T} \forall x (x < \num{a} \to (x = 0 \lor \ldots \lor x = \num{a-1}))\text{.}$\\
-%   R4 & $\text{For all }a, b\text{, if }a \neq b\text{ then }\vdash_{T} \num{a} \neq \num{b}\text{.}$\\
-%   R5 & $\text{For all }a, b\text{, }\vdash_{T} \num{a} + \num{b} = \num{a+b}\text{.}$\\
-%   R6 & $\text{For all }a, b\text{, }\vdash_{T} \num{a} \times \num{b} = \num{a\times b}\text{.}$
+%   R3 & $\text{For all }n > 0\text{, }\vdash_{T} \forall x (x < \num{n} \to (x = 0 \lor \ldots \lor x = \num{n-1}))\text{.}$\\
+%   R4 & $\text{For all }n, m\text{, if }n \neq m\text{ then }\vdash_{T} \num{n} \neq \num{m}\text{.}$\\
+%   R5 & $\text{For all }n, m\text{, }\vdash_{T} \num{n} + \num{m} = \num{n+m}\text{.}$\\
+%   R6 & $\text{For all }n, m\text{, }\vdash_{T} \num{n} \times \num{m} = \num{n\times m}\text{.}$
 % \end{axioms}
 
 
 \begin{theorem}{}{Q-rep}
-  All recursive functions and relations are representable in every extension of Q.
+  All computable functions and relations are representable in every extension of Q.
 \end{theorem}
 \begin{proof}
   \emph{Proof.}
@@ -1633,9 +1272,9 @@ in the sense that it contains all sentences in Q.
   it suffices to show that Q (and therefore any extension of Q) satisfies R1--R6.
 
   \emph{R1.} % Lemme 14.13 in BJ
-  % R1 & $\text{For all }a\text{, }\vdash_{T} \forall x (\num{a} < x \;\lor\; x = \num{a} \;\lor\; x < \num{a})\text{.}$
-  We show by induction on $a$ that $\vdash_Q \forall x (\num{a} < x \;\lor\; x\!=\!\num{a} \;\lor\; x < \num{a})$.
-  \emph{Base:} $a=0$.
+  % R1 & $\text{For all }n\text{, }\vdash_{T} \forall x (\num{n} < x \;\lor\; x = \num{n} \;\lor\; x < \num{n})\text{.}$
+  We show by induction on $n$ that $\vdash_Q \forall x (\num{n} < x \;\lor\; x\!=\!\num{n} \;\lor\; x < \num{n})$.
+  \emph{Base:} $n=0$.
   (I now reason ``inside Q''.)
   By Q3,
   for all $x$ either $x=0$ or $\exists y\, x=s(y)$.
@@ -1645,23 +1284,23 @@ in the sense that it contains all sentences in Q.
   So $\forall x(x\!=\!0 \;\lor\; 0 < x)$.
   \emph{Induction step:}
   Let $x$ be any number.
-  We show that $s(\num{a}) < x \;\lor\; x\!=\!s(\num{a}) \;\lor\; x < s(\num{a})$.
+  We show that $s(\num{n}) < x \;\lor\; x\!=\!s(\num{n}) \;\lor\; x < s(\num{n})$.
   By Q3,
   either $x=0$ or $\exists y\, x=s(y)$.
-  If $x=0$ then $x < s(\num{a})$ because
-  $s(\num{a}) + 0=s(\num{a})$ by Q4 and hence $\exists z(s(z) + 0=s(a))$.
+  If $x=0$ then $x < s(\num{n})$ because
+  $s(\num{n}) + 0=s(\num{n})$ by Q4 and hence $\exists z(s(z) + 0=s(n))$.
   Assume $\exists y\, x=s(y)$.
   By induction hypothesis,
-  $\num{a} < y \;\lor\; y\!=\!\num{a} \;\lor\; y < \num{a}$.
-  If $\num{a} < y$ then
-  $\exists z(s(z) + \num{a}\!=\!y)$ and
-  $s(z) + s(\num{a})\!=\!s(y)$ by Q5;
-  so $s(\num{a}) < x$.
-  If $y\!=\!\num{a}$ then $x = s(\num{a})$.
-  If $y < \num{a}$ then
-  $\exists z(s(z) + y = \num{a})$ and
-  $s(z) + s(y) = s(\num{a})$ by Q5;
-  so $x < s(\num{a})$.
+  $\num{n} < y \;\lor\; y\!=\!\num{n} \;\lor\; y < \num{n}$.
+  If $\num{n} < y$ then
+  $\exists z(s(z) + \num{n}\!=\!y)$ and
+  $s(z) + s(\num{n})\!=\!s(y)$ by Q5;
+  so $s(\num{n}) < x$.
+  If $y\!=\!\num{n}$ then $x = s(\num{n})$.
+  If $y < \num{n}$ then
+  $\exists z(s(z) + y = \num{n})$ and
+  $s(z) + s(y) = s(\num{n})$ by Q5;
+  so $x < s(\num{n})$.
 
   \smallskip%
   \emph{R2.}
@@ -1678,9 +1317,9 @@ in the sense that it contains all sentences in Q.
   
   \smallskip%
   \emph{R3.} % Lemma 14.11 in BJ.
-  We show by induction on $a$ that whenever $a > 0$ then
-  $\vdash_Q \forall x (x < \num{a} \;\to\; ({x\!=\!0} \;\lor\; \ldots \;\lor\; {x\!=\!\num{a-1}}))$.
-  \emph{Base:} $a=1$.
+  We show by induction on $n$ that whenever $n > 0$ then
+  $\vdash_Q \forall x (x < \num{n} \;\to\; ({x\!=\!0} \;\lor\; \ldots \;\lor\; {x\!=\!\num{n-1}}))$.
+  \emph{Base:} $n=1$.
   We show that $\vdash_Q \forall x (x < \num{1} \;\to\; x = 0)$.
   Assume $x < \num{1}$;
   i.e.\ $\exists z (s(z) + x = s(0))$.
@@ -1692,93 +1331,92 @@ in the sense that it contains all sentences in Q.
   if $y=0$ then $s(z)+0=s(z)=0$ contradicting Q2;
   if $y=s(w)$ then $s(z)+s(w)=s(s(z)+w)=0$, again contradicting Q2.
   \emph{Induction step:}
-  Assume $x < s(\num{a})$,
-  i.e.\ $\exists z(s(z) + x = s(\num{a}))$.
+  Assume $x < s(\num{n})$,
+  i.e.\ $\exists z(s(z) + x = s(\num{n}))$.
   By Q3,
   either $x=0$ or $\exists y\, x=s(y)$.
   In the second case,
-  $s(z) + s(y) = s(\num{a})$,
-  so $s(s(z) + y) = s(\num{a})$ by Q5,
-  and $s(z) + y = \num{a}$ by Q1;
-  so $y < \num{a}$.
+  $s(z) + s(y) = s(\num{n})$,
+  so $s(s(z) + y) = s(\num{n})$ by Q5,
+  and $s(z) + y = \num{n}$ by Q1;
+  so $y < \num{n}$.
   By induction hypothesis,
-  $y = 0 \;\lor\; \ldots \;\lor\; y = \num{a-1}$,
-  so $x= s(y)$ is one of $1, \ldots, \num{a}$.
-  Combining both cases, we have $x=0 \;\lor\; \ldots \;\lor\; x = \num{a}$.
+  $y = 0 \;\lor\; \ldots \;\lor\; y = \num{n-1}$,
+  so $x= s(y)$ is one of $1, \ldots, \num{n}$.
+  Combining both cases, we have $x=0 \;\lor\; \ldots \;\lor\; x = \num{n}$.
 
   \smallskip%
   \emph{R4.} % Lemma 14.7 in BJ.
-  We show that if $a \ne b$,
-  then $\vdash_Q \num{a} \ne \num{b}$.
-  Assume $a < b$.
-  We show by induction on $a$ that $\vdash_Q \num{a} \ne \num{b}$.
-  \emph{Base:} $a=0$.
-  Then $\num{b} = \num{s(b-1)})$
-  and hence $0 \ne \num{b}$ by Q2.
-  \emph{Induction step:} $a=s(c)$.
-  Then $b = s(d)$ for some $d$ with $c < d$.
+  We show that if $n \ne m$,
+  then $\vdash_Q \num{n} \ne \num{m}$.
+  Assume $n < m$.
+  We show by induction on $n$ that $\vdash_Q \num{n} \ne \num{m}$.
+  \emph{Base:} $n=0$.
+  Then $\num{m} = \num{s(m-1)})$
+  and hence $0 \ne \num{m}$ by Q2.
+  \emph{Induction step:} $n=s(k)$.
+  Then $m = s(d)$ for some $d$ with $k < d$.
   By induction hypothesis,
-  $\vdash_Q \num{c} \ne \num{d}$.
-  So $\vdash_Q s(\num{c}) \ne s(\num{d})$ by Q1.
-  The case for $b < a$ is analogous.
+  $\vdash_Q \num{k} \ne \num{d}$.
+  So $\vdash_Q s(\num{k}) \ne s(\num{d})$ by Q1.
+  The case for $m < n$ is analogous.
 
   \smallskip%
   \emph{R5.}
-  We show by induction on $b$ that
-  for all $a,b$,
-  $\vdash_Q \num{a} + \num{b} = \num{a+b}$.
-  \emph{Base}: $b=0$.
-  Then $\num{a} + \num{b} = \num{a+b}$ by Q4.
-  \emph{Induction step:} $b=s(c)$.
+  We show by induction on $m$ that
+  for all $n,m$,
+  $\vdash_Q \num{n} + \num{m} = \num{n+m}$.
+  \emph{Base}: $m=0$.
+  Then $\num{n} + \num{m} = \num{n+m}$ by Q4.
+  \emph{Induction step:} $m=s(k)$.
   By induction hypothesis,
-  $\num{a} + \num{c} = \num{a+c}$.
+  $\num{n} + \num{k} = \num{n+k}$.
   By Q5,
-  $\num{a} + s(\num{c}) = s(\num{a} + \num{c}) = s(\num{a+c}) = \num{a + s(c)} = \num{a+b}$.
+  $\num{n} + s(\num{k}) = s(\num{n} + \num{k}) = s(\num{n+k}) = \num{n + s(k)} = \num{n+m}$.
 
   \smallskip%
   \emph{R6.}
-  We show by induction on $b$ that
-  for all $a,b$,
-  $\vdash_Q \num{a} \times \num{b} = \num{a\times b}$.
-  \emph{Base}: $b=0$.
-  Then $\num{a} \times \num{b} = \num{a\times b}$ by Q6.
-  \emph{Induction step:} $b=s(c)$.
+  We show by induction on $m$ that
+  for all $n,m$,
+  $\vdash_Q \num{n} \times \num{m} = \num{n\times m}$.
+  \emph{Base}: $m=0$.
+  Then $\num{n} \times \num{m} = \num{n\times m}$ by Q6.
+  \emph{Induction step:} $m=s(k)$.
   Then
-  $\num{a} \times s(\num{c}) = \num{a} \times \num{c} + \num{a}$ by Q7,
-  $= \num{a\times c} + \num{a}$ by induction hypothesis,
-  $= \num{a\times c + a}$ by R5,
-  $= \num{a \times b}$.
+  $\num{n} \times s(\num{k}) = \num{n} \times \num{k} + \num{n}$ by Q7,
+  $= \num{n\times k} + \num{n}$ by induction hypothesis,
+  $= \num{n\times k + n}$ by R5,
+  $= \num{n \times m}$.
   \qed
 \end{proof}
 
 By Proposition~\ref{prop:PAentailsQ},
 Peano Arithmetic (PA) is an extension of Q.
-So all recursive functions and relations are representable in PA.
+So all computable functions and relations are representable in PA.
 
 We can also prove a result that goes in the other direction:
 
 \begin{theorem}{}{repr-rec}
-  Every relation that is representable in an axiomatizable and consistent $\L_{A}$-theory is recursive.
+  Every relation that is representable in an axiomatizable and consistent $\L_{A}$-theory is computable.
 \end{theorem}
 \begin{proof}
   \emph{Proof.}
-  Assume $A(x_{1},\ldots,x_{n})$ represents $R$ in an axiomatizable and consistent theory $T$.
+  Assume $A(x_{1},\ldots,x_{k})$ represents $R$ in an axiomatizable and consistent theory $T$.
   That is,
-  if $R$ holds of some numbers $a_{1},\ldots,a_{n}$,
-  then $T$ can prove $A(\num{a_{1}},\ldots,\num{a_{n}})$,
-  and if $R$ does not hold of $a_{1},\ldots,a_{n}$,
-  then $T$ can prove $\neg A(\num{a_{1}},\ldots,\num{a_{n}})$.
+  if $R$ holds of some numbers $n_{1},\ldots,n_{k}$,
+  then $T$ can prove $A(\num{n_{1}},\ldots,\num{n_{k}})$,
+  and if $R$ does not hold of $n_{1},\ldots,n_{k}$,
+  then $T$ can prove $\neg A(\num{n_{1}},\ldots,\num{n_{k}})$.
   Since $T$ is consistent,
-  it never proves both $A(\num{a_{1}},\ldots,\num{a_{n}})$ and $\neg A(\num{a_{1}},\ldots,\num{a_{n}})$.
+  it never proves both $A(\num{n_{1}},\ldots,\num{n_{k}})$ and $\neg A(\num{n_{1}},\ldots,\num{n_{k}})$.
   By Proposition~\ref{prop:re-theory},
   every axiomatizable first-order theory is computably enumerable:
   we can express an algorithm that
   lists all sentences provable in $T$.
   This gives us an algorithm for deciding $R$:
-  to check whether $R$ holds of some numbers $a_{1},\ldots,a_{n}$,
-  we wait until either $A(\num{a_{1}},\ldots,\num{a_{n}})$ or $\neg A(\num{a_{1}},\ldots,\num{a_{n}})$ appears on the list of sentences provable in $T$.
-  By the Church-Turing thesis,
-  it follows that $R$ is recursive.
+  to check whether $R$ holds of some numbers $a_{1},\ldots,n_{k}$,
+  we wait until either $A(\num{n_{1}},\ldots,\num{n_{k}})$ or $\neg A(\num{n_{1}},\ldots,\num{n_{k}})$ appears on the list of sentences provable in $T$.
+  So $R$ is computable.
   \qed
 \end{proof}
 
@@ -1786,15 +1424,15 @@ Finally,
 let's return to expressibility.
 As I announced in Section~\ref{sec:representability},
 our result about representability % (Theorem~\ref{thm:recrep})
-shows that all recursive functions and relations can be expressed in $\L_{A}$:
+shows that all computable functions and relations can be expressed in $\L_{A}$:
 
 \begin{theorem}{}{expressibility}
-  All recursive functions and relations are expressible in $\L_{A}$.
+  All computable functions and relations are expressible in $\L_{A}$.
 \end{theorem}
 \begin{proof}
   \emph{Proof.}
   By Theorem~\ref{thm:Q-rep},
-  all recursive functions and relations are representable in Q.
+  all computable functions and relations are representable in Q.
   All axioms of Q are true in the standard model of arithmetic $\Mod{N}$.
   So Q $\subseteq \mathrm{Th}(\Mod{N})$.
   By Proposition~\ref{prop:repr-def},
@@ -1809,7 +1447,7 @@ The last few results
 offer a high-level perspective on Gödel's incompleteness theorem.
 We know from Proposition~\ref{prop:decidable-from-re} that
 every computably enumerable relation results
-by existential quantification from a computable and therefore recursive relation:
+by existential quantification from a computable relation:
 if $S$ is computably enumerable,
 then there is a computable relation $R$ such that
 $x \in S$ iff $\exists y R(x,y)$.
@@ -1830,35 +1468,34 @@ By Theorem~\ref{thm:repr-rec},
 it is therefore not representable in any axiomatizable and consistent theory of arithmetic.
 That is,
 there is no axiomatizable and consistent $\L_{A}$-theory $T$ such that
-whenever $S$ holds of a number $a$
-then $\vdash_{T} \exists y \smallcaps{R}(\num{a},y)$,
-and whenever $S$ does not hold of $a$
-then $\vdash_{T} \neg \exists y \smallcaps{R}(\num{a},y)$.
+whenever $S$ holds of a number $n$
+then $\vdash_{T} \exists y \smallcaps{R}(\num{n},y)$,
+and whenever $S$ does not hold of $n$
+then $\vdash_{T} \neg \exists y \smallcaps{R}(\num{n},y)$.
 So every axiomatizable and consistent theory of arithmetic must leave out some arithmetical truths.
 Much more on this in the next chapter.
 
 % Now suppose $T$ is an axiomatizable and consistent extension of Q.
 % Then $\smallcaps{R}(x,y)$ \emph{represents} $R$ in $T$:
-% for every number $a$ and $b$ for which $R(a,b)$ holds,
-% $\vdash_T \smallcaps{R}(\num{a},\num{b})$.
-% It follows that whenever $S$ holds of $a$ then
-% $\vdash_{T} \exists y \smallcaps{R}(\num{a},y)$.
+% for every number $n$ and $m$ for which $R(n,m)$ holds,
+% $\vdash_T \smallcaps{R}(\num{n},\num{m})$.
+% It follows that whenever $S$ holds of $n$ then
+% $\vdash_{T} \exists y \smallcaps{R}(\num{n},y)$.
 % Since $S$ is not representable in $T$,
-% there must be some number $a$ such that
-% $S$ does not hold of $a$,
-% and $\not\vdash_{T} \neg \exists y \smallcaps{R}(\num{a},y)$.
-% Could $T$ prove $\exists y \smallcaps{R}(\num{a},y)$?
+% there must be some number $n$ such that
+% $S$ does not hold of $n$,
+% and $\not\vdash_{T} \neg \exists y \smallcaps{R}(\num{n},y)$.
+% Could $T$ prove $\exists y \smallcaps{R}(\num{n},y)$?
 
 \fi
 
 \begin{exercise}
-  Are all recursive functions and relations representable in
+  Are all computable functions and relations representable in
   $\mathrm{Th}(\Mod{N})$?
 \end{exercise}
 
 \begin{exercise}
-  Using the Church-Turing theses,
-  explain why all computably enumerable relations are expressible in $\L_{A}$.
+  Explain why all computably enumerable relations are expressible in $\L_{A}$.
   (Hint: use Proposition~\ref{prop:decidable-from-re}.) 
 \end{exercise}
 
@@ -1867,203 +1504,23 @@ Much more on this in the next chapter.
 \end{exercise}
 
 \begin{exercise}\label{ex:weak-repr}
-  Say that a relation $R$ is \emph{weakly represented} by an $\L_{A}$-formula $A(x_{1},\ldots,x_{n})$ in a theory $T$ iff for all numbers $a_{1},\ldots,a_{n}$,
+  Say that a relation $R$ is \emph{weakly represented} by an $\L_{A}$-formula $A(x_{1},\ldots,x_{n})$ in a theory $T$ iff for all numbers $n_{1},\ldots,n_{k}$,
   \[
-    R(a_{1},\ldots,a_{n}) \text{ iff } \vdash_{T} A(\num{a_{1}},\ldots,\num{a_{n}}).
+    R(n_{1},\ldots,n_{k}) \text{ iff } \vdash_{T} A(\num{n_{1}},\ldots,\num{n_{k}}).
   \]
   Explain the following facts:
   \begin{cenumerate}
     \item[(a)] A relation can be weakly representable in a theory without being representable in that theory.
     \item[(b)] If $R$ is weakly representable in an axiomatizable and consistent theory
     then $R$ is computably enumerable. (Compare Theorem~\ref{thm:repr-rec}.)
-    \item[(c)] All recursive relations are weakly representable in any $\L_{A}$-theory that is   consistent with Q.
+    \item[(c)] All computable relations are weakly representable in any $\L_{A}$-theory that is   consistent with Q.
     (Hint:
-    We know that every recursive relation $R$ is represented in Q by some formula $A$.
+    We know that every computable relation $R$ is represented in Q by some formula $A$.
     Let $\hat{Q}$ be the conjunction of the seven axioms of Q,
     and consider the formula $\hat{Q} \to A$.)
   \end{cenumerate}
 \end{exercise}
 
-\iffalse
-
-
-We've just seen that
-the converse does not hold.
-Some relations that are expressible in $\L_{A}$ are not recursive.
-That's because the recursive relations aren't closed under existential quantification.
-They also aren't closed under universal quantification.
-
-Maybe move hierarchy to next chapter:
-PA can prove all true $\Delta_{0}$ sentences. etc.
-
-
-One can express a whole hierarchy of relations
-expressible in $\L_{A}$,
-in terms of the quantifiers used in their definitions.
-At the bottom of the hierarchy are the relations expressible by
-formulas without any unbounded quantifiers
-(except for the quantifier that occurs in the definition of $<$;
-for this purpose,
-it is cleaner to add '$<$' as a primitive relation to $\L_{A}$).
-These are called $\Delta_{0}$-formulas,
-and the relations $\Delta_{0}$-relations.
-At the next level are two classes of relations:
-the $\Sigma_{1}$-relations are expressed by
-($\Sigma_{1}$-)formulas that prefix existential quantifiers to $\Delta_{0}$-formulas,
-the $\Pi_{1}$-relations are expressed by
-($\Pi_{1}$-)formulas that prefix universal quantifiers to $\Delta_{0}$-formulas.
-Prefixing universal quantifiers to a $\Sigma_{1}$-formula yields a $\Pi_{2}$-formula;
-prefixing existential quantifiers to a $\Pi_{1}$-formula yields a $\Sigma_{2}$-formula.
-These express the $\Sigma_{2}$-relations and the $\Pi_{2}$-relations, respectively.
-And so on.
-The recursive relations,
-it turns out,
-are all $\Sigma_{1}$:
-they can be expressed by formulas that prefix existential quantifiers to $\L_{A}$-formulas
-without unbounded quantifiers.
-
-[It's useful to think of
-this hierarchy not so much in terms of language,
-but in terms of relations.
-We start with the computable relations $\Delta_{0}$,
-then consider relations expressed by existential or universal quantification from them,
-and so on.]
-
-
-In fact,
-we know more about what a representation of recursive relations in $\L_{A}$ looks like.
-Note that every term of $\L_{A}$ expresses a polynomial:
-it is (arithmetically) equivalent to an expression of the form
-$a_{0} + a_{1} \times x + a_{2} \times x^{2} + \ldots + a_{n} \times x^{n}$.
-Since the only predicate in $\L_{A}$ is equality,
-all atomic $\L_{A}$-formulas express equations between polynomials.
-It follows that any relation that is expressible in $\L_{A}$ can
-be expressed from an equation between polynomials by logical operations.
-Now,
-one can show that all recursive relations (and therefore also all r.e. relations)
-are expressible in $\L_{A}$ by formulas that prefix existential quantifiers to an equation between polynomials.
-This is the result of the so-called MRDP Theorem,
-named after Matiyasevich, Robinson, Davis, and Putnam.
-The proof is much too difficult to be included here.
-
-
-\fi
-
-\iffalse
-
-\section{A look ahead}
-
-We're going to prove Gödel's incompleteness theorem.
-We'll show that
-every consistent theory of arithmetic (in the language $\L_{A}$)
-with a computable set of axioms
-is \emph{incomplete} in the sense that
-there are arithmetical sentences $A$ which
-the theory can neither prove nor refute.
-
-We focus on arithmetic for two reasons.
-One, it's a comparatively simple and familiar branch of maths.
-If arithmetic can't be adequately axiomatized,
-then evidently the same is true for more powerful theories.
-Two, the proof of Gödel's theorem requires that
-the theory in question has the resources to
-express basic facts about what can and can't be proved.
-Arithmetic theories satisfy this requirement.
-
-(In a sense, arithmetic is the computational fragment of maths: computations on
-any domain can be encoded as arithmetic computations.
-Once we've shown that every total recursive function is expressible in $L_{A}$, what
-remains to be shown is that if we code the elements of other domains as numbers,
-computable operations on these domains will be recursive operations on numbers.)
-
-Of course,
-some theories of arithmetic are complete.
-The restriction to a computable set of axioms is important.
-
-\begin{definition}{Recursive Axiomatizability}{recursive-axiomatizability}
-  A theory is \emph{recursively axiomatizable} if it contains all and only the
-  sentences derivable from some recursive set of axioms.
-\end{definition}
-
-Remember that proofs from computable axioms are ``verifiable''.
-There is an algorithm for checking that something is a proof.
-We've already seen that
-algorithms can generally be represented as operating on numbers,
-with a suitable coding and decoding of the inputs and outputs.
-We can code each $\L_{A}$-sentence and each sequence of $\L_{A}$-sentences by a number,
-called the gn.
-Since there is an algorithm
-for checking whether a sequence is a proof of some target sentence,
-it follows by Church's Thesis that
-the relation Prf(x,y) is recursive.
-
-Prf is a relation between numbers.
-As such,
-we may wonder if it can be expressed in $\L_{A}$,
-in terms of $+$, $\times$, $s$, and $0$.
-The answer is yes.
-So there is an $\L_{A}$-formula $Prf(x,y)$ so that
-$Prf(n,m)$ is true (in the standard model of arithmetic) iff
-$n$ codes a proof of the sentence coded by $m$.
-From this,
-we can construct a formula $Prov(y)$ as $\exists x Prf(x,y)$ so that
-$Prov(y)$ is true iff
-$y$ is provable.
-Again,
-this will be a purely arithmetical formula,
-couched in terms of $+$, $\times$, $s$, and $0$.
-
-Using an ingenious trick due to Gödel,
-we'll then show that
-for every $\L_{A}$-formula
-there is an $\L_{A}$-sentence that is true iff
-the formula is true of the gödel number of that very sentence.
-Thus,
-in particular,
-there is a sentence $G$ that is true iff
-$\neg Prov(x)$ is true of $G$.
-That is,
-we'll find an arithmetical sentence $G$ that is true iff it is not provable.
-
-Now suppose $G$ is provable,
-in some axiomatizable theory $T$.
-Then $G$ is false,
-as it is true iff it is not provable.
-So if an arithmetical theory $T$ doesn't prove false sentences,
-then it can't prove $G$.
-In this case,
-$G$ is true.
-So $T$ can't prove its negation either,
-as the negation is false.
-So any sound axiomatizable $\L_{A}$-theory is incomplete.
-
-This result is sometimes called the \emph{semantic incompleteness theorem}.
-It is ``semantic'' because it involves the concept of arithmetical truth,
-which is a semantic concept.
-Gödel himself focussed on a different version of the incompleteness theorem
-that only relies on syntactic concepts of arithmetical theories.
-He showed that
-any axiomatic $\L_{A}$-theory of reasonable strength can prove
-all true statements of the form $Prf(n,m)$ and $\neg Prf(n,m)$.
-
-What we need to show, then, is that
-the Prf relation can be expressed in $\L_{A}$
-and, moreover, that reasonably strong arithmetical theories can
-prove all true statements of the form $Prf(n,m)$ and $\neg Prf(n,m)$.
-
-In this chapter, we are going to show something much more general:
-every recursive relation $R$ is expressible in $\L_{A}$.
-and reasonably strong arithmetical theories can prove all true statements of the form $R(n,m)$ and $\neg R(n,m)$.
-This more general fact will help get a deeper understanding of
-the nature and limitations of axiomatized theories.
-
-\begin{exercise}
-  Show that if a theory is r. ax. and complete then it is decidable. (appeal
-  lazily to Church's Theorem)
-\end{exercise}
-
-
-\fi
 
 %%% Local Variables:
 %%% mode: latex

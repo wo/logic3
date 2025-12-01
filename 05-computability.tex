@@ -265,77 +265,79 @@ We'll look at Turing machines in chapter~\ref{ch:turing}.
 These suggestions turned out to be equivalent,
 in the sense that they define the very same class of functions.
 Later attempts to define computability
-in terms of register machines,
+(in terms of register machines,
 Post systems,
 Markov algorithms,
-or combinatory definability also led to the same class of functions.
-Moreover,
-nobody has ever presented a function that is computable
+or combinatory definability)
+also led to the same class of functions.
+Nobody has ever presented a function that is computable
 by the informal definition I gave above
-but not by one of these formal definitions.
-There are strong reasons to think that no such function exists.
+but not by one of these formal definitions,
+and there are strong reasons to think that no such function exists.
 
 We thus have a remarkable case where
 a seemingly vague concept turns out not to be vague at all.
-The concept of a ``mechanically computable'' function seems to pick out
+The concept of a ``mechanically computable'' function picks out
 precisely the functions that are, say, computable by a Turing machine
 or definable in the lambda calculus.
 
-The hypothesis that our informal concept of mechanical computability
-coincides with these formal definitions
-is known as \emph{Church's Thesis},
-or as the \emph{Church-Turing Thesis}.
-It is called a ``Thesis'' rather than a theorem
-because it does not admit a mathematical proof.
-(A rigorous proof would first require a mathematically precise definition of
-`mechanically computable'.)
-But it is not a speculative conjecture.
-As I'll explain in chapter~\ref{ch:recursive},
-we \emph{know} that it is true.
+Conveniently,
+we therefore don't need to fix a particular formal definition
+to start our investigation into computability theory.
+I'll use `computable' as a precise technical term --
+a term that can be rigorously defined in many equivalent ways.
+We'll look at two such definitions in later chapters.
+But you don't need to know them to understand what I mean:
+a function is computable iff
+there is a mechanical algorithm for computing the output for any input,
+as explained above.
 
-If we want to prove that
-there is no algorithm for computing a certain function,
+The claim that our informal concept of computability
+coincides with the formal concept is known as \emph{Church's Thesis},
+or as the \emph{Church-Turing Thesis}.
+It is a ``Thesis'' rather than a theorem
+because it is not a mathematical statement:
+it can't be proved mathematically.
+But we nonetheless know that it is true.
+I'll explain why in Chapter~\ref{ch:recursive},
+after we've looked at some  formal definitions of computability.
+
+If we want to answer a question about
+computability in an informal, intuitive sense,
 we generally need to invoke the Church-Turing Thesis.
-Consider, for example,
-the function that returns `yes' for every valid first-order sentence
-and `no' for every invalid one.
-An algorithm for computing this function
-would solve the Entscheidungsproblem.
+For example,
+when Hilbert asked whether there is an algorithm for deciding
+whether a first-order sentence is valid,
+he was using `algorithm' in an informal sense.
 In chapters \ref{ch:turing} and \ref{ch:incompleteness},
-we'll prove that there is no such algorithm.
-But all we can actually prove is that
-the function isn't computable in any of the formal senses mentioned above.
-We can prove,
-for example,
-that no Turing machine can compute the function.
+we'll show that
+no Turing machine can decide whether a first-order sentence is valid.
 From this,
 we will infer ``by the Church-Turing Thesis''
-that there is no algorithm for solving the Entscheidungsproblem.
+that there is no algorithm (in the informal sense) for deciding validity.
 
-\begin{exercise}
-  We could avoid having to appeal to the Church-Turing Thesis by
-  \emph{defining} `mechanically computable' as, say, `definable in the lambda calculus'.
-  Why would this be a bad idea?
-  (You don't need to know anything about the lambda calculus to answer the question.)
-\end{exercise}
+% \begin{exercise}
+%   We could avoid having to appeal to the Church-Turing Thesis by
+%   \emph{defining} `mechanically computable' as, say, `definable in the lambda calculus'.
+%   Why would this be a bad idea?
+%   (You don't need to know anything about the lambda calculus to answer the question.)
+% \end{exercise}
 
 Besides these \textit{unavoidable} appeals to the Church-Turing Thesis,
-we will also occasionally make \textit{avoidable} or \textit{lazy} appeals to the Thesis.
+we will also make \textit{avoidable} or \textit{lazy} appeals to the Thesis.
 If a particular function is obviously computable,
 we sometimes won't bother proving that
 it is computable in any of the formal senses.
 For example,
-we might say that ``by the Church-Turing Thesis'',
-the multiplication function
-(which is obviously computable)
-is computable by a Turing machine.
+the multiplication function on the natural numbers
+is obviously computable:
+there is a mechanical algorithm for multiplying two natural numbers.
+We can infer ``by the Church-Turing Thesis''
+that there is a Turing machine that computes this function.
 This appeal to the Church-Turing Thesis is avoidable
-because we could actually prove that
-there is a Turing machine that computes the function.
-(I will, incidentally, display such a machine in chapter~\ref{ch:turing}.)
-But this would be tedious,
-and we can save the effort
-by relying on the Church-Turing Thesis.
+because we could instead have shown that
+there is such a machine
+(as I will in Chapter~\ref{ch:turing}).
 
 \begin{exercise}
   Explain (informally) why,
@@ -347,16 +349,18 @@ by relying on the Church-Turing Thesis.
 \section{Uncomputable functions}
 
 I've mentioned -- so far without proof -- that
-the function that
+there is no algorithm for deciding whether
+a first-order sentence is valid.
+We can put this in terms of computability.
+Consider the function that
 takes a first-order sentence as input
 and returns `yes' or `no'
-depending on whether the sentence is valid or not
-is uncomputable.
-Are there other uncomputable functions?
-
-Let's think about functions that take one or more natural numbers as input
+depending on whether the sentence is valid or not.
+This function is uncomputable.
+But let's focus on functions that take one or more natural numbers as input
 and return a natural number as output.
 Are all such functions computable?
+
 Any example function that you might come up with
 (addition, multiplication, factorial, the $n$-th prime, etc.)
 is almost certainly computable.
@@ -396,19 +400,21 @@ But what matters is that it is uncountable.)
 The set of algorithms for functions on $\mathbb{N}$,
 on the other hand,
 is countable.
-I've said that an algorithm must be specifiable in a finite way.
-So each algorithm can be given as a finite string of symbols.
-Moreover,
-we don't need uncountably many primitive symbols to define
-an algorithm for manipulating numbers.
-Since there are only countably many finite strings of symbols
-in a countable language,
-it follows that there are only countably many algorithms for functions on $\mathbb{N}$.
+An algorithm must be specifiable in a finite way.
+So every algorithm can be given as a finite string of symbols
+(When we give precise definitions of computability later,
+we'll see what these strings might look like.)
+We don't need uncountably many primitive symbols to define
+algorithms for manipulating numbers.
+So every algorithm for computing functions on $\mathbb{N}$
+can be written down as a finite string of symbols in a countable language.
+There are countably many such strings.
+So there are only countably many algorithms for functions on $\mathbb{N}$.
 
 If the set of functions from $\mathbb{N}$ to $\mathbb{N}$ is uncountable
 and the set of algorithms is countable,
 it follows that
-uncountably many functions from $\mathbb{N}$ to $\mathbb{N}$ are not computable by any algorithm.
+uncountably many functions from $\mathbb{N}$ to $\mathbb{N}$ are not computable.
 
 By itself,
 this isn't yet a serious blow to Hilbert's (and Leibniz's) dream that
@@ -429,17 +435,13 @@ and also to a concrete example of an uncomputable function.
 
 Let's still focus on algorithms for computing functions on $\mathbb{N}$.
 (We'll see in section~\ref{sec:coding} why this is not a serious restriction.)
-Any such algorithm can be written down as a finite string of symbols,
+As I just mentioned,
+any such algorithm can be written down as a finite string of symbols
 in some suitable language.
-That language may be a restricted part of English,
-or a programming language like Python or JavaScript,
-or a special language for defining Turing machines,
-as will be explained in chapter~\ref{ch:turing}.
-Any of them will do.
 For any sensible choice of such a language,
 there will be a mechanical way of checking whether
 a given string of symbols (in the language) specifies an algorithm.
-It follows that we can mechanically go through all algorithms,
+So we can mechanically go through all algorithms,
 one by one,
 just as we can go through all proofs in the first-order calculus.
 
@@ -448,7 +450,7 @@ For any input number $n$,
 the antidiagonal algorithm generates
 the list of all algorithms (for functions on $\mathbb{N}$) up to the $n$-th entry:
 $A_1, A_2, \ldots, A_n$.
-It then runs the $n$-th algorithm $A_n$ with input $n$
+It then runs the $n$-th algorithm $A_n$ on input $n$
 and returns the output plus 1.
 
 Think of the algorithms and their outputs arranged in a table:
@@ -458,17 +460,17 @@ Think of the algorithms and their outputs arranged in a table:
     \toprule
     Algorithm & 0 & 1 & 2 & 3 & \cdots \\
     \midrule
-    A1 & x_{1,0} & x_{1,1} & x_{1,2} & x_{1,3} & \cdots \\
-    A2 & x_{2,0} & x_{2,1} & x_{2,2} & x_{2,3} & \cdots \\
-    A3 & x_{3,0} & x_{3,1} & x_{3,2} & x_{3,3} & \cdots \\
+    $A_1$ & x_{1,0} & x_{1,1} & x_{1,2} & x_{1,3} & \cdots \\
+    $A_2$ & x_{2,0} & x_{2,1} & x_{2,2} & x_{2,3} & \cdots \\
+    $A_3$ & x_{3,0} & x_{3,1} & x_{3,2} & x_{3,3} & \cdots \\
     $\vdots$ & \vdots & \vdots & \vdots & \vdots &  \\
     \bottomrule
   \end{tabular}
 \end{center}
 
 \noindent%
-$x_{1,0}$ is the output of algorithm $A1$ for input 0,
-$x_{2,3}$ is the output of algorithm $A2$ for input 3,
+$x_{1,0}$ is the output of algorithm $A_1$ for input 0,
+$x_{2,3}$ is the output of algorithm $A_2$ for input 3,
 and so on.
 The antidiagonal algorithm takes an input $n$,
 goes to the $n$-th row,
@@ -529,6 +531,8 @@ algorithms always return an output.
 But the above argument still goes through:
 the revised algorithm
 can't be on the list of algorithms.
+(If it were the $n$-th algorithm on the list,
+what would its output be for input $n$?)
 It is still not a genuine algorithm.
 Why not?
 
@@ -601,16 +605,17 @@ the function $d$ is uncomputable.
 % the problem of determining whether a given algorithm halts on a given input.
 
 \begin{exercise}
-  Explain why there is no mechanical way to enumerate the \emph{total} functions on $\mathbb{N}$.
+  Explain why there is no mechanical way to enumerate all total computable one-place functions on $\mathbb{N}$.
+  (Hint: construct an antidiagonal algorithm.)
 \end{exercise}
 
 \begin{exercise}
-  Show that every total non-increasing function on $\mathbb{N}$ is computable.
+  Show that every total non-increasing one-place function on $\mathbb{N}$ is computable.
   A function $f$ is non-increasing if, for all $x$, $f(x) \geq f(x+1)$.
 \end{exercise}
 
 
-\section{Decidable and semidecidable sets}\label{sec:decidable}
+\section{Decidability}\label{sec:decidable}
 
 Hilbert's Entscheidungsproblem is the problem of deciding,
 for any first-order sentence,
@@ -663,19 +668,13 @@ even if it misclassifies objects in other possible worlds.
 To decide a property extensionally is really to decide
 whether an object belongs to a certain set:
 to the property's extension.
-Henceforth,
-when I talk about deciding properties,
-I always mean deciding them extensionally
-(although the present complication won't often arise,
-because we'll mostly be concerned with mathematical properties
-whose extension doesn't vary from world to world).
 
-In computability theory,
-it is common to speak directly of deciding sets.
-An algorithm \emph{decides a set} if
+We'll say that algorithm \emph{decides a set} if
 it returns `yes' for every object in the set
 and `no' for every other object.
 A set is \emph{decidable} if there is an algorithm that decides it.
+We call a property or relation \emph{decidable} if
+there is an algorithm that decides its extension.
 
 Decidability is closely related to computability.
 An algorithm for deciding a set
@@ -684,17 +683,30 @@ and outputs `yes' for objects in the set
 and `no' for objects not in the set.
 This function is called the \emph{characteristic function} of the set.
 Officially,
-the outputs are often taken to be 1 and 0 rather than `yes' and `no'.
+the outputs are usually taken to be 1 and 0 rather than `yes' and `no'.
 That is,
-the characteristic function $f_S$ of a set $S$ is defined by
+the characteristic function of a set $S$ is the function $\chi_S$ defined by
 \begin{equation*}
-  f_S(x) = \begin{cases}1 & \text{ if $x \in S$}\\
+  \chi_S(x) = \begin{cases}1 & \text{ if $x \in S$}\\
     0 &\text{ if $x \notin S$.}
   \end{cases}
 \end{equation*}
 
 The connection between decidability and computability can now be stated as follows:
-a set is decidable iff its characteristic function is computable.
+
+\begin{definition}{}{decidable}
+  The \emph{characteristic function} of a set $S$ is the function that maps
+  every object in $S$ to 1
+  and every other object to 0.
+  
+  A set is \emph{decidable} if its characteristic function is computable.
+
+  A property or relation is \emph{decidable} if its extension is decidable.
+\end{definition}
+
+We adopt this as the official definition
+because it reduces the concept of decidability to the concept of computability,
+which will be given a precise definition in the next chapters.
 
 \begin{exercise}
   Explain why every finite set is decidable.
@@ -710,23 +722,27 @@ a set is decidable iff its characteristic function is computable.
   i.e., the set of natural numbers not in $S$.
 \end{exercise}
 
-We can generalize the concept of decidability to relations.
-An $n$-ary relation $R$ is (extensionally) decidable if
-there is an algorithm that
-outputs `yes' for every $n$-tuple of objects that stand in the relation
-and `no' for every $n$-tuple of objects that don't.
+Definition~\ref{def:decidable} covers relations with any number of arguments.
+The extension of an $n$-ary relation $R$ is the set of $n$-tuples of objects that stand in the relation.
+The characteristic function of this set maps
+every $n$-tuple of objects to 1 if they stand in the relation
+and to 0 if they don't.
+More intuitively,
+a relation is decidable
+if there is an algorithm for deciding whether
+any given $n$-tuple of objects stands in the relation.
 
-An important example of a decidable relation is the relation that holds
+An important example of a decidable relation is the one that holds
 between a sequence $A_1,\ldots,A_n$ of first-order sentences and a first-order sentence $B$
 iff $A_1,\ldots,A_n$ is a proof of $B$ in the first-order calculus.
-I relied on the decidability of this relation
-when I described the algorithm for finding proofs in section~\ref{sec:entscheidungsproblem}:
-I noted that
-there is a mechanical algorithm for checking whether
+(I relied on the decidability of this relation
+when I described the algorithm for finding proofs in Section~\ref{sec:entscheidungsproblem}.)
+There is a mechanical algorithm for checking whether
 a given sequence of sentences $A_1,\ldots,A_n$ is a proof of a sentence $B$ in the first-order calculus.
 We only need to check that
 each sentence in $A_1,\ldots,A_n$ is either an axiom or follows from previous sentences by MP or Gen,
 and that the last sentence $A_n$ is the target sentence $B$.
+
 The decidability of the proof relation is not an accidental feature of our calculus.
 It is a critical property of proof systems in general.
 In any acceptable proof system,
@@ -745,46 +761,51 @@ On the other hand,
 there is an algorithm for listing all algorithms that halt on a given input $n$.
 We know that we can mechanically enumerate all algorithms,
 in some order $A_1, A_2, A_3, \ldots$.
-For each number $i = 1, 2, 3, \ldots$,
-we can therefore take the first $i$ algorithms $A_1, \ldots, A_i$
-and apply them to input $n$,
-letting them run for $i$ steps.
+For each number $k = 1, 2, 3, \ldots$,
+we can therefore take the first $k$ algorithms $A_1, \ldots, A_k$
+apply them to the input $n$,
+and let them run for $k$ steps.
 (Every algorithm can be divided into steps;
 it doesn't matter how exactly these are defined.)
-That is,
-we start by running $A_1$ on $n$ for a single step.
-Then we run $A_1$ and $A_2$ on $n$ for two steps
-(after one another, say).
-Then we run $A_1$, $A_2$, and $A_3$ on $n$ for three steps,
-and so on.
-Whenever an algorithm returns an output,
+Starting with $k=1$,
+we simply run $A_1$ on $n$ for a single step.
+For $k=2$,
+we then run $A_1$ and $A_2$ on $n$ for two steps each.
+For $k=3$,
+we run $A_1$, $A_2$, and $A_3$ on $n$ for three steps,
+and so on,
+continuing through all natural numbers $k$.
+Whenever we find that an algorithm returns an output for input $n$ within the allotted number of steps,
 we add it to the list of algorithms that halt on input $n$.
-This way,
-every algorithm that halts on input $n$
-will eventually be listed.
+This mechanical procedure will eventually list
+every algorithm that halts on input $n$.
 
 So, even though
 there is no algorithm for deciding whether an arbitrary algorithm halts on input $n$,
 there is an algorithm for listing all and only the algorithms that do halt on input $n$.
 The property of halting on input $n$ is not decidable,
-but it is \emph{semidecidable}.
+but it is \emph{semidecidable} or \emph{computably enumerable}.
 
 In general,
-a property is (extensionally) \emph{semidecidable} if
-there is a mechanical procedure for listing all objects that have the property.
+a set is \emph{computably enumerable} if
+there is a mechanical procedure for listing all (and only) its elements.
 Equivalently,
 there is an algorithm that
 outputs `yes' for every object that has the property
 and never outputs `yes' for an object that doesn't have the property.
+We'll adopt this as the official definition:
 
-Semidecidable properties are also called \emph{computably enumerable},
-or \emph{recursively enumerable}, or just \emph{r.e}.
-I'll mostly use the term `computably enumerable'.
+\begin{definition}{}{computably-enumerable}
+  The \emph{partial characteristic function} of a set $S$ is the (partial) function that maps
+  every object in $S$ to 1
+  and is undefined for every object not in $S$.
+  
+  A set is \emph{computably enumerable} if
+  its partial characteristic function is computable.
 
-As with decidability,
-the concept of semidecidability, or computable enumerability, can be generalized to relations and to sets.
-A set is computably enumerable if
-there is an algorithm for listing all its elements.
+  A property or relation is \emph{computably enumerable} if
+  its extension is computably enumerable.
+\end{definition}
 
 \begin{exercise}
   Explain why the set of valid first-order sentences is computably enumerable.
@@ -804,20 +825,20 @@ The following propositions state some easy connections between
 decidability and computable enumerability.
 
 \begin{proposition}{}{kleenes-theorem}
-   If a set and its complement are both computably enumerable then the set is decidable.
+   If a set and its complement are both computably enumerable then it is decidable.
 \end{proposition}
 \begin{proof}
   \emph{Proof.}
   Let $S$ be a set such that both $S$ and its complement $\bar{S}$ are computably enumerable:
   there are mechanical procedures for listing the elements of $S$ and of $\bar{S}$.
-  We can use these to define an algorithm for deciding $S$:
+  We can use these procedures to define an algorithm for deciding $S$:
   Given any object $x$,
   we run the two procedures in alternation,
   listing the first element of $S$, then the first element of $\bar{S}$,
   then the second element of $S$, then the second element of $\bar{S}$, and so on.
   At some stage,
   we must find $x$ in either of the two lists.
-  If it shows up in the list of elements of $S$,
+  If $x$ shows up in the list of elements of $S$,
   we return `yes'.
   If it shows up in the list of elements of $\bar{S}$,
   we return `no'.
@@ -869,7 +890,7 @@ Proposition~\ref{prop:re-existential} has a converse:
   Let $R$ be the relation that holds between $x$ and $y$ iff
   the algorithm has produced $x$ among the first $y$ items.
   Then $x \in S$ iff $\exists y R(x,y)$.
-  Moreover, $R$ is dedicable:
+  Moreover, $R$ is decidable:
   given any $x$ and $y$,
   simply run the enumerate-$S$ algorithm for $y$ steps;
   if $x$ shows up in the list, return `yes',
@@ -925,7 +946,7 @@ The converse doesn't hold:
 an axiomatizable theory need not be decidable.
 It will,
 however,
-always be semidecidable,
+always be computably enumerable,
 as the following proposition shows.
 
 \begin{proposition}{}{re-theory}
@@ -951,7 +972,7 @@ Ideally,
 we'd like a theory of, say, arithmetic to be complete,
 in the sense that it contains all truths about its intended model.
 Since every sentence $A$ is either true or false in the intended model,
-the theory would then contain either $A$ or $\neg A$,
+the theory would contain either $A$ or $\neg A$,
 for every sentence $A$ in its language.
 This is how completeness of theories is usually defined:
 a theory is \emph{complete} if,
@@ -1000,7 +1021,7 @@ it follows that any axiomatizable theory
 that ``knows'' elementary facts about computability is incomplete.
 
 \begin{exercise}
-  Let $T$ be the theory axiomatized by the empty set.
+  Let $T$ be the $\L_A$-theory axiomatized by the empty set.
   Given the undecidability of first-order logic (which we still haven't proved),
   is $T$ (a) axiomatizable? (b) decidable? (c) complete?
 \end{exercise}
