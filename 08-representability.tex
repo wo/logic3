@@ -493,7 +493,7 @@ if the theory can prove $0 \not= 1$.
   % then $\proves_{T} B(\num{a_{1}},\ldots,\num{a_{n}},0)$ and
   % $\proves_{T} \forall y(B(\num{a_{1}},\ldots,\num{a_{n}},y) \to y = 0)$.
 
-\section{Conditions for Representability I}
+\section{Conditions for representability I}
 
 We want to show that every computable total function
 is representable in any theory
@@ -765,7 +765,7 @@ where $z$ is a variable that doesn't occur in $t_{1}$ or $t_{2}$.
 
 Now for the hard part: primitive recursion.
 
-\section{Conditions for Representability II}
+\section{Conditions for representability II}
 
 Return to the factorial function $\mathrm{fact}$ that maps
 each number $n$ to $n! = 1 \times 2 \times \ldots \times n$.
@@ -893,9 +893,9 @@ is the formula $\smallcaps{Entry}(x,y,z)$ that we were looking for.
 I'm not actually going to write down $\smallcaps{Beta}(x,y,z)$ as an $\L_A$-formula.
 Instead,
 I'll show that the function
-$\mathrm{beta}$ can be defined by composition and minimization from certain
+$\mathrm{beta}$ can be defined by composition and (regular) minimization from certain
 functions that are easily expressible in $\L_{A}$.
-Since expressibility is preserved under composition and minimization,
+Since expressibility is preserved under composition and (regular) minimization,
 it follows that $\mathrm{beta}$ is expressible.
 
 The base functions I'll need to define $\mathrm{beta}$ are
@@ -951,7 +951,7 @@ To this end,
 let's first introduce a name for the class of functions that can be so constructed.
 I'll call a function \emph{tame} if it can be defined
 from projection, addition, multiplication, and $\chi_=$
-by composition and minimization;
+by composition and regular minimization;
 I'll call a relation \emph{tame} if its characteristic function is tame.
 
 The following lemmas show that
@@ -962,7 +962,7 @@ We've met the first two of these operations in Section~\ref{sec:pr-examples}.
 For the third,
 recall that the minimization $\mu y\, R(x_{1},\ldots,x_{n},y)$ of an $n\!+\!1$-ary relation $R$
 is the $n$-ary function that maps $x_{1},\ldots,x_{n}$ to the least $y$ such that $R(x_{1},\ldots,x_{n},y)$.
-\emph{Regular} minimization is minimization applied to a relation
+\emph{Regular} minimization for relations is minimization applied to a relation
 that is \emph{regular} in the sense that
 for all $x_{1},\ldots,x_{n}$ there is some $y$ such that $R(x_{1},\ldots,x_{n},y)$.
 
@@ -1043,7 +1043,7 @@ it is representable in any theory that satisfies R1--R6:
   projection, addition, multiplication, and $\chi_=$ are representable in any theory
   that satisfies R4--R6.
   By Lemmas~\ref{lem:repr-closure-cn} and \ref{lem:repr-closure-mn},
-  composition and minimization preserve representability
+  composition and (regular) minimization preserve representability
   in any theory that satisfies R1--R4.
   \qed
 \end{proof}
