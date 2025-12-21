@@ -6,7 +6,7 @@ We are going to introduce formal languages
 in which one can regiment mathematical and philosophical reasoning,
 without the distracting complexities and vagaries of natural language.
 In this chapter,
-we begin with the language of propositional logic,
+we begin with the language of propositional logic:
 the logic of the connectives $\neg$, $\to$, $\land$, $\lor$, etc.
 This language is woefully inadequate for any serious applications,
 but it is a useful prototype to introduce general ideas and techniques
@@ -42,7 +42,7 @@ The \emph{primitive symbols} of $\L_{0}$ are:
 
 The sentence letters are classified as \emph{non-logical} symbols;
 the other expressions are \emph{logical}.
-(The point of this classification will become clear in section~\ref{sec:semantics0}.)
+The point of this classification will become clear in section~\ref{sec:semantics0}.
 
 \begin{definition}{}{L0}
   A \emph{sentence} of $\L_{0}$ is a finite string of symbols,
@@ -62,7 +62,7 @@ sentences in the object language.
 I'll sometimes use the lowercase letters `$p$' and `$q$' to denote arbitrary sentence letters.
 I haven't said what the sentence letters of $\L_{0}$ look like.
 It doesn't matter
-(as long as none of them has any other primitive $\L_{0}$-symbols as a part,
+(as long as none of them has any other primitive $\L_{0}$-symbol as a part,
 which I hereby stipulate).
 Strictly speaking, $\L_{0}$ is therefore not a single language,
 but a family of languages, with different stocks of sentence letters.
@@ -76,7 +76,7 @@ Rather,
 it says that \emph{for all strings $A$},
 if $A$ is a sentence then $\neg A$ is a sentence.
 By `$\neg A$',
-I mean the string that obtained by putting `$\neg$' in front of whatever string `$A$' picks out.
+I mean the string obtained by putting `$\neg$' in front of whatever string `$A$' picks out.
 Similarly for `$(A \to B)$' and other such cases.
 
 % (This can be explained as follows: The metalanguage in which these notes are
@@ -112,7 +112,7 @@ That is, if $A$ and $B$ are $\L_{0}$-sentences, we write
 \item $(A \leftrightarrow B)$ for $\neg ((A \to B) \to \neg(B \to A))$.
 \end{itemize*}
 %
-We could have added `$\land$', `$\lor$', and `$\leftrightarrow$' as primitive symbols;
+I could have added `$\land$', `$\lor$', and `$\leftrightarrow$' as primitive symbols;
 you'll soon understand why we didn't.
 At any rate,
 you should remember that
