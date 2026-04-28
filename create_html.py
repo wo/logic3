@@ -232,6 +232,19 @@ def escape_intext_links(tex):
     tex = re.sub(r'\\ref\{def:([^}]+)\}', r'REFdef:\1ENDREF', tex)
     tex = re.sub(r'\\begin{observation}\{([^}]+)\}', r'\\begin{observation}{\1} ANCHORobs:\1ENDANCHOR', tex)
     tex = re.sub(r'\\ref\{obs:([^}]+)\}', r'REFobs:\1ENDREF', tex)
+    # Theorem-like envs from header-boxes.tex (\newtcbtheorem-defined):
+    for env, prefix in [('lemma', 'lem'), ('theorem', 'thm'),
+                        ('proposition', 'prop'), ('corollary', 'cor')]:
+        tex = re.sub(
+            r'\\begin{' + env + r'}\{(.*)\}\{([^}]+)\}',
+            r'\\begin{' + env + r'}{\1 ANCHOR' + prefix + r':\2ENDANCHOR}{\2}',
+            tex
+        )
+        tex = re.sub(
+            r'\\ref\{' + prefix + r':([^}]+)\}',
+            r'REF' + prefix + r':\1ENDREF',
+            tex
+        )
     # page number references:
     tex = re.sub(r'\\label\{([^}]+)\}', r'\\label{\1}ANCHOR\1ENDANCHOR', tex)
     tex = re.sub(r'(?:on|from|at)\s+(?:p\.|page)\\?\s+\\pageref\{([^}]+)\}', r'PAGEREF\1ENDPAGEREF', tex)
@@ -262,7 +275,7 @@ def restore_intext_links():
             return definition_text + '<a id="' + match.group(2) + '"></a>'
 
         pattern = r"""
-        (?:Definition|Observation)
+        (?:Definition|Observation|Lemma|Theorem|Proposition|Corollary)
         \s*([\d\.]+)              # chapter and section number
         [^<]*?                    # optional text like ': Basic Model '
         (?:<\s*\/?[^>]+>\s*)*     # optional tags, but no text in between
@@ -502,7 +515,7 @@ def fix_layout(html):
     # QED symbol, right-aligned:
     html = re.sub(r'QEDSYMBOL', r'<span class="qed">□</span>', html)
     # Small caps:
-    html = re.sub(r'SMALLCAPS([^E]+)ENDSMALLCAPS', r'<span class="smallcaps">\1</span>', html)
+    html = re.sub(r'SMALLCAPS(.*?)ENDSMALLCAPS', r'<span class="smallcaps">\1</span>', html, flags=re.DOTALL)
     return html
 
 
