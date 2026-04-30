@@ -3,3 +3,6 @@
 *.out
 *.toc
 /.auctex-auto/
+/html/*
+!/html/logic3.css
+!/html/fonts/

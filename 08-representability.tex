@@ -767,18 +767,18 @@ Now for the hard part: primitive recursion.
 
 \section{Conditions for representability II}
 
-Return to the factorial function $\mathrm{fact}$ that maps
+Return to the factorial function $\mathrm{fac}$ that maps
 each number $n$ to $n! = 1 \times 2 \times \ldots \times n$.
 The primitive recursive definition goes as follows:
 \begin{align*}
-  \mathrm{fact}(0) & = 1 \\
-  \mathrm{fact}(s(y)) & = s(y) \times \mathrm{fact}(y).
+  \mathrm{fac}(0) & = 1 \\
+  \mathrm{fac}(s(y)) & = s(y) \times \mathrm{fac}(y).
 \end{align*}
 We need to find a formula $F(x,y)$ that expresses this function in $\L_{A}$.
 
 The trick is to see the recursive definition as defining a sequence:
-$\t{\mathrm{fact}(0), \mathrm{fact}(1), \mathrm{fact}(2), \ldots}$.
-Our formula $F(x,y)$ will say ``$y$ is the last element of the sequence $\t{\mathrm{fact}(0), \ldots, \mathrm{fact}(x)}$''.
+$\t{\mathrm{fac}(0), \mathrm{fac}(1), \mathrm{fac}(2), \ldots}$.
+Our formula $F(x,y)$ will say ``$y$ is the last element of the sequence $\t{\mathrm{fac}(0), \ldots, \mathrm{fac}(x)}$''.
 
 Of course,
 $\L_{A}$ doesn't have terms for sequences.
@@ -792,14 +792,14 @@ saying that
   \item[(ii)] for all $i<x$, the $s(i)$-th entry in the sequence coded by $z$ is the product of the $i$th entry and $s(i)$.
 \end{cenumerate}
 So $\smallcaps{Seq}(z,x)$ will say that
-$z$ codes the sequence $\t{\mathrm{fact}(0), \mathrm{fact}(1), \ldots, \mathrm{fact}(x)}$.
+$z$ codes the sequence $\t{\mathrm{fac}(0), \mathrm{fac}(1), \ldots, \mathrm{fac}(x)}$.
 From this,
 we can express $F(x,y)$ as $\exists z(\smallcaps{Seq}(z,x) \land \smallcaps{Entry}(z,s(x),y))$.
 This says that
-there is a number $z$ that codes $\t{\mathrm{fact}(0), \ldots, \mathrm{fact}(x)}$
+there is a number $z$ that codes $\t{\mathrm{fac}(0), \ldots, \mathrm{fac}(x)}$
 that $y$ is the $s(x)$-th entry in that sequence.
 (We need an $s(x)$ here because $F(x,0)$ is the \emph{first}, not the \emph{zero}-th, entry in the sequence,
-and so $\mathrm{fact}(x)$ is the $s(x)$-th entry.)
+and so $\mathrm{fac}(x)$ is the $s(x)$-th entry.)
 
 The main task, then,
 is to find the formula $\smallcaps{Entry}(x,i,y)$

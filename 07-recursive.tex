@@ -49,7 +49,7 @@ we start with three kinds of base functions.
 
   \item The \emph{zero function} $z$ that returns 0 for any input number.
 
-  \item For each $n,i$, the \emph{projection function} $\pi^{n}_{i}$ takes $n$ numbers as input and return the $i$-th of them. (For example $\pi^{3}_{2}(5,9,2) = 9$.)
+  \item For each $n$ and $i$, the \emph{projection function} $\pi^{n}_{i}$ takes $n$ numbers as input and return the $i$-th of them. (For example $\pi^{3}_{2}(5,9,2) = 9$.)
 \end{cenumerate}
 \noindent%
 These functions are trivially computable,
@@ -131,8 +131,8 @@ Some more examples.
 First, the \emph{factorial function} that takes
 a number $n$ as input and returns the product of all numbers from 1 to $n$:
 \begin{align*}
-  \mathrm{fact}(0) &= 1\\
-  \mathrm{fact}(s(y)) &= s(y) \cdot \mathrm{fact}(y)
+  \mathrm{fac}(0) &= 1\\
+  \mathrm{fac}(s(y)) &= s(y) \cdot \mathrm{fac}(y)
 \end{align*}
 
 Next,
@@ -217,7 +217,7 @@ That's because
 \end{exercise}
 
 A downside of the above format is that
-it doesn't directly account for our definitions of $\mathrm{pred}$, $\mathrm{fact}$, and $\delta$,
+it doesn't directly account for our definitions of $\mathrm{pred}$, $\mathrm{fac}$, and $\delta$,
 which are one-place functions.
 Recall the definition of $\mathrm{pred}$:
 \begin{align*}
@@ -244,7 +244,7 @@ we can now define $\mathrm{pred}$ by composition and projection from $\mathrm{dp
 \[
   \mathrm{pred} = \mathrm{Cn}[\mathrm{dpred}, \pi^{1}_{1}, \pi^{1}_{1}]
 \]
-This trick also works for $\mathrm{fact}$ and $\delta$,
+This trick also works for $\mathrm{fac}$ and $\delta$,
 and any other case of ``one-place primitive recursion''.
 
 We now define the class of primitive recursive functions.
@@ -456,7 +456,7 @@ This trick can be generalized:
   \[
     f(x_1, \ldots, x_n) \cdot \chi(x_1, \ldots, x_n) + g(x_1, \ldots, x_n) \cdot \delta(\chi(x_1, \ldots, x_n))
   \]
-  is primitive recursive and defines $h$.
+  is primitive recursive and defines $h$. \qed
 \end{proof}
 
 \begin{exercise}

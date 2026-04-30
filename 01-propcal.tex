@@ -1219,6 +1219,7 @@ The soundness proof is straightforward.
   If $\Gamma \vdash_{0} A$, then $\Gamma \entails A$.
 \end{theorem}
 \begin{proof}
+  \emph{Proof.}
   Suppose $\Gamma \vdash_{0} A$.
   This means that
   there is a sequence $A_1, A_2, \ldots, A_n$ such that $A_n = A$ and
@@ -1454,12 +1455,14 @@ Here comes step 2.
   Assume first that $A$ is $\neg B$,
   for some sentence $B$.
   We have to show that $\sigma_\Gamma \satisfies \neg B$ iff $\neg B \in \Gamma$.
+  
   Left to right:
   Assume $\sigma_\Gamma \satisfies \neg B$.
   Then $\sigma_\Gamma \not\satisfies B$ by definition~\ref{def:satisfaction0}.
   By induction hypothesis,
   it follows that $B \not\in \Gamma$.
   Then $\neg B \in \Gamma$ because $\Gamma$ is maximal.
+
   Right to left:
   Assume $\neg B \in \Gamma$.
   Then $B \not\in \Gamma$ because $\Gamma$ is consistent.
@@ -1471,6 +1474,7 @@ Here comes step 2.
   Now assume that $A$ is $B \to C$,
   for some sentences $B$ and $C$.
   We show that $\sigma_\Gamma \satisfies B \to C$ iff $B \to C \in \Gamma$.
+
   Left to right:
   Assume $\sigma_\Gamma \satisfies B \to C$.
   Then $\sigma_\Gamma \not\satisfies B$ or $\sigma_\Gamma \satisfies C$ by definition~\ref{def:satisfaction0}.
@@ -1479,6 +1483,7 @@ Here comes step 2.
   and so $B \to C \in \Gamma$ by lemma~\ref{lem:max-cons-closure} and exercise~\ref{ex:vdash0-examples}(a).
   If $\sigma_\Gamma \satisfies C$ then $C \in \Gamma$ by induction hypothesis,
   and so $B \to C \in \Gamma$ by lemma~\ref{lem:max-cons-closure} and exercise~\ref{ex:vdash0-examples}(b).
+
   Right to left:
   Assume $B \to C \in \Gamma$.
   Assume first that $B$ is also in $\Gamma$.

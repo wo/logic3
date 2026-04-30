@@ -226,10 +226,10 @@ for which there are no instructions.
 There are other ways to represent the same program.
 We could, for example, package it into a list of quintuples:
 \begin{equation*}
-  (q_{0}, 1, \mathrm{B}, \mathrm{R}, q_{1}), \quad
-  (q_{0}, \mathrm{B}, 1, \mathrm{R}, q_{2}), \quad
-  (q_{1}, 1, \mathrm{B}, \mathrm{R}, q_{0}), \quad
-  (q_{1}, \mathrm{B}, 1, \mathrm{R}, q_{0}).
+  \t{q_{0}, 1, \mathrm{B}, \mathrm{R}, q_{1}}, \quad
+  \t{q_{0}, \mathrm{B}, 1, \mathrm{R}, q_{2}}, \quad
+  \t{q_{1}, 1, \mathrm{B}, \mathrm{R}, q_{0}}, \quad
+  \t{q_{1}, \mathrm{B}, 1, \mathrm{R}, q_{0}}.
 \end{equation*}
 
 \noindent%
@@ -331,11 +331,11 @@ if odd, the output is two strokes.
 
 \begin{exercise}\label{ex:bb3}
   Draw a flow chart for the machine given by the following quintuples:
-  $(q_0, \mathrm{B}, 1, \mathrm{R}, q_1)$,
-  $(q_0, 1, 1, \mathrm{L}, q_2)$,
-  $(q_1, \mathrm{B}, 1, \mathrm{L}, q_{0})$,
-  $(q_1, 1, 1, \mathrm{R}, q_{1})$,
-  $(q_2, \mathrm{B}, 1, \mathrm{L}, q_{1})$.
+  $\t{q_0, \mathrm{B}, 1, \mathrm{R}, q_1}$,
+  $\t{q_0, 1, 1, \mathrm{L}, q_2}$,
+  $\t{q_1, \mathrm{B}, 1, \mathrm{L}, q_{0}}$,
+  $\t{q_1, 1, 1, \mathrm{R}, q_{1}}$,
+  $\t{q_2, \mathrm{B}, 1, \mathrm{L}, q_{1}}$.
   Can you figure out what this machine does,
   when started on a blank tape?
   % It writes six strokes, then halts.
@@ -992,7 +992,7 @@ But it can also be shown directly:
 \begin{theorem}{(Rado 1962)}{bb}
   The Busy Beaver function is not Turing-computable.
 \end{theorem}
-\begin{proof}
+\begin{proof} \emph{Proof.}
   We'll show that
   every Turing-computable total function $f$ on the natural numbers
   is eventually overtaken by the Busy Beaver function $\Sigma$.

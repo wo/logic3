@@ -21,12 +21,46 @@ tex4ht_config = r"""
 """
 
 
+MATHJAX_VERSION = "4.1.1"
+MATHJAX_SCRIPT = f"html/mathjax/tex-chtml-nofont.js"
+STIX2_CHTML = f"html/mathjax-fonts/mathjax-stix2-font/chtml.js"
+
+
+def ensure_mathjax():
+    """Download MathJax and STIX2 font files if not already present."""
+    if os.path.exists(MATHJAX_SCRIPT) and os.path.exists(STIX2_CHTML):
+        return
+    import tempfile
+    print("Installing MathJax and STIX2 font...")
+    os.makedirs("html/mathjax", exist_ok=True)
+    os.makedirs("html/mathjax-fonts/mathjax-stix2-font", exist_ok=True)
+    with tempfile.TemporaryDirectory() as tmp:
+        v = MATHJAX_VERSION
+        # MathJax — full package (extensions loaded dynamically need to be present)
+        subprocess.run(["npm", "pack", f"mathjax@{v}"], cwd=tmp, check=True,
+                       capture_output=True)
+        subprocess.run(["tar", "-xzf", f"mathjax-{v}.tgz", "--strip-components=1",
+                        "-C", os.path.abspath("html/mathjax")], cwd=tmp, check=True,
+                       capture_output=True)
+        # STIX2 font package (chtml files only)
+        subprocess.run(["npm", "pack", f"@mathjax/mathjax-stix2-font@{v}"],
+                       cwd=tmp, check=True, capture_output=True)
+        subprocess.run(["tar", "-xzf", f"mathjax-mathjax-stix2-font-{v}.tgz",
+                        "--strip-components=1",
+                        "-C", os.path.abspath("html/mathjax-fonts/mathjax-stix2-font"),
+                        "--wildcards", "package/chtml*"],
+                       cwd=tmp, check=True, capture_output=True)
+    print("✓ MathJax installed.")
+
+
 def main():
     """Create HTML version of textbook."""
     argparser = argparse.ArgumentParser(description="Create HTML version")
     argparser.add_argument('-f', '--fake', action='store_true', help="Use previous make4ht output")
     argparser.add_argument('-v', '--verbose', action='store_true', help="Verbose output")
     args = argparser.parse_args()
+
+    ensure_mathjax()
 
     if not args.fake:
         prepare_paths()
@@ -118,18 +152,116 @@ def prep_chapter(texfile):
     """Edit LaTeX chapter for conversion to HTML."""
     tex = read_file(texfile)
     tex = remove_noindent(tex)
+    tex = fix_turingtape(tex)
+    tex = fix_smallcaps_in_math(tex)
     tex = fix_custom_commands(tex)
     tex = fix_gather(tex)
+    tex = fix_math_line_spacing(tex)
     tex = fix_math_columns(tex)
     tex = escape_labeled_items(tex)
     tex = escape_intext_links(tex)
     write_file(tmp_path + "/" + texfile, tex)
 
 
+def fix_turingtape(tex):
+    r"""Replace \turingtape / \inlineturingtape with placeholder markers.
+
+    The \turingtape macro is a TikZ-based renderer that tex4ht/MathJax can't
+    handle, so we strip it out and emit a TTAPESTART…TTAPEEND marker that
+    fix_turingtape_html turns into HTML cells. The mode encodes whether the
+    surrounding source had \ldots on the left/right (so we know whether to
+    render leading/trailing ellipses).
+    """
+    def make_marker(mode, content, pos):
+        return f'TTAPESTART|{mode}|{content}|{pos}|TTAPEEND'
+
+    def display_mode(left_ldots, right_ldots):
+        if left_ldots and right_ldots:
+            return 'D'
+        if left_ldots:
+            return 'Dl'
+        if right_ldots:
+            return 'Dr'
+        return 'D-'
+
+    # \[ [\ldots] \turingtape{{cells}}{pos} [\ldots] \]
+    display_pattern = re.compile(
+        r'\\\[\s*(\\ldots\s+)?'
+        r'\\turingtape\{\{([^{}]+)\}\}\{(\d+)\}'
+        r'(\s+\\ldots)?\s*\\\]'
+    )
+    def display_repl(m):
+        marker = make_marker(display_mode(m.group(1), m.group(4)), m.group(2), m.group(3))
+        return f'\n\n{marker}\n\n'
+    tex = display_pattern.sub(display_repl, tex)
+
+    # gather* containing one or more [\ldots] \turingtape{{X}}{Y} [\ldots] lines
+    line_pattern = re.compile(
+        r'\s*(\\ldots\s+)?'
+        r'\\turingtape\{\{([^{}]+)\}\}\{(\d+)\}'
+        r'(\s+\\ldots)?\s*$'
+    )
+    def gather_repl(m):
+        body = m.group(1)
+        if r'\turingtape' not in body:
+            return m.group(0)
+        out = []
+        for line in re.split(r'\\\\', body):
+            line_m = line_pattern.match(line)
+            if line_m:
+                out.append(make_marker(
+                    display_mode(line_m.group(1), line_m.group(4)),
+                    line_m.group(2), line_m.group(3),
+                ))
+        if out:
+            return '\n\n' + '\n\n'.join(out) + '\n\n'
+        return m.group(0)
+    tex = re.sub(
+        r'\\begin\{gather\*\}(.*?)\\end\{gather\*\}',
+        gather_repl, tex, flags=re.DOTALL,
+    )
+
+    # \inlineturingtape{{cells}}{pos}
+    tex = re.sub(
+        r'\\inlineturingtape\{\{([^{}]+)\}\}\{(\d+)\}',
+        lambda m: make_marker('I', m.group(1), m.group(2)),
+        tex,
+    )
+    return tex
+
+
 def remove_noindent(tex):
     r"""Remove \noindent commands that prevent rendering text as p."""
     # Replace with a space to avoid joining adjacent words (e.g., \medskip\noindent\nNode)
     return re.sub(r'\\noindent\s*%?', ' ', tex)
+
+
+_MATH_REGION = re.compile(
+    r'\\\(.*?\\\)|\\\[.*?\\\]|\$\$.*?\$\$|\$.*?\$|'
+    r'\\begin\{(equation\*?|align\*?|flalign\*?|gather\*?|multline\*?|eqnarray\*?)\}'
+    r'.*?\\end\{\1\}',
+    re.DOTALL,
+)
+
+# Same but for HTML output where tex4ht may add spaces in \begin {align*}
+_HTML_MATH_REGION = re.compile(
+    r'\\\(.*?\\\)|\\\[.*?\\\]|'
+    r'\\begin\s*\{(equation\*?|align\*?|flalign\*?|gather\*?|multline\*?|eqnarray\*?)\}'
+    r'.*?\\end\s*\{\1\}',
+    re.DOTALL,
+)
+
+
+def sub_outside_math(pattern, replacement, tex):
+    """Apply re.sub only to non-math segments of tex."""
+    out = []
+    last = 0
+    for m in _MATH_REGION.finditer(tex):
+        out.append(re.sub(pattern, replacement, tex[last:m.start()]))
+        out.append(m.group(0))
+        last = m.end()
+    out.append(re.sub(pattern, replacement, tex[last:]))
+    return ''.join(out)
 
 
 def fix_custom_commands(tex):
@@ -139,8 +271,9 @@ def fix_custom_commands(tex):
     tex = re.sub(r'\\Cfr\b', r'\\mathfrak{C}', tex)
     tex = re.sub(r'\\Mfr\b', r'\\mathfrak{M}', tex)
     tex = re.sub(r'\\Mod\{([^}]+)\}', r'\\mathfrak{\1}', tex)
-    # Handle \t{} tuples, including one level of nested braces like \t{[\tau]^{M,g}}
-    tex = re.sub(r'\\t\{((?:[^{}]|\{[^{}]*\})*)\}', r'\\langle \1 \\rangle', tex)
+    # Handle \t{} tuples; allow up to two levels of nested braces, e.g.
+    # \t{\llbracket t_1\rrbracket^{\mathfrak{M}},\ldots} where ^{...} contains {M}
+    tex = re.sub(r'\\t\{((?:[^{}]|\{(?:[^{}]|\{[^{}]*\})*\})*)\}', r'\\langle \1 \\rangle', tex)
     # Turnstiles and semantic relations:
     tex = re.sub(r'\\notsatisfies(?![a-zA-Z])', r'\\not\\Vdash', tex)
     tex = re.sub(r'\\satisfies(?![a-zA-Z])', r'\\Vdash', tex)
@@ -149,7 +282,9 @@ def fix_custom_commands(tex):
     tex = re.sub(r'\\notproves(?![a-zA-Z])', r'\\not\\vdash', tex)
     tex = re.sub(r'\\proves(?![a-zA-Z])', r'\\vdash', tex)
     tex = re.sub(r'\\notmodels', r'\\not\\vDash', tex)
-    tex = re.sub(r'\\qed\b', r'QEDSYMBOL', tex)
+    # tex4ht loses the custom labels in enumitem's enumerate*; cenumerate renders fine:
+    tex = re.sub(r'\\begin\{enumerate\*\}', r'\\begin{cenumerate}', tex)
+    tex = re.sub(r'\\end\{enumerate\*\}', r'\\end{cenumerate}', tex)
     # Principle environments:
     tex = re.sub(r'\\principle\{([^}]+)\}\{([^}]+)\}', r'\\begin{equation}\\tag{\1}\2\\end{equation}', tex)
     tex = re.sub(r'\\begin{principles}', r'\\begin{enumerate}', tex)
@@ -157,15 +292,19 @@ def fix_custom_commands(tex):
     tex = re.sub(r'\\pri\{([^}]+)\}\{(.+)\}', r'\\item[(\1)] $\2$', tex)
     tex = re.sub(r'\\pr\{([^}]+)\}', r'(\1)', tex)
     # Logic3-specific commands:
-    tex = re.sub(r'\\num\{([^}]+)\}', r'\\overline{\1}', tex)
-    tex = re.sub(r'\\gn\{([^}]+)\}', r'\\ulcorner \1 \\urcorner', tex)
-    tex = re.sub(r'\\dn\{([^}]+)\}', r'[\\![ \1 ]\\!]', tex)
-    # Brackets and formatting:
+    # Allow up to two levels of nested braces in the argument, e.g.
+    # \gn{\smallcaps{Prov}_T(\gn{A})} or \num{\gln{A}}.
+    nested = r'(?:[^{}]|\{(?:[^{}]|\{[^{}]*\})*\})*'
+    tex = re.sub(r'\\num\{(' + nested + r')\}', r'\\overline{\1}', tex)
+    tex = re.sub(r'\\gn\{(' + nested + r')\}', r'\\ulcorner \1 \\urcorner', tex)
+    tex = re.sub(r'\\dn\{(' + nested + r')\}', r'[\\![ \1 ]\\!]', tex)
+    # Brackets:
     tex = re.sub(r'\\llbracket\b', r'⟦', tex)
     tex = re.sub(r'\\rrbracket\b', r'⟧', tex)
-    tex = re.sub(r'\\smallcaps\{([^}]+)\}', r'SMALLCAPS\1ENDSMALLCAPS', tex)
-    # Preserve \quad and \qquad spacing (outside math mode) by using a placeholder
-    tex = re.sub(r'\\q?quad\b', r'QUADSPACE', tex)
+    # Substitutions that must NOT touch math regions
+    # (\qed and \quad/\qquad are native to MathJax). Applied only outside math envs:
+    tex = sub_outside_math(r'\\qed\b', r'QEDSYMBOL', tex)
+    tex = sub_outside_math(r'\\q?quad\b', r'QUADSPACE', tex)
     return tex
 
 
@@ -185,6 +324,39 @@ def fix_math_columns(tex):
     tex = re.sub(r'& (\\cdots) ', r'& $\1$ ', tex)
     tex = re.sub(r'& (\\vdots) &', r'& $\1$ &', tex)
     return tex
+
+
+def fix_smallcaps_in_math(tex):
+    r"""Replace \smallcaps{} inside math with scriptstyle uppercase text.
+
+    MathJax has correct metrics for \scriptstyle, so layout is accurate.
+    """
+    def repl_in_math(m):
+        return re.sub(
+            r'\\smallcaps\{([^}]*)\}',
+            lambda s: '{\\scriptstyle \\class{smallcaps}{\\text{' + s.group(1).upper() + '}}}',
+            m.group(0)
+        )
+    return _MATH_REGION.sub(repl_in_math, tex)
+
+
+def fix_math_line_spacing(tex):
+    """Add extra row spacing in display math environments for HTML rendering.
+
+    Replaces \\\\ (row break) with \\\\[0.5em] so MathJax row spacing better
+    matches the surrounding text line height. Skips \\\\ that already carry
+    explicit spacing (\\\\[...]) or a star (\\\\*).
+    """
+    def add_spacing(m):
+        return re.sub(r'\\\\(?![\[*])', r'\\\\[0.5em]', m.group(0))
+    # Only display math; inline math doesn't use \\\\ for row breaks
+    display = re.compile(
+        r'\\\[.*?\\\]|\$\$.*?\$\$|'
+        r'\\begin\{(equation\*?|align\*?|flalign\*?|gather\*?|multline\*?|eqnarray\*?)\}'
+        r'.*?\\end\{\1\}',
+        re.DOTALL,
+    )
+    return display.sub(add_spacing, tex)
 
 
 def fix_gather(tex):
@@ -292,16 +464,31 @@ def restore_intext_links():
     for htmlfile in html_files():
         html = read_file(html_path + '/' + htmlfile)
 
-        def replace_ref(match, pageref=False):
+        def replace_ref(match, pageref=False, link=True):
             if match.group(1) not in anchors:
                 print('Missing anchor:', match.group(1))
                 return '??'
             filename, num = anchors[match.group(1)]
             if pageref:
                 num = 'here'
+            if not link:
+                return num
             return f'<a class="locallink" href="{filename}#{match.group(1)}">{num}</a>'
 
-        html = re.sub(r'REF(.+?)ENDREF', replace_ref, html)
+        def sub_refs_html_aware(html):
+            """Replace REF placeholders, emitting bare numbers inside math blocks."""
+            out = []
+            last = 0
+            for m in _HTML_MATH_REGION.finditer(html):
+                out.append(re.sub(r'REF(.+?)ENDREF', replace_ref, html[last:m.start()]))
+                math = re.sub(r'REF(.+?)ENDREF',
+                               lambda r: replace_ref(r, link=False), m.group(0))
+                out.append(math)
+                last = m.end()
+            out.append(re.sub(r'REF(.+?)ENDREF', replace_ref, html[last:]))
+            return ''.join(out)
+
+        html = sub_refs_html_aware(html)
         html = re.sub(r'PAGEREF(.+?)ENDPAGEREF', lambda m: replace_ref(m, True), html)
         write_file(html_path + '/' + htmlfile, html)
 
@@ -437,9 +624,40 @@ def fix_html():
         html = fix_tcolorboxes(html, htmlfile)
         html = fix_exercise_titles(html)
         html = fix_item_labels(html)
+        html = fix_turingtape_html(html)
         html = fix_layout(html)
         validate_html(html, htmlfile)
         write_file(html_path + '/' + htmlfile, html)
+
+
+def fix_turingtape_html(html):
+    """Replace TTAPESTART…TTAPEEND markers with HTML tape cells."""
+    def render(mode, content, pos):
+        cells = [c.strip() for c in content.split(',')]
+        try:
+            highlight = int(pos)
+        except ValueError:
+            highlight = -1
+        spans = []
+        for i, c in enumerate(cells):
+            cls = 'turingtape-cell'
+            if i == highlight:
+                cls += ' turingtape-highlight'
+            inner = c if c else '&nbsp;'
+            spans.append(f'<span class="{cls}">{inner}</span>')
+        cells_html = ''.join(spans)
+        if mode == 'I':
+            return f'<span class="turingtape-inline">{cells_html}</span>'
+        left = '…' if mode in ('D', 'Dl') else ''
+        right = '…' if mode in ('D', 'Dr') else ''
+        return (f'<span class="turingtape-display">{left}'
+                f'<span class="turingtape">{cells_html}</span>{right}</span>')
+
+    return re.sub(
+        r'TTAPESTART\|(D[lr-]?|I)\|([^|]+)\|(\d+)\|TTAPEEND',
+        lambda m: render(m.group(1), m.group(2), m.group(3)),
+        html,
+    )
 
 
 def remove_comments(html):
@@ -504,6 +722,8 @@ def fix_layout(html):
     html = re.sub(r'QUADSPACE', r'&emsp;', html)
     # remove anchors in lists that add a linebreak:
     html = re.sub(r'(<li class=.enumerate.[^>]*>)\s*<a\s+id=.[^\'"]+[\'"]></a>', r'\1', html)
+    # strip trailing whitespace before </p> so justify does not stretch the last line:
+    html = re.sub(r'\s+</p>', '</p>', html)
     # remove whitespace before section titles:
     html = re.sub(r'(<span class=.titlemark.>.+?</span>) *', r'\1', html)
     # widen too narrow tex, e.g. in $\Kn\!\neg\!\Kn\!\neg p$
@@ -514,8 +734,6 @@ def fix_layout(html):
     html = re.sub(r'<tr>\s*<td[^>]*>\s*</td>\s*</tr>', '', html)
     # QED symbol, right-aligned:
     html = re.sub(r'QEDSYMBOL', r'<span class="qed">□</span>', html)
-    # Small caps:
-    html = re.sub(r'SMALLCAPS(.*?)ENDSMALLCAPS', r'<span class="smallcaps">\1</span>', html, flags=re.DOTALL)
     return html
 
 
@@ -528,6 +746,16 @@ def fix_mathjax_linebreaks(html):
     there, so we wrap '\( x \);' in a no-wrap span.
     """
     html = re.sub(r'(\\\((?:[^\\)]|\\[^)])+\\\)[;.,?!\)])', r'<span class="nowrap">\1</span>', html)
+    # Also keep an opening curly quote glued to the math it introduces
+    # (and the closing quote, if present): ‘\(...\)’
+    html = re.sub(r'(‘\\\((?:[^\\)]|\\[^)])+\\\)’?)', r'<span class="nowrap">\1</span>', html)
+    # Glue a standalone opening bracket math element to the next token,
+    # and a standalone closing bracket math element to the preceding token,
+    # so a line break can't fall right next to ‘{’, ‘[’, ‘}’ or ‘]’.
+    html = re.sub(r'(\\\(\\(?:\{|\[)\\\))(\s+[^\s<>]+)',
+                  r'<span class="nowrap">\1\2</span>', html)
+    html = re.sub(r'([^\s<>]+\s+)(\\\(\\(?:\}|\])\\\)[;.,?!\)]?)',
+                  r'<span class="nowrap">\1\2</span>', html)
     return html
 
 
